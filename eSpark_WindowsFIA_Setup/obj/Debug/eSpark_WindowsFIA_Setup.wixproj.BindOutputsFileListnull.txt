@@ -1,0 +1,2 @@
+C:\Users\masb\Desktop\eSpark_WindowsFIA\eSpark_WindowsFIA_Setup\bin\Debug\WindowsFIA_Setup.msi
+C:\Users\masb\Desktop\eSpark_WindowsFIA\eSpark_WindowsFIA_Setup\bin\Debug\WindowsFIA_Setup.wixpdb
