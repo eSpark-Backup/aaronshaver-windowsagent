@@ -196,6 +196,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="bin\StopGo.jpeg" />
+    <None Include="bin\GreenButton.png" />
+    <None Include="bin\RedButton.png" />
     <Content Include="eSpark_WindowsFIA.ico" />
     <Content Include="logo-p256.ico" />
     <None Include="Resources\AppIcon.ico" />

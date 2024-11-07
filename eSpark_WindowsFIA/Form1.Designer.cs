@@ -34,25 +34,11 @@ namespace eSpark_WindowsFIA
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.tootltip1label1 = new System.Windows.Forms.Label();
-            this.cmbLogsLevel = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.btnSrchFltr = new System.Windows.Forms.Button();
-            this.btnScanLoc = new System.Windows.Forms.Button();
-            this.btnExcludefile = new System.Windows.Forms.Button();
-            this.cmbScanLocations = new System.Windows.Forms.ComboBox();
-            this.cmbSrchFileFilter = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtLogsAndDBpath = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.cmbExcludefileSize = new System.Windows.Forms.ComboBox();
-            this.btnLogs = new System.Windows.Forms.Button();
-            this.chkHash = new System.Windows.Forms.CheckBox();
-            this.btnFilesSearch = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.numMinExcludeFileSize = new System.Windows.Forms.NumericUpDown();
+            this.cmbMinExcludeFileSize = new System.Windows.Forms.ComboBox();
+            this.numMaxExcludeFileSize = new System.Windows.Forms.NumericUpDown();
+            this.cmbMaxExcludeFileSize = new System.Windows.Forms.ComboBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
@@ -70,206 +56,90 @@ namespace eSpark_WindowsFIA
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.tootltip1label2 = new System.Windows.Forms.Label();
-            this.panel1.SuspendLayout();
+            this.btnFilesSearch = new System.Windows.Forms.Button();
+            this.chkHash = new System.Windows.Forms.CheckBox();
+            this.btnLogs = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.txtLogsAndDBpath = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.cmbSrchFileFilter = new System.Windows.Forms.ComboBox();
+            this.cmbScanLocations = new System.Windows.Forms.ComboBox();
+            this.btnScanLoc = new System.Windows.Forms.Button();
+            this.btnSrchFltr = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.cmbLogsLevel = new System.Windows.Forms.ComboBox();
+            this.tootltip1label1 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.FileSystemWatcherTimer = new System.Windows.Forms.Timer(this.components);
+            this.lblFileSystemWatcher = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.numMinExcludeFileSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numMaxExcludeFileSize)).BeginInit();
             this.FSW_trayMenu.SuspendLayout();
             this.toolStripContainer2.ContentPanel.SuspendLayout();
             this.toolStripContainer2.SuspendLayout();
             this.toolStrip2.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel1
+            // numMinExcludeFileSize
             // 
-            this.panel1.Controls.Add(this.tootltip1label1);
-            this.panel1.Controls.Add(this.cmbLogsLevel);
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.btnSrchFltr);
-            this.panel1.Controls.Add(this.btnScanLoc);
-            this.panel1.Controls.Add(this.btnExcludefile);
-            this.panel1.Controls.Add(this.cmbScanLocations);
-            this.panel1.Controls.Add(this.cmbSrchFileFilter);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.txtLogsAndDBpath);
-            this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.cmbExcludefileSize);
-            this.panel1.Controls.Add(this.btnLogs);
-            this.panel1.Controls.Add(this.chkHash);
-            this.panel1.Controls.Add(this.btnFilesSearch);
-            this.panel1.Location = new System.Drawing.Point(12, 12);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(528, 247);
-            this.panel1.TabIndex = 0;
+            this.numMinExcludeFileSize.Location = new System.Drawing.Point(151, 52);
+            this.numMinExcludeFileSize.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numMinExcludeFileSize.Name = "numMinExcludeFileSize";
+            this.numMinExcludeFileSize.Size = new System.Drawing.Size(69, 20);
+            this.numMinExcludeFileSize.TabIndex = 3;
+            this.toolTip1.SetToolTip(this.numMinExcludeFileSize, "Minimum file size here");
             // 
-            // tootltip1label1
+            // cmbMinExcludeFileSize
             // 
-            this.tootltip1label1.AutoSize = true;
-            this.tootltip1label1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.tootltip1label1.Location = new System.Drawing.Point(436, 0);
-            this.tootltip1label1.Name = "tootltip1label1";
-            this.tootltip1label1.Size = new System.Drawing.Size(92, 13);
-            this.tootltip1label1.TabIndex = 3;
-            this.tootltip1label1.Text = "execution time: 0s";
+            this.cmbMinExcludeFileSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbMinExcludeFileSize.FormattingEnabled = true;
+            this.cmbMinExcludeFileSize.Items.AddRange(new object[] {
+            "KB",
+            "MB",
+            "GB"});
+            this.cmbMinExcludeFileSize.Location = new System.Drawing.Point(223, 52);
+            this.cmbMinExcludeFileSize.MaxDropDownItems = 50;
+            this.cmbMinExcludeFileSize.Name = "cmbMinExcludeFileSize";
+            this.cmbMinExcludeFileSize.Size = new System.Drawing.Size(55, 21);
+            this.cmbMinExcludeFileSize.TabIndex = 4;
+            this.toolTip1.SetToolTip(this.cmbMinExcludeFileSize, "Minimum file size here");
             // 
-            // cmbLogsLevel
+            // numMaxExcludeFileSize
             // 
-            this.cmbLogsLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbLogsLevel.ImeMode = System.Windows.Forms.ImeMode.Disable;
-            this.cmbLogsLevel.Items.AddRange(new object[] {
-            "None",
-            "Errors Only",
-            "Errors and Search Results",
-            "Full Logs"});
-            this.cmbLogsLevel.Location = new System.Drawing.Point(124, 133);
-            this.cmbLogsLevel.MaxDropDownItems = 50;
-            this.cmbLogsLevel.Name = "cmbLogsLevel";
-            this.cmbLogsLevel.Size = new System.Drawing.Size(326, 21);
-            this.cmbLogsLevel.TabIndex = 9;
+            this.numMaxExcludeFileSize.Location = new System.Drawing.Point(323, 52);
+            this.numMaxExcludeFileSize.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numMaxExcludeFileSize.Name = "numMaxExcludeFileSize";
+            this.numMaxExcludeFileSize.Size = new System.Drawing.Size(69, 20);
+            this.numMaxExcludeFileSize.TabIndex = 5;
+            this.toolTip1.SetToolTip(this.numMaxExcludeFileSize, "Maximum file size here");
             // 
-            // label5
+            // cmbMaxExcludeFileSize
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(11, 136);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(91, 13);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "Select Logs level:";
-            // 
-            // btnSrchFltr
-            // 
-            this.btnSrchFltr.Location = new System.Drawing.Point(456, 104);
-            this.btnSrchFltr.Name = "btnSrchFltr";
-            this.btnSrchFltr.Size = new System.Drawing.Size(39, 23);
-            this.btnSrchFltr.TabIndex = 8;
-            this.btnSrchFltr.Text = "...";
-            this.btnSrchFltr.UseVisualStyleBackColor = true;
-            this.btnSrchFltr.Click += new System.EventHandler(this.btnSrchFltr_Click);
-            // 
-            // btnScanLoc
-            // 
-            this.btnScanLoc.Location = new System.Drawing.Point(456, 77);
-            this.btnScanLoc.Name = "btnScanLoc";
-            this.btnScanLoc.Size = new System.Drawing.Size(39, 23);
-            this.btnScanLoc.TabIndex = 6;
-            this.btnScanLoc.Text = "...";
-            this.btnScanLoc.UseVisualStyleBackColor = true;
-            this.btnScanLoc.Click += new System.EventHandler(this.btnScanLoc_Click);
-            // 
-            // btnExcludefile
-            // 
-            this.btnExcludefile.Location = new System.Drawing.Point(456, 50);
-            this.btnExcludefile.Name = "btnExcludefile";
-            this.btnExcludefile.Size = new System.Drawing.Size(39, 23);
-            this.btnExcludefile.TabIndex = 4;
-            this.btnExcludefile.Text = "...";
-            this.btnExcludefile.UseVisualStyleBackColor = true;
-            this.btnExcludefile.Click += new System.EventHandler(this.btnExcludefile_Click);
-            // 
-            // cmbScanLocations
-            // 
-            this.cmbScanLocations.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbScanLocations.FormattingEnabled = true;
-            this.cmbScanLocations.Location = new System.Drawing.Point(124, 79);
-            this.cmbScanLocations.MaxDropDownItems = 50;
-            this.cmbScanLocations.Name = "cmbScanLocations";
-            this.cmbScanLocations.Size = new System.Drawing.Size(326, 21);
-            this.cmbScanLocations.TabIndex = 5;
-            this.cmbScanLocations.DropDownClosed += new System.EventHandler(this.cmbScanLocations_DropDownClosed);
-            // 
-            // cmbSrchFileFilter
-            // 
-            this.cmbSrchFileFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbSrchFileFilter.FormattingEnabled = true;
-            this.cmbSrchFileFilter.Location = new System.Drawing.Point(124, 106);
-            this.cmbSrchFileFilter.MaxDropDownItems = 50;
-            this.cmbSrchFileFilter.Name = "cmbSrchFileFilter";
-            this.cmbSrchFileFilter.Size = new System.Drawing.Size(326, 21);
-            this.cmbSrchFileFilter.TabIndex = 7;
-            this.cmbSrchFileFilter.DropDownClosed += new System.EventHandler(this.cmbSrchFileFilter_DropDownClosed);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(11, 109);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(82, 13);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "Search file filter:";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(11, 31);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(97, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Logs and DB Path:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 82);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(79, 13);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "Scan Location:";
-            // 
-            // txtLogsAndDBpath
-            // 
-            this.txtLogsAndDBpath.Location = new System.Drawing.Point(124, 26);
-            this.txtLogsAndDBpath.Name = "txtLogsAndDBpath";
-            this.txtLogsAndDBpath.Size = new System.Drawing.Size(326, 20);
-            this.txtLogsAndDBpath.TabIndex = 1;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 55);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(107, 13);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Exclude file with size:";
-            // 
-            // cmbExcludefileSize
-            // 
-            this.cmbExcludefileSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbExcludefileSize.FormattingEnabled = true;
-            this.cmbExcludefileSize.Location = new System.Drawing.Point(124, 52);
-            this.cmbExcludefileSize.MaxDropDownItems = 50;
-            this.cmbExcludefileSize.Name = "cmbExcludefileSize";
-            this.cmbExcludefileSize.Size = new System.Drawing.Size(326, 21);
-            this.cmbExcludefileSize.TabIndex = 3;
-            this.cmbExcludefileSize.DropDownClosed += new System.EventHandler(this.cmbExcludefileSize_DropDownClosed);
-            // 
-            // btnLogs
-            // 
-            this.btnLogs.Location = new System.Drawing.Point(456, 26);
-            this.btnLogs.Name = "btnLogs";
-            this.btnLogs.Size = new System.Drawing.Size(39, 23);
-            this.btnLogs.TabIndex = 2;
-            this.btnLogs.Text = "...";
-            this.btnLogs.UseVisualStyleBackColor = true;
-            this.btnLogs.Click += new System.EventHandler(this.btnLogs_Click);
-            // 
-            // chkHash
-            // 
-            this.chkHash.AutoSize = true;
-            this.chkHash.Location = new System.Drawing.Point(124, 161);
-            this.chkHash.Name = "chkHash";
-            this.chkHash.Size = new System.Drawing.Size(98, 17);
-            this.chkHash.TabIndex = 10;
-            this.chkHash.Text = "Calculate Hash";
-            this.chkHash.UseVisualStyleBackColor = true;
-            // 
-            // btnFilesSearch
-            // 
-            this.btnFilesSearch.Location = new System.Drawing.Point(216, 184);
-            this.btnFilesSearch.Name = "btnFilesSearch";
-            this.btnFilesSearch.Size = new System.Drawing.Size(120, 52);
-            this.btnFilesSearch.TabIndex = 11;
-            this.btnFilesSearch.Text = "Search Files";
-            this.btnFilesSearch.UseVisualStyleBackColor = true;
-            this.btnFilesSearch.Click += new System.EventHandler(this.btnFilesSearch_Click);
+            this.cmbMaxExcludeFileSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbMaxExcludeFileSize.FormattingEnabled = true;
+            this.cmbMaxExcludeFileSize.Items.AddRange(new object[] {
+            "KB",
+            "MB",
+            "GB"});
+            this.cmbMaxExcludeFileSize.Location = new System.Drawing.Point(395, 52);
+            this.cmbMaxExcludeFileSize.MaxDropDownItems = 50;
+            this.cmbMaxExcludeFileSize.Name = "cmbMaxExcludeFileSize";
+            this.cmbMaxExcludeFileSize.Size = new System.Drawing.Size(55, 21);
+            this.cmbMaxExcludeFileSize.TabIndex = 6;
+            this.toolTip1.SetToolTip(this.cmbMaxExcludeFileSize, "Maximum file size here");
             // 
             // directorySearcher1
             // 
@@ -393,6 +263,216 @@ namespace eSpark_WindowsFIA
             this.tootltip1label2.TabIndex = 3;
             this.tootltip1label2.Text = "Press start search files to start scanning!";
             // 
+            // btnFilesSearch
+            // 
+            this.btnFilesSearch.Location = new System.Drawing.Point(216, 184);
+            this.btnFilesSearch.Name = "btnFilesSearch";
+            this.btnFilesSearch.Size = new System.Drawing.Size(120, 52);
+            this.btnFilesSearch.TabIndex = 13;
+            this.btnFilesSearch.Text = "Search Files";
+            this.btnFilesSearch.UseVisualStyleBackColor = true;
+            this.btnFilesSearch.Click += new System.EventHandler(this.btnFilesSearch_Click);
+            // 
+            // chkHash
+            // 
+            this.chkHash.AutoSize = true;
+            this.chkHash.Location = new System.Drawing.Point(124, 161);
+            this.chkHash.Name = "chkHash";
+            this.chkHash.Size = new System.Drawing.Size(98, 17);
+            this.chkHash.TabIndex = 12;
+            this.chkHash.Text = "Calculate Hash";
+            this.chkHash.UseVisualStyleBackColor = true;
+            // 
+            // btnLogs
+            // 
+            this.btnLogs.Location = new System.Drawing.Point(456, 26);
+            this.btnLogs.Name = "btnLogs";
+            this.btnLogs.Size = new System.Drawing.Size(39, 23);
+            this.btnLogs.TabIndex = 2;
+            this.btnLogs.Text = "...";
+            this.btnLogs.UseVisualStyleBackColor = true;
+            this.btnLogs.Click += new System.EventHandler(this.btnLogs_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(11, 55);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(88, 13);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Exclude File size:";
+            // 
+            // txtLogsAndDBpath
+            // 
+            this.txtLogsAndDBpath.Location = new System.Drawing.Point(124, 26);
+            this.txtLogsAndDBpath.Name = "txtLogsAndDBpath";
+            this.txtLogsAndDBpath.Size = new System.Drawing.Size(326, 20);
+            this.txtLogsAndDBpath.TabIndex = 1;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(11, 82);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(79, 13);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "Scan Location:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(11, 31);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(97, 13);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "Logs and DB Path:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(11, 109);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(82, 13);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "Search file filter:";
+            // 
+            // cmbSrchFileFilter
+            // 
+            this.cmbSrchFileFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbSrchFileFilter.FormattingEnabled = true;
+            this.cmbSrchFileFilter.Location = new System.Drawing.Point(124, 106);
+            this.cmbSrchFileFilter.MaxDropDownItems = 50;
+            this.cmbSrchFileFilter.Name = "cmbSrchFileFilter";
+            this.cmbSrchFileFilter.Size = new System.Drawing.Size(326, 21);
+            this.cmbSrchFileFilter.TabIndex = 9;
+            this.cmbSrchFileFilter.DropDownClosed += new System.EventHandler(this.cmbSrchFileFilter_DropDownClosed);
+            // 
+            // cmbScanLocations
+            // 
+            this.cmbScanLocations.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbScanLocations.FormattingEnabled = true;
+            this.cmbScanLocations.Location = new System.Drawing.Point(124, 79);
+            this.cmbScanLocations.MaxDropDownItems = 50;
+            this.cmbScanLocations.Name = "cmbScanLocations";
+            this.cmbScanLocations.Size = new System.Drawing.Size(326, 21);
+            this.cmbScanLocations.TabIndex = 7;
+            // 
+            // btnScanLoc
+            // 
+            this.btnScanLoc.Location = new System.Drawing.Point(456, 77);
+            this.btnScanLoc.Name = "btnScanLoc";
+            this.btnScanLoc.Size = new System.Drawing.Size(39, 23);
+            this.btnScanLoc.TabIndex = 8;
+            this.btnScanLoc.Text = "...";
+            this.btnScanLoc.UseVisualStyleBackColor = true;
+            this.btnScanLoc.Click += new System.EventHandler(this.btnScanLoc_Click);
+            // 
+            // btnSrchFltr
+            // 
+            this.btnSrchFltr.Location = new System.Drawing.Point(456, 104);
+            this.btnSrchFltr.Name = "btnSrchFltr";
+            this.btnSrchFltr.Size = new System.Drawing.Size(39, 23);
+            this.btnSrchFltr.TabIndex = 10;
+            this.btnSrchFltr.Text = "...";
+            this.btnSrchFltr.UseVisualStyleBackColor = true;
+            this.btnSrchFltr.Click += new System.EventHandler(this.btnSrchFltr_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(11, 136);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(91, 13);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "Select Logs level:";
+            // 
+            // cmbLogsLevel
+            // 
+            this.cmbLogsLevel.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbLogsLevel.ImeMode = System.Windows.Forms.ImeMode.Disable;
+            this.cmbLogsLevel.Items.AddRange(new object[] {
+            "None",
+            "Errors Only",
+            "Errors and Search Results",
+            "Full Logs"});
+            this.cmbLogsLevel.Location = new System.Drawing.Point(124, 133);
+            this.cmbLogsLevel.MaxDropDownItems = 50;
+            this.cmbLogsLevel.Name = "cmbLogsLevel";
+            this.cmbLogsLevel.Size = new System.Drawing.Size(326, 21);
+            this.cmbLogsLevel.TabIndex = 11;
+            // 
+            // tootltip1label1
+            // 
+            this.tootltip1label1.AutoSize = true;
+            this.tootltip1label1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.tootltip1label1.Location = new System.Drawing.Point(436, 0);
+            this.tootltip1label1.Name = "tootltip1label1";
+            this.tootltip1label1.Size = new System.Drawing.Size(92, 13);
+            this.tootltip1label1.TabIndex = 3;
+            this.tootltip1label1.Text = "execution time: 0s";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(121, 55);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(30, 13);
+            this.label6.TabIndex = 18;
+            this.label6.Text = "MIN:";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(284, 55);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(33, 13);
+            this.label7.TabIndex = 19;
+            this.label7.Text = "MAX:";
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.lblFileSystemWatcher);
+            this.panel1.Controls.Add(this.label7);
+            this.panel1.Controls.Add(this.label6);
+            this.panel1.Controls.Add(this.cmbMaxExcludeFileSize);
+            this.panel1.Controls.Add(this.numMaxExcludeFileSize);
+            this.panel1.Controls.Add(this.cmbMinExcludeFileSize);
+            this.panel1.Controls.Add(this.numMinExcludeFileSize);
+            this.panel1.Controls.Add(this.tootltip1label1);
+            this.panel1.Controls.Add(this.cmbLogsLevel);
+            this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.btnSrchFltr);
+            this.panel1.Controls.Add(this.btnScanLoc);
+            this.panel1.Controls.Add(this.cmbScanLocations);
+            this.panel1.Controls.Add(this.cmbSrchFileFilter);
+            this.panel1.Controls.Add(this.label4);
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.txtLogsAndDBpath);
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.btnLogs);
+            this.panel1.Controls.Add(this.chkHash);
+            this.panel1.Controls.Add(this.btnFilesSearch);
+            this.panel1.Location = new System.Drawing.Point(12, 12);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(528, 247);
+            this.panel1.TabIndex = 0;
+            // 
+            // FileSystemWatcherTimer
+            // 
+            this.FileSystemWatcherTimer.Enabled = true;
+            this.FileSystemWatcherTimer.Interval = 1000;
+            this.FileSystemWatcherTimer.Tick += new System.EventHandler(this.FileSystemWatcherTimer_Tick);
+            // 
+            // lblFileSystemWatcher
+            // 
+            this.lblFileSystemWatcher.AutoSize = true;
+            this.lblFileSystemWatcher.Location = new System.Drawing.Point(3, 0);
+            this.lblFileSystemWatcher.Name = "lblFileSystemWatcher";
+            this.lblFileSystemWatcher.Size = new System.Drawing.Size(148, 13);
+            this.lblFileSystemWatcher.TabIndex = 20;
+            this.lblFileSystemWatcher.Text = "File System Watcher stopped!";
+            // 
             // Form1
             // 
             this.AcceptButton = this.btnFilesSearch;
@@ -412,8 +492,8 @@ namespace eSpark_WindowsFIA
             this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.Form1_HelpButtonClicked);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numMinExcludeFileSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numMaxExcludeFileSize)).EndInit();
             this.FSW_trayMenu.ResumeLayout(false);
             this.toolStripContainer2.ContentPanel.ResumeLayout(false);
             this.toolStripContainer2.ContentPanel.PerformLayout();
@@ -421,20 +501,18 @@ namespace eSpark_WindowsFIA
             this.toolStripContainer2.PerformLayout();
             this.toolStrip2.ResumeLayout(false);
             this.toolStrip2.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.Button btnFilesSearch;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.DirectoryServices.DirectorySearcher directorySearcher1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
-        private System.Windows.Forms.CheckBox chkHash;
         private System.Windows.Forms.NotifyIcon FSW_trayicon;
         private System.Windows.Forms.ContextMenuStrip FSW_trayMenu;
         private System.Windows.Forms.ToolStripMenuItem TaskScheduler_toolStripMenuItem1;
@@ -442,28 +520,37 @@ namespace eSpark_WindowsFIA
         private System.Windows.Forms.ToolStripMenuItem Exit_toolStripMenuItem3;
         private System.Windows.Forms.ToolStripMenuItem About_toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem Quartz_toolStripMenuItem;
-        private System.Windows.Forms.ComboBox cmbScanLocations;
-        private System.Windows.Forms.ComboBox cmbSrchFileFilter;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtLogsAndDBpath;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox cmbExcludefileSize;
-        private System.Windows.Forms.Button btnLogs;
-        private System.Windows.Forms.Button btnSrchFltr;
-        private System.Windows.Forms.Button btnScanLoc;
-        private System.Windows.Forms.Button btnExcludefile;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
-        private System.Windows.Forms.ComboBox cmbLogsLevel;
-        private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ToolStripContainer toolStripContainer2;
         private System.Windows.Forms.ToolStrip toolStrip2;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
-        private System.Windows.Forms.Label tootltip1label1;
         private System.Windows.Forms.Label tootltip1label2;
+        private System.Windows.Forms.Button btnFilesSearch;
+        private System.Windows.Forms.CheckBox chkHash;
+        private System.Windows.Forms.Button btnLogs;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox txtLogsAndDBpath;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox cmbSrchFileFilter;
+        private System.Windows.Forms.ComboBox cmbScanLocations;
+        private System.Windows.Forms.Button btnScanLoc;
+        private System.Windows.Forms.Button btnSrchFltr;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ComboBox cmbLogsLevel;
+        private System.Windows.Forms.Label tootltip1label1;
+        private System.Windows.Forms.NumericUpDown numMinExcludeFileSize;
+        private System.Windows.Forms.ComboBox cmbMinExcludeFileSize;
+        private System.Windows.Forms.NumericUpDown numMaxExcludeFileSize;
+        private System.Windows.Forms.ComboBox cmbMaxExcludeFileSize;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Timer FileSystemWatcherTimer;
         public static System.Windows.Forms.Timer timer1;
         public static System.Windows.Forms.Timer progressbarTimer;
+        private System.Windows.Forms.Label lblFileSystemWatcher;
         //public static System.Windows.Forms.Timer timer1;
         //public static System.Windows.Forms.Timer progressbarTimer;
     }

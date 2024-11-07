@@ -27,6 +27,7 @@ namespace eSpark_WindowsFIA
         //public static StringBuilder sb_collectedText = new StringBuilder();
         public static bool processCompleted = false;
         public static bool calculateHash = false;
+        public static bool IsFSWRunning = false;
         public static int progressCounter = 0;
         public static int LogsLevel = 0;
         //public static DateTime StartTime = DateTime.UtcNow;
@@ -44,8 +45,10 @@ namespace eSpark_WindowsFIA
 
         private bool userExit = false;
         private static String filefiltr = "";
-        private static String currentfilescan = "";
-
+        public static String currentfilescan = "";
+        private string[] excFileSize;
+        
+        
 
         private NLog.Config.LoggingConfiguration config = new NLog.Config.LoggingConfiguration();
 
@@ -54,9 +57,21 @@ namespace eSpark_WindowsFIA
             InitializeComponent();
             
             try { this.txtLogsAndDBpath.Text = GetSetting("LogsDBPath"); } catch { }
-            try { this.cmbExcludefileSize.Items.AddRange(GetSetting("ExcludeFileSize").Split('~')); } catch { }
-            try { this.cmbScanLocations.Items.AddRange(GetSetting("ScanLocations").Split('~')); } catch { }
-            try { this.cmbSrchFileFilter.Items.AddRange(GetSetting("ExcludeFilterList").Split('~')); } catch { }
+            try { //this.cmbExcludefileSize.Items.AddRange(); 
+                excFileSize = GetSetting("ExcludeFileSize").Split('~');
+                this.numMinExcludeFileSize.Value = int.Parse(excFileSize[0].Split(':')[0]);
+                this.cmbMinExcludeFileSize.SelectedIndex = int.Parse(excFileSize[0].Split(':')[1]);
+
+                this.numMaxExcludeFileSize.Value = int.Parse(excFileSize[1].Split(':')[0]);
+                this.cmbMaxExcludeFileSize.SelectedIndex = int.Parse(excFileSize[1].Split(':')[1]);
+            }
+            catch { }
+            try { this.cmbScanLocations.Items.AddRange(GetSetting("ScanLocations").Split('~'));
+                this.cmbScanLocations.SelectedIndex = 0;
+            } catch { }
+            try { this.cmbSrchFileFilter.Items.AddRange(GetSetting("ExcludeFilterList").Split('~'));
+                this.cmbSrchFileFilter.SelectedIndex = 0;
+            } catch { }
 
             if (this.txtLogsAndDBpath.Text.Length > 1)
             {
@@ -163,6 +178,15 @@ namespace eSpark_WindowsFIA
 
         private void btnFilesSearch_Click(object sender, EventArgs e)
         {
+            if (excFileSize[0].ToString() != this.numMinExcludeFileSize.Value + ":" + this.cmbMinExcludeFileSize.SelectedIndex
+                || excFileSize[1].ToString() != this.numMaxExcludeFileSize.Value + ":" + this.cmbMaxExcludeFileSize.SelectedIndex)
+            {
+                String minMaxstr = this.numMinExcludeFileSize.Value + ":" + this.cmbMinExcludeFileSize.SelectedIndex 
+                    + "~" + this.numMaxExcludeFileSize.Value + ":" + this.cmbMaxExcludeFileSize.SelectedIndex;
+
+                SetSetting("ExcludeFileSize", minMaxstr.Trim());
+            }
+
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             FolderBrowserDialog folderDlg = new FolderBrowserDialog();
             //DialogResult result = folderDlg.ShowDialog();
@@ -204,11 +228,10 @@ namespace eSpark_WindowsFIA
                         return;
                     }
 
-                    if (Directory.Exists(this.cmbScanLocations.Items[i].ToString()))
-                        SelectedFldr += this.cmbScanLocations.Items[i].ToString().Trim() + ";";
                 }
-                if (SelectedFldr.Length > 0)
-                    SelectedFldr = SelectedFldr.Substring(0, SelectedFldr.Length - 1);
+
+                if (Directory.Exists(this.cmbScanLocations.Items[this.cmbScanLocations.SelectedIndex].ToString()))
+                    SelectedFldr = this.cmbScanLocations.Items[this.cmbScanLocations.SelectedIndex].ToString().Trim();
             }
             else
             {
@@ -244,56 +267,33 @@ namespace eSpark_WindowsFIA
                 loger = NLog.LogManager.GetCurrentClassLogger();
             }
 
-
-            if (this.cmbExcludefileSize.Items != null && this.cmbExcludefileSize.Items.Count > 0)
+            try
             {
-                for (int i = 0; i < this.cmbExcludefileSize.Items.Count; i++)
+                if (this.numMaxExcludeFileSize.Value > 0)//Greater value
                 {
-                    try
-                    {
-                        if (this.cmbExcludefileSize.Items[i].ToString().Trim().Contains(">"))//Greater value
-                            if (this.cmbExcludefileSize.Items[i].ToString().Contains("KB"))//Greater value
-                            {
-                                MaxSize = double.Parse(Regex.Match(this.cmbExcludefileSize.Items[i].ToString().Trim(), @"\d+").Value);
-                                MaxSize = MaxSize;
-                            }
-                            else if (this.cmbExcludefileSize.Items[i].ToString().Trim().Contains("MB"))//Greater value
-                            {
-                                MaxSize = double.Parse(Regex.Match(this.cmbExcludefileSize.Items[i].ToString().Trim(), @"\d+").Value);
-                                MaxSize = MaxSize * 1024;
-                            }
-                            else if (this.cmbExcludefileSize.Items[i].ToString().Trim().Contains("GB"))//Greater value
-                            {
-                                MaxSize = double.Parse(Regex.Match(this.cmbExcludefileSize.Items[i].ToString().Trim(), @"\d+").Value);
-                                MaxSize = MaxSize * 1024 * 1024;
-                            }
-                    }
-                    catch { }
-
-                    try
-                    {
-                        if (this.cmbExcludefileSize.Items[i].ToString().Trim().Contains("<"))//Greater value
-                            if (this.cmbExcludefileSize.Items[i].ToString().Contains("KB"))//Greater value
-                            {
-                                MinSize = double.Parse(Regex.Match(this.cmbExcludefileSize.Items[i].ToString().Trim(), @"\d+").Value);
-                                MinSize = MinSize;
-                            }
-                            else if (this.cmbExcludefileSize.Items[i].ToString().Trim().Contains("MB"))//Greater value
-                            {
-                                MinSize = double.Parse(Regex.Match(this.cmbExcludefileSize.Items[i].ToString().Trim(), @"\d+").Value);
-                                MinSize = MinSize * 1024;
-                            }
-                            else if (this.cmbExcludefileSize.Items[i].ToString().Trim().Contains("GB"))//Greater value
-                            {
-                                MinSize = double.Parse(Regex.Match(this.cmbExcludefileSize.Items[i].ToString().Trim(), @"\d+").Value);
-                                MinSize = MinSize * 1024 * 1024;
-                            }
-                    }
-                    catch { }
+                    if (this.cmbMaxExcludeFileSize.SelectedIndex == 0)//"KB"
+                        MaxSize = int.Parse(this.numMaxExcludeFileSize.Value.ToString());
+                    else if (this.cmbMaxExcludeFileSize.SelectedIndex == 1)//"MB"
+                        MaxSize = int.Parse(this.numMaxExcludeFileSize.Value.ToString()) * 1024;
+                    else if (this.cmbMaxExcludeFileSize.SelectedIndex == 2)//"GB"
+                        MaxSize = int.Parse(this.numMaxExcludeFileSize.Value.ToString()) * 1024 * 1024;
                 }
-                //if (SelectedFldr.Length > 0)
-                //    SelectedFldr = SelectedFldr.Substring(0, SelectedFldr.Length - 1);
             }
+            catch { }
+
+            try
+            {
+                if (this.numMinExcludeFileSize.Value > -1)//Greater value
+                {
+                    if (this.cmbMinExcludeFileSize.SelectedIndex == 0)//"KB"
+                        MinSize = int.Parse(this.numMinExcludeFileSize.Value.ToString());
+                    else if (this.cmbMinExcludeFileSize.SelectedIndex == 1)//"MB"
+                        MinSize = int.Parse(this.numMinExcludeFileSize.Value.ToString()) * 1024;
+                    else if (this.cmbMinExcludeFileSize.SelectedIndex == 2)//"GB"
+                        MinSize = int.Parse(this.numMinExcludeFileSize.Value.ToString()) * 1024 * 1024;
+                }
+            }
+            catch { }
 
             if (this.cmbSrchFileFilter.Items != null && this.cmbSrchFileFilter.Items.Count > 0)
             {
@@ -360,7 +360,7 @@ namespace eSpark_WindowsFIA
                 CallFileSystemWatcherAsync();
                 CallBrowseProcessAsync();
                 timer1.Start();
-                progressbarTimer.Start();
+                progressbarTimer.Start();                
             }
 
         }
@@ -368,12 +368,15 @@ namespace eSpark_WindowsFIA
         public static async void CallFileSystemWatcherAsync()
         {
             //Form1.SelectedFldr
-            foreach (string subfldr in Form1.SelectedFldr.Split(';'))
+            //foreach (string subfldr in Form1.SelectedFldr.Split(';'))
+            //{
+            if (Directory.Exists(SelectedFldr))
             {
-                WindowsFIA_FSW callFIA_FSW = new WindowsFIA_FSW();
-                await Task.Run(() => callFIA_FSW.Initiate(subfldr));
-                break;//can not run multiple watchers
+                WindowsFIA_FSW callFIA_FSW = new WindowsFIA_FSW();                
+                await Task.Run(() => callFIA_FSW.Initiate(SelectedFldr));
             }
+            //    break;//can not run multiple watchers
+            //}
         }
 
         public static async void CallBrowseProcessAsync()
@@ -400,175 +403,187 @@ namespace eSpark_WindowsFIA
             processCompleted = false;
             int counter = 1;
             String rootDir = "";
-            String[] SelectedFldr_single = SelectedFldr.Split(';');
+            //String[] SelectedFldr_single = SelectedFldr.Split(';');
 
             int TotalFiles = 0;
-            foreach (String fldr in SelectedFldr_single)
+            //foreach (String fldr in SelectedFldr_single)
+            //{
+            try
             {
-                TotalFiles += Directory.GetFiles(fldr, "*", SearchOption.AllDirectories).Length;                
+                TotalFiles += Directory.GetFiles(SelectedFldr, "*", SearchOption.AllDirectories).Length;
             }
-            loger.Log(LogLevel.Trace, "===================TotalFilesToScan=================== "+TotalFiles.ToString());
-
-
-            foreach (String fldr in SelectedFldr_single)
+            catch
             {
-                if(Regex.IsMatch(fldr, filefiltr))
+                loger.Log(LogLevel.Trace, "===================Access denied to scan folder =================== " + SelectedFldr);
+                currentfilescan = "Access Denied to Scan Folder " + SelectedFldr;
+                return Task.FromResult("Access denied to scan folder " + SelectedFldr);
+            }
+
+            //}
+            loger.Log(LogLevel.Trace, "===================TotalFilesToScan=================== " + TotalFiles.ToString());
+
+            String fldr = SelectedFldr;
+            //foreach (String fldr in SelectedFldr_single)
+            //{
+            if (Regex.IsMatch(fldr, filefiltr))
+            {
+                loger.Log(LogLevel.Trace, "===================Exculding folder =================== " + fldr);
+                return Task.FromResult("No Such Folder Exist or Folder is in Exclusion list");
+            }
+
+            string[] files = Directory.GetFiles(fldr, "*", SearchOption.AllDirectories);
+            if (files.Count() > 0)
+            {
+                stopwatch.Reset();
+                stopwatch.Start();
+
+
+                loger.Log(LogLevel.Trace, "0 > FileName  : CreationTime + : LastWriteTime : LastAccessTime : fileLengthKB : 0xGetHashCode() ");
+                String fileSizeUnit = "Bytes";
+                int dirID = 0;
+                controllerDB.InitializeFlexMoldDB();
+                rootDir = "";
+                controllerDB.DeleteData("ScannedFileLogs", " DirectoryID in (Select Distinct DirectoryID as DirectoryID from ScannedDirectoryLogs where DirectoryPath like '" + fldr + "%') ");
+                controllerDB.DeleteData("ScannedDirectoryLogs", " DirectoryPath like '" + fldr + "%'");
+
+                List<Dictionary<string, string>> FileList = new List<Dictionary<string, string>>();
+
+                foreach (string s in files)
                 {
-                    loger.Log(LogLevel.Trace, "===================Exculding folder =================== " + fldr);
-                    continue;
-                }
-
-                string[] files = Directory.GetFiles(fldr, "*", SearchOption.AllDirectories);
-                if (files.Count() > 0)
-                {
-                    stopwatch.Reset();
-                    stopwatch.Start();
-
-
-                    loger.Log(LogLevel.Trace, "0 > FileName  : CreationTime + : LastWriteTime : LastAccessTime : fileLengthKB : 0xGetHashCode() ");
-                    String fileSizeUnit = "Bytes";
-                    int dirID = 0;
-                    controllerDB.InitializeFlexMoldDB();
-                    rootDir = "";
-                    controllerDB.DeleteData("ScannedFileLogs", " DirectoryID in (Select Distinct DirectoryID as DirectoryID from ScannedDirectoryLogs where DirectoryPath like '" + SelectedFldr_single + "%') ");
-                    controllerDB.DeleteData("ScannedDirectoryLogs", " DirectoryPath like '" + SelectedFldr_single + "%'");
-
-                    List<Dictionary<string, string>> FileList = new List<Dictionary<string, string>>();
-
-                    foreach (string s in files)
+                    try
                     {
+                        FileInfo file = new FileInfo(s);
+                        currentfilescan = file.FullName;
+                        if (comboLastSelectedIndex > -1 && Regex.IsMatch(file.FullName, filefiltr.Replace("\\\\", "\\"))) //filefiltr.IsMatch(fldr))
+                        {
+                            loger.Log(LogLevel.Trace, "===================Exculding folder =================== " + file.FullName);
+                            decimal dd2 = (counter * 1.00M) / TotalFiles;
+                            progressCounter = (int)Math.Ceiling(dd2 * 100.00M);
+                            counter++;
+                            continue;
+                        }
+
+
+                        double fileLengthKB = Math.Ceiling(file.Length / 1024D);
+
+                        if (file.Length < 1024)
+                        {
+                            fileLengthKB = file.Length;
+                            fileSizeUnit = "Bytes";
+                        }
+                        else if (fileLengthKB < 1024)
+                            fileSizeUnit = "KB";
+
+                        if (fileLengthKB > 1024)
+                        {
+                            fileLengthKB = Math.Ceiling(fileLengthKB / 1024D);
+                            fileSizeUnit = "MB";
+                        }
+                        if (fileLengthKB > 1024)
+                        {
+                            fileLengthKB = Math.Ceiling(fileLengthKB / 1024D);
+                            fileSizeUnit = "GB";
+                        }
+
+                        if (fileLengthKB > MaxSize || fileLengthKB < MinSize)
+                        {
+                            loger.Log(LogLevel.Trace, "===================File Max/Min Size exceed =================== " + file.FullName);
+                            decimal dd1 = (counter * 1.00M) / TotalFiles;
+                            progressCounter = (int)Math.Ceiling(dd1 * 100.00M);
+                            counter++;
+                            continue;
+                        }
+
+                        loger.Log(LogLevel.Trace, counter + " > " + file.Name + " : " + file.CreationTime + " : " + file.LastWriteTime + " : " + file.LastAccessTime + " : " + fileLengthKB.ToString() + fileSizeUnit + " : 0x" + file.GetHashCode().ToString() + " : FileType" + file.Directory);
+
+                        if (file.Directory.FullName != rootDir)
+                        {
+                            Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
+                            dirID = file.FullName.GetHashCode();
+                            DirectoryInf.Add("DirectoryID", (dirID).ToString());
+                            DirectoryInf.Add("DirectoryPath", file.Directory.FullName);
+                            DirectoryInf.Add("ScannedDate", DateTime.UtcNow.ToString());
+
+                            rootDir = file.Directory.FullName;
+
+                            controllerDB.InsertOnlyData("ScannedDirectoryLogs", " DirectoryPath='" + rootDir + "' ", DirectoryInf);
+
+                        }
+
+                        Dictionary<String, String> fileInf = new Dictionary<string, string>();
+                        fileInf.Add("DirectoryID", dirID.ToString());
+                        fileInf.Add("FileName", file.Name);
+                        fileInf.Add("CreationDate", file.CreationTime.ToString());
+                        fileInf.Add("ModifiedDate", file.LastWriteTime.ToString());
+                        fileInf.Add("AccessedDate", file.LastAccessTime.ToString());
+                        fileInf.Add("ScannedDate", DateTime.UtcNow.ToString());
+                        fileInf.Add("FileSize", (fileLengthKB.ToString() + "" + fileSizeUnit).ToString());
+
                         try
                         {
-                            FileInfo file = new FileInfo(s);
-                            currentfilescan = file.FullName;
-                            if (Regex.IsMatch(file.FullName, filefiltr.Replace("\\\\", "\\"))) //filefiltr.IsMatch(fldr))
+                            if (calculateHash)
                             {
-                                loger.Log(LogLevel.Trace, "===================Exculding folder =================== " + file.FullName);
-                                decimal dd2 = (counter * 1.00M) / TotalFiles;
-                                progressCounter = (int)Math.Ceiling(dd2 * 100.00M);
-                                counter++;
-                                continue;
+                                fileInf.Add("FileHash", Compute256Hash(file.FullName));
                             }
+                            else fileInf.Add("FileHash", "0000000");
 
 
-                            double fileLengthKB = Math.Ceiling(file.Length / 1024D);
-
-                            if (file.Length < 1024)
-                            {
-                                fileLengthKB = file.Length;
-                                fileSizeUnit = "Bytes";
-                            }
-                            else if (fileLengthKB < 1024)
-                                fileSizeUnit = "KB";
-
-                            if (fileLengthKB > 1024)
-                            {
-                                fileLengthKB = Math.Ceiling(fileLengthKB / 1024D);
-                                fileSizeUnit = "MB";
-                            }
-                            if (fileLengthKB > 1024)
-                            {
-                                fileLengthKB = Math.Ceiling(fileLengthKB / 1024D);
-                                fileSizeUnit = "GB";
-                            }
-
-                            if (fileLengthKB > MaxSize || fileLengthKB < MinSize)
-                            {
-                                loger.Log(LogLevel.Trace, "===================File Max/Min Size exceed =================== " + file.FullName);
-                                decimal dd1 = (counter * 1.00M) / TotalFiles;
-                                progressCounter = (int)Math.Ceiling(dd1 * 100.00M);
-                                counter++;
-                                continue;
-                            }
-
-                            loger.Log(LogLevel.Trace, counter + " > " + file.Name + " : " + file.CreationTime + " : " + file.LastWriteTime + " : " + file.LastAccessTime + " : " + fileLengthKB.ToString() + fileSizeUnit + " : 0x" + file.GetHashCode().ToString() + " : FileType" + file.Directory);
-
-                            if (file.Directory.FullName != rootDir)
-                            {
-                                Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
-                                dirID = file.FullName.GetHashCode();
-                                DirectoryInf.Add("DirectoryID", (dirID).ToString());
-                                DirectoryInf.Add("DirectoryPath", file.Directory.FullName);
-                                DirectoryInf.Add("ScannedDate", DateTime.UtcNow.ToString());
-
-                                rootDir = file.Directory.FullName;
-
-                                controllerDB.InsertOnlyData("ScannedDirectoryLogs", " DirectoryPath='" + rootDir + "' ", DirectoryInf);
-
-                            }
-
-                            Dictionary<String, String> fileInf = new Dictionary<string, string>();
-                            fileInf.Add("DirectoryID", dirID.ToString());
-                            fileInf.Add("FileName", file.Name);
-                            fileInf.Add("CreationDate", file.CreationTime.ToString());
-                            fileInf.Add("ModifiedDate", file.LastWriteTime.ToString());
-                            fileInf.Add("AccessedDate", file.LastAccessTime.ToString());
-                            fileInf.Add("ScannedDate", DateTime.UtcNow.ToString());
-                            fileInf.Add("FileSize", (fileLengthKB.ToString() + "" + fileSizeUnit).ToString());
-
-                            try
-                            {
-                                if (calculateHash)
-                                {
-                                    fileInf.Add("FileHash", Compute256Hash(file.FullName));
-                                }
-                                else fileInf.Add("FileHash", "0000000");
-
-
-                            }
-                            catch (Exception ex)
-                            { fileInf.Add("FileHash", "0000000"); }
-
-
-
-                            FileList.Add(fileInf);
-
-                            if (FileList.Count() > 102400)//files records count almost in 100MBs???
-                            {
-                                foreach (Dictionary<string, string> fileRecord in FileList)
-                                    controllerDB.InsertOnlyData("ScannedFileLogs", "", fileRecord);
-
-                                FileList.Clear();
-
-                            }
-
-                            decimal dd = (counter * 1.00M) / TotalFiles;
-                            progressCounter = (int)Math.Ceiling(dd * 100.00M);
-                            counter++;
-                        }
-                        catch (UnauthorizedAccessException e)
-                        {
-                            loger.Log(LogLevel.Trace, "=================== UnauthorizedAccessException =================== " + e.Message);
                         }
                         catch (Exception ex)
+                        { fileInf.Add("FileHash", "0000000"); }
+
+
+
+                        FileList.Add(fileInf);
+
+                        if (FileList.Count() > 102400)//files records count almost in 100MBs???
                         {
-                            loger.Log(LogLevel.Trace, "=================== FolderScanning Exception =================== " + ex.Message);
+                            foreach (Dictionary<string, string> fileRecord in FileList)
+                                controllerDB.InsertOnlyData("ScannedFileLogs", "", fileRecord);
+
+                            FileList.Clear();
+
                         }
+
+                        decimal dd = (counter * 1.00M) / TotalFiles;
+                        progressCounter = (int)Math.Ceiling(dd * 100.00M);
+                        counter++;
                     }
-
-                    //StopTime = DateTime.UtcNow;
-                    //stopwatch.Stop();
-
-                    foreach (Dictionary<string, string> fileRecord in FileList)
-                        controllerDB.InsertOnlyData("ScannedFileLogs", "", fileRecord);
-                    
-                    loger.Log(LogLevel.Trace, "===================Summary=================== \r\n Folder scanned=" + fldr);
-                    loger.Log(LogLevel.Trace, "===================Summary=================== \r\n Total Files Scanned=" + counter);
-                    loger.Log(LogLevel.Trace, "===================Summary=================== \r\n TotalTime=" + stopwatch.Elapsed);
-
+                    catch (UnauthorizedAccessException e)
+                    {
+                        loger.Log(LogLevel.Trace, "=================== UnauthorizedAccessException =================== " + e.Message);
+                    }
+                    catch (Exception ex)
+                    {
+                        loger.Log(LogLevel.Trace, "=================== FolderScanning Exception =================== " + ex.Message);
+                        currentfilescan = "FolderScanning Exception:>> " + ex.Message;
+                        Thread.Sleep(1000);
+                    }
                 }
-                Thread.Sleep(50);// to flush all the messages from collectedText 
-                //processCompleted = true;
-                //return Task.FromResult(SelectedFldr);
+
+                //StopTime = DateTime.UtcNow;
+                //stopwatch.Stop();
+
+                foreach (Dictionary<string, string> fileRecord in FileList)
+                    controllerDB.InsertOnlyData("ScannedFileLogs", "", fileRecord);
+
+                loger.Log(LogLevel.Trace, "===================Summary=================== \r\n Folder scanned=" + fldr);
+                loger.Log(LogLevel.Trace, "===================Summary=================== \r\n Total Files Scanned=" + counter);
+                loger.Log(LogLevel.Trace, "===================Summary=================== \r\n TotalTime=" + stopwatch.Elapsed);
+
             }
-            //}
+            Thread.Sleep(50);// to flush all the messages from collectedText 
+                             //processCompleted = true;
+                             //return Task.FromResult(SelectedFldr);
+                             //}
+                             //}
 
 
 
-            loger.Log(LogLevel.Trace, "===================Summary=================== \r\n Total Files Scanned= (0) Files" );
-            loger.Log(LogLevel.Trace, "===================Summary=================== \r\n TotalTime=" + stopwatch.Elapsed );
+            loger.Log(LogLevel.Trace, "===================Summary=================== \r\n Total Files Scanned= (0) Files");
+            loger.Log(LogLevel.Trace, "===================Summary=================== \r\n TotalTime=" + stopwatch.Elapsed);
 
-            
+
             processCompleted = true;
             return Task.FromResult(SelectedFldr);
             //return Task.FromResult(ShowFolderBrowserDialog());
@@ -853,93 +868,143 @@ namespace eSpark_WindowsFIA
             testDialog.Dispose();
         }
 
-        private void btnExcludefile_Click(object sender, EventArgs e)
-        {
-            txtResult = this.cmbExcludefileSize.Text;
-            UserControlLabel = "Please enter Exclude File Filter Values Here";
-            ShowMyDialogBox();
-            this.cmbExcludefileSize.Text = txtResult;//combo text not replacing
-            String CollectCollection = "";
-            bool newRecExist = false;
+        //private void btnExcludefile_Click(object sender, EventArgs e)
+        //{
+        //    txtResult = this.cmbExcludefileSize.Text;
+        //    UserControlLabel = "Please enter Exclude File Filter Values Here";
+        //    ShowMyDialogBox();
+        //    this.cmbExcludefileSize.Text = txtResult;//combo text not replacing
+        //    String CollectCollection = "";
+        //    bool newRecExist = false;
 
-            if (comboLastSelectedIndex > -1 && txtResult != this.cmbExcludefileSize.Items[comboLastSelectedIndex].ToString())
-            {
-                if (txtResult.Length < 3)
-                    this.cmbExcludefileSize.Items.RemoveAt(comboLastSelectedIndex);
-                else
-                {
-                    this.cmbExcludefileSize.Items.RemoveAt(comboLastSelectedIndex);
-                    this.cmbExcludefileSize.Items.Add(txtResult);
-                    CollectCollection += cmbExcludefileSize.SelectedText.ToString() + "~";
-                }
-            }
+        //    if (comboLastSelectedIndex > -1 && txtResult != this.cmbExcludefileSize.Items[comboLastSelectedIndex].ToString())
+        //    {
+        //        if (txtResult.Length < 3)
+        //            this.cmbExcludefileSize.Items.RemoveAt(comboLastSelectedIndex);
+        //        else
+        //        {
+        //            this.cmbExcludefileSize.Items.RemoveAt(comboLastSelectedIndex);
+        //            this.cmbExcludefileSize.Items.Add(txtResult);
+        //            CollectCollection += cmbExcludefileSize.SelectedText.ToString() + "~";
+        //        }
+        //    }
 
-            
-            if (txtResult.Length > 2 && this.cmbExcludefileSize.Items != null && this.cmbExcludefileSize.Items.Count > 0)
-            {
-                for (int i = 0; i < this.cmbExcludefileSize.Items.Count; i++)
-                {
-                    if (cmbExcludefileSize.Items[i].ToString().Contains(txtResult))
-                        newRecExist = true;
 
-                    if (!this.cmbExcludefileSize.Items.Contains(cmbExcludefileSize.Items[i].ToString()))
-                        CollectCollection += cmbExcludefileSize.Items[i].ToString() + "~";
-                    else if (!CollectCollection.Contains(cmbExcludefileSize.Items[i].ToString()))
-                        CollectCollection += cmbExcludefileSize.Items[i].ToString() + "~";
-                }
-                CollectCollection = CollectCollection.Substring(0,CollectCollection.Length - 1);
+        //    if (txtResult.Length > 2 && this.cmbExcludefileSize.Items != null && this.cmbExcludefileSize.Items.Count > 0)
+        //    {
+        //        for (int i = 0; i < this.cmbExcludefileSize.Items.Count; i++)
+        //        {
+        //            if (cmbExcludefileSize.Items[i].ToString().Contains(txtResult))
+        //                newRecExist = true;
 
-                if (!newRecExist)
-                    this.cmbExcludefileSize.Items.Add(txtResult);
+        //            if (!this.cmbExcludefileSize.Items.Contains(cmbExcludefileSize.Items[i].ToString()))
+        //                CollectCollection += cmbExcludefileSize.Items[i].ToString() + "~";
+        //            else if (!CollectCollection.Contains(cmbExcludefileSize.Items[i].ToString()))
+        //                CollectCollection += cmbExcludefileSize.Items[i].ToString() + "~";
+        //        }
+        //        CollectCollection = CollectCollection.Substring(0,CollectCollection.Length - 1);
 
-                if (CollectCollection.Length > 0)
-                    SetSetting("ExcludeFileSize", CollectCollection.Trim());
-            }
-            txtResult = "";
-        }
+        //        if (!newRecExist)
+        //            this.cmbExcludefileSize.Items.Add(txtResult);
+
+        //        if (CollectCollection.Length > 0)
+        //            SetSetting("ExcludeFileSize", CollectCollection.Trim());
+        //    }
+        //    txtResult = "";
+        //}
+
+        //private void btnScanLoc_Click(object sender, EventArgs e)
+        //{
+        //    txtResult = this.cmbScanLocations.Text;
+        //    UserControlLabel = "Please enter Search Location Values Here";
+        //    ShowMyDialogBox();
+        //    this.cmbScanLocations.Text = txtResult;
+        //    bool newRecExist = false;
+        //    String CollectCollection = "";
+
+        //    if (comboLastSelectedIndex > -1 && txtResult != this.cmbScanLocations.Items[comboLastSelectedIndex].ToString())
+        //    {
+        //        if (txtResult.Length < 3)
+        //            this.cmbScanLocations.Items.RemoveAt(comboLastSelectedIndex);
+        //        else
+        //        {
+        //            this.cmbScanLocations.Items.RemoveAt(comboLastSelectedIndex);
+        //            this.cmbScanLocations.Items.Add(txtResult);
+        //            CollectCollection += cmbScanLocations.SelectedText.ToString() + "~";
+        //        }
+        //    }
+
+        //    if (txtResult.Length>2 && this.cmbScanLocations.Items != null && this.cmbScanLocations.Items.Count > 0)
+        //    {
+        //        for (int i = 0; i < this.cmbScanLocations.Items.Count; i++)
+        //        {
+        //            if (cmbScanLocations.Items[i].ToString().Contains(txtResult))
+        //                    newRecExist = true;
+
+        //            if (!CollectCollection.Contains(cmbScanLocations.Items[i].ToString()))
+        //                CollectCollection += cmbScanLocations.Items[i].ToString() + "~";
+        //            else if (!this.cmbScanLocations.Items.Contains(cmbScanLocations.Items[i].ToString()))
+        //                CollectCollection += cmbScanLocations.Items[i].ToString() + "~";
+        //        }
+
+        //        if (!newRecExist)
+        //                this.cmbScanLocations.Items.Add(txtResult);
+
+        //        CollectCollection = CollectCollection.Substring(0, CollectCollection.Length - 1);
+
+        //        if (CollectCollection.Length > 0)
+        //            SetSetting("ScanLocations", CollectCollection.Trim());
+        //    }
+
+        //    txtResult = "";
+        //}
 
         private void btnScanLoc_Click(object sender, EventArgs e)
         {
             txtResult = this.cmbScanLocations.Text;
             UserControlLabel = "Please enter Search Location Values Here";
-            ShowMyDialogBox();
-            this.cmbScanLocations.Text = txtResult;
-            bool newRecExist = false;
-            String CollectCollection = "";
 
-            if (comboLastSelectedIndex > -1 && txtResult != this.cmbScanLocations.Items[comboLastSelectedIndex].ToString())
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            FolderBrowserDialog folderDlg = new FolderBrowserDialog();
+            using (var fbd = new FolderBrowserDialog())
             {
-                if (txtResult.Length < 3)
-                    this.cmbScanLocations.Items.RemoveAt(comboLastSelectedIndex);
-                else
+                var result = fbd.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
-                    this.cmbScanLocations.Items.RemoveAt(comboLastSelectedIndex);
-                    this.cmbScanLocations.Items.Add(txtResult);
-                    CollectCollection += cmbScanLocations.SelectedText.ToString() + "~";
+                    txtResult = fbd.SelectedPath.Trim();
+                    this.cmbScanLocations.Text = txtResult;
+                    //ShowMyDialogBox();
+                    bool newRecExist = false;
+                    String CollectCollection = "";
+
+                    if (txtResult.Length > 2)//&& this.cmbScanLocations.Items != null && this.cmbScanLocations.Items.Count > 0
+                    {
+                        for (int i = 0; i < this.cmbScanLocations.Items.Count; i++)
+                        {
+                            if (cmbScanLocations.Items[i].ToString()==txtResult)
+                            {
+                                newRecExist = true;
+                                CollectCollection = "";
+                                MessageBox.Show(txtResult + " Already exist!", "Record already exist", MessageBoxButtons.OK);
+                                return;
+                            }
+
+                            if (!CollectCollection.Contains(cmbScanLocations.Items[i].ToString()))
+                                CollectCollection += cmbScanLocations.Items[i].ToString() + "~";
+                            else if (!this.cmbScanLocations.Items.Contains(cmbScanLocations.Items[i].ToString()))
+                                CollectCollection += cmbScanLocations.Items[i].ToString() + "~";
+                        }
+
+                        if (!newRecExist)
+                        {
+                            this.cmbScanLocations.Items.Add(txtResult);
+                            SetSetting("ScanLocations", CollectCollection.Trim()+ txtResult);
+                        }
+                    }
                 }
             }
 
-            if (txtResult.Length>2 && this.cmbScanLocations.Items != null && this.cmbScanLocations.Items.Count > 0)
-            {
-                for (int i = 0; i < this.cmbScanLocations.Items.Count; i++)
-                {
-                    if (cmbScanLocations.Items[i].ToString().Contains(txtResult))
-                            newRecExist = true;
-
-                    if (!CollectCollection.Contains(cmbScanLocations.Items[i].ToString()))
-                        CollectCollection += cmbScanLocations.Items[i].ToString() + "~";
-                    else if (!this.cmbScanLocations.Items.Contains(cmbScanLocations.Items[i].ToString()))
-                        CollectCollection += cmbScanLocations.Items[i].ToString() + "~";
-                }
-
-                if (!newRecExist)
-                        this.cmbScanLocations.Items.Add(txtResult);
-
-                CollectCollection = CollectCollection.Substring(0, CollectCollection.Length - 1);
-
-                if (CollectCollection.Length > 0)
-                    SetSetting("ScanLocations", CollectCollection.Trim());
-            }
 
             txtResult = "";
         }
@@ -1014,19 +1079,39 @@ namespace eSpark_WindowsFIA
             try { System.Diagnostics.Process.Start(AssemblyDirectory+"\\Help.chm"); } catch { }
         }
 
-        private void cmbScanLocations_DropDownClosed(object sender, EventArgs e)
-        {
-             comboLastSelectedIndex = this.cmbScanLocations.SelectedIndex;
-        }
+        //private void cmbScanLocations_DropDownClosed(object sender, EventArgs e)
+        //{
+        //     comboLastSelectedIndex = this.cmbScanLocations.SelectedIndex;
+        //}
 
-        private void cmbExcludefileSize_DropDownClosed(object sender, EventArgs e)
-        {
-            comboLastSelectedIndex = this.cmbExcludefileSize.SelectedIndex;
-        }
+        //private void cmbExcludefileSize_DropDownClosed(object sender, EventArgs e)
+        //{
+        //    comboLastSelectedIndex = this.cmbExcludefileSize.SelectedIndex;
+        //}
 
         private void cmbSrchFileFilter_DropDownClosed(object sender, EventArgs e)
         {
             comboLastSelectedIndex = this.cmbSrchFileFilter.SelectedIndex;
+            filefiltr = this.cmbSrchFileFilter.Items[comboLastSelectedIndex].ToString();
+        }
+
+        private void FileSystemWatcherTimer_Tick(object sender, EventArgs e)
+        {
+            if (IsFSWRunning)
+            {
+                try
+                {
+                    lblFileSystemWatcher.Text = "File System Watcher RUNNING at:" + cmbScanLocations.SelectedItem.ToString();                    
+                    String sst = this.tootltip1label2.Text.Replace("Process completed successfully!", "");
+                    if (sst.Length > 1 && !sst.Contains(currentfilescan))
+                    {
+                        this.tootltip1label2.Text = currentfilescan;
+                        IsFSWRunning = false;
+                        //lblFileSystemWatcher.Text = "File System Watcher Stopped!";
+                    }
+                }
+                catch { }
+            }            
         }
     }
 }
