@@ -94,10 +94,10 @@ namespace eSpark_WindowsFIA
 
                     Dictionary<String, String> ScheduledJobRecord = new Dictionary<string, string>();
                     //ScheduledJobRecord.Add("ScanPath", scanPath);
-                    //ScheduledJobRecord.Add("CreationDate", DateTime.UtcNow.ToString());
+                    //ScheduledJobRecord.Add("CreationDate", DateTime.Now.ToString());
                     //ScheduledJobRecord.Add("CalculateHash", calcHash.ToString());//0=false 1=true
                     //ScheduledJobRecord.Add("ScannedDate", NextScanDate.ToString());//datetime of nextScan
-                    ScheduledJobRecord.Add("ActualCompleteDate", DateTime.UtcNow.ToString());//no of days , 0 means noRepeat
+                    ScheduledJobRecord.Add("ActualCompleteDate", DateTime.Now.ToString());//no of days , 0 means noRepeat
                     ScheduledJobRecord.Add("JobCompleted", "1");//Is job Completed , 0 means False=Notyet
                     controllerDB.UpdateData("ScheduledQuartzJob", " CreationDate=" + context.JobDetail.Key.Name, ScheduledJobRecord);
                 }

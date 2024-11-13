@@ -87,7 +87,7 @@ namespace eSpark_WindowsFIA
 
              FSW_trayicon.Visible = true;
 
-            loger.Log(LogLevel.Info, "==================Starting Windows File Logger==============="+DateTime.UtcNow);
+            loger.Log(LogLevel.Info, "==================Starting Windows File Logger==============="+DateTime.Now);
 
             //resheduled Jobs from database
             QuartzScheduler.autoLoadJobsStartUp();
@@ -215,7 +215,6 @@ namespace eSpark_WindowsFIA
                     MessageBox.Show("Source database location not found!", "Source file not found", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     return;
                 }
-                UpdateLogdbEntry();
             }
 
             if (this.cmbScanLocations.Items != null && this.cmbScanLocations.Items.Count > 0)
@@ -247,7 +246,7 @@ namespace eSpark_WindowsFIA
                 // Targets where to log to: File and Console
                 var logfile = new NLog.Targets.FileTarget("logfile")
                 {
-                    FileName = "logfile.txt",
+                    FileName = (logfilePath + "\\logfile.txt").Replace("\\\\", "\\"),
                     ArchiveFileName = "logfile.{#}.txt",
                     ArchiveNumbering = NLog.Targets.ArchiveNumberingMode.Date,
                     ArchiveEvery = NLog.Targets.FileArchivePeriod.Day,
@@ -502,7 +501,7 @@ namespace eSpark_WindowsFIA
                             dirID = file.FullName.GetHashCode();
                             DirectoryInf.Add("DirectoryID", (dirID).ToString());
                             DirectoryInf.Add("DirectoryPath", file.Directory.FullName);
-                            DirectoryInf.Add("ScannedDate", DateTime.UtcNow.ToString());
+                            DirectoryInf.Add("ScannedDate", DateTime.Now.ToString());
 
                             rootDir = file.Directory.FullName;
 
@@ -516,7 +515,7 @@ namespace eSpark_WindowsFIA
                         fileInf.Add("CreationDate", file.CreationTime.ToString());
                         fileInf.Add("ModifiedDate", file.LastWriteTime.ToString());
                         fileInf.Add("AccessedDate", file.LastAccessTime.ToString());
-                        fileInf.Add("ScannedDate", DateTime.UtcNow.ToString());
+                        fileInf.Add("ScannedDate", DateTime.Now.ToString());
                         fileInf.Add("FileSize", (fileLengthKB.ToString() + "" + fileSizeUnit).ToString());
 
                         try
@@ -704,7 +703,7 @@ namespace eSpark_WindowsFIA
             }
             else
             {
-                loger.Log(LogLevel.Info, "==================Closing Windows File Logger===============" + DateTime.UtcNow);
+                loger.Log(LogLevel.Info, "==================Closing Windows File Logger===============" + DateTime.Now);
 
                 FSW_trayicon.Visible = false;
                 NLog.LogManager.Shutdown(); // Flush and close down internal threads and timers
@@ -745,7 +744,7 @@ namespace eSpark_WindowsFIA
             Process taskScheduler = new Process();
             //SCHTASKS /CREATE /SC DAILY /TN "FOLDERPATH\TASKNAME" /TR "C:\SOURCE\FOLDER\APP-OR-SCRIPT" /ST HH:MM 
             //taskschd.msc /s
-            string TaskParams = "/CREATE /SC DAILY /TN eSparkTask\\FSW" + DateTime.UtcNow.ToString() + "  /TR '" + AssemblyDirectory + "\\eSpark_WindowsFIA.exe' /ST 00:12 ";
+            string TaskParams = "/CREATE /SC DAILY /TN eSparkTask\\FSW" + DateTime.Now.ToString() + "  /TR '" + AssemblyDirectory + "\\eSpark_WindowsFIA.exe' /ST 00:12 ";
             taskScheduler.StartInfo = new ProcessStartInfo("taskschd.msc", TaskParams);
             taskScheduler.Start();
         }

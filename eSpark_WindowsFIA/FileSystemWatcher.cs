@@ -51,7 +51,7 @@ namespace eSpark_WindowsFIA
             Form1.IsFSWRunning = true;
             Form1.currentfilescan = "FileSystemWatcher Error > " + e.ToString();
             
-                Form1.loger.Log(LogLevel.Info, "==================FileSystemWatcher Error===============" + DateTime.UtcNow+" --- "+e.ToString());
+                Form1.loger.Log(LogLevel.Info, "==================FileSystemWatcher Error===============" + DateTime.Now+" --- "+e.ToString());
             Form1.IsFSWRunning = false;
         }
 
@@ -70,7 +70,7 @@ namespace eSpark_WindowsFIA
             //    //If directory already exist
             //    if (controllerDB.CheckRecordExistManual("Select DISTINCT d.DirectoryPath , f.FileName from ScannedFileLogs f , ScannedDirectoryLogs D where f.DirectoryID=D.DirectoryID and D.DirectoryPath =" + fin.Directory + "' "))
             //    {
-            //        parms.Add("CreationDate", DateTime.UtcNow.ToString());
+            //        parms.Add("CreationDate", DateTime.Now.ToString());
             //        parms.Add("DirectoryPath", e.FullPath);
             //        controllerDB.UpdateData("ScannedDirectoryLogs", " DirectoryPath =" + e.FullPath + "' ", parms);
             //    }
@@ -78,7 +78,7 @@ namespace eSpark_WindowsFIA
             //    {
             //        parms.Add("DirectoryID", e.FullPath.GetHashCode().ToString());
             //        parms.Add("DirectoryPath", e.FullPath);
-            //        parms.Add("CreationDate", DateTime.UtcNow.ToString());
+            //        parms.Add("CreationDate", DateTime.Now.ToString());
             //        parms.Add("ModifiedDate", null);
             //        parms.Add("AccessedDate", null);
             //        parms.Add("ScannedDate", null);
@@ -93,7 +93,7 @@ namespace eSpark_WindowsFIA
             //if file exist then only update the file record for FAST process
             //if (controllerDB.CheckRecordExistManual("Select DISTINCT d.DirectoryPath , f.FileName from ScannedFileLogs f , ScannedDirectoryLogs D where f.DirectoryID=D.DirectoryID and D.DirectoryPath =" + fin.Directory + "' and f.FileName ='" + fin.Name + "'"))
             //{
-            //    parms.Add("CreationDate", DateTime.UtcNow.ToString());
+            //    parms.Add("CreationDate", DateTime.Now.ToString());
             //    controllerDB.UpdateData("ScannedFileLogs", " DirectoryPath =" + e.FullPath + "' ", parms);
             //}
             //else//Inser new record for directory and File
@@ -119,7 +119,7 @@ namespace eSpark_WindowsFIA
                         if (!File.Exists(e.FullPath)) // This is directory
                         {
                             Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
-                            DirectoryInf.Add("RenamedDate", DateTime.UtcNow.ToString());
+                            DirectoryInf.Add("RenamedDate", DateTime.Now.ToString());
                             DirectoryInf.Add("DirectoryPath", e.FullPath);
                             DirectoryInf.Add("OldName", Path.GetFileName(e.OldFullPath));
 
@@ -140,7 +140,7 @@ namespace eSpark_WindowsFIA
                         if (!File.Exists(e.OldFullPath)) // This is directory
                         {
                             Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
-                            DirectoryInf.Add("RenamedDate", DateTime.UtcNow.ToString());
+                            DirectoryInf.Add("RenamedDate", DateTime.Now.ToString());
                             DirectoryInf.Add("FileName", Path.GetFileName(e.FullPath));
                             DirectoryInf.Add("OldName", Path.GetFileName(e.OldFullPath));
 
@@ -173,8 +173,7 @@ namespace eSpark_WindowsFIA
 
                 DataSet dsTemp = null;
 
-
-                if (File.Exists(e.FullPath)) // This is File deleted
+                if (Path.GetExtension(e.FullPath).Length>3 && Path.GetExtension(e.FullPath).Length < 9) // This is File deleted
                 {
                     //dsTemp = controllerDB.ReadData("ScannedDirectoryLogs", " DirectoryPath = '" + e.FullPath + "' ");
                     dsTemp = controllerDB.ReadData("ScannedDirectoryLogs", " DirectoryPath = '" + Path.GetDirectoryName(e.FullPath) + "' ");
@@ -184,7 +183,7 @@ namespace eSpark_WindowsFIA
                         DirectoryIDNew = dsTemp.Tables[0].Rows[0]["DirectoryID"].ToString();
                         parms.Clear();
                         //parms.Add("DeleteDate", DirectoryIDNew);
-                        parms.Add("DeleteDate", DateTime.UtcNow.ToString());
+                        parms.Add("DeleteDate", DateTime.Now.ToString());
                         parms.Add("FileName", "~" + e.FullPath);
                         controllerDB.UpdateData("ScannedFileLogs", " DirectoryID ='" + DirectoryIDNew + "' and FileName='" + Path.GetFileName(e.FullPath) + "' ", parms);
                         Form1.currentfilescan = "FileSystemWatcher Deleted > " + e.FullPath;
@@ -199,7 +198,7 @@ namespace eSpark_WindowsFIA
                         DirectoryIDNew = dsTemp.Tables[0].Rows[0]["DirectoryID"].ToString();
                             //Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
                             //DirectoryInf.Add("DirectoryPath", "~"+e.FullPath);
-                            //DirectoryInf.Add("DeleteDate", DateTime.UtcNow.ToString());
+                            //DirectoryInf.Add("DeleteDate", DateTime.Now.ToString());
                             
                         controllerDB.DeleteData("ScannedDirectoryLogs", " DirectoryID ='" + DirectoryIDNew + "' ");
                             
@@ -215,7 +214,7 @@ namespace eSpark_WindowsFIA
                 //    //Add directory record
                 //    Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
                 //    //DirectoryInf.Add("DirectoryID", DirectoryIDNew);
-                //    DirectoryInf.Add("DeleteDate", DateTime.UtcNow.ToString());
+                //    DirectoryInf.Add("DeleteDate", DateTime.Now.ToString());
                 //    controllerDB.UpdateData("ScannedDirectoryLogs", " DirectoryID ='" + DirectoryIDNew + "' ", DirectoryInf);
                 //}
             }
@@ -238,7 +237,7 @@ namespace eSpark_WindowsFIA
             //    //If directory already exist
             //    if (controllerDB.CheckRecordExistManual("Select DISTINCT d.DirectoryPath , f.FileName from ScannedFileLogs f , ScannedDirectoryLogs D where f.DirectoryID=D.DirectoryID and D.DirectoryPath =" + fin.Directory + "' "))
             //    {
-            //        parms.Add("CreationDate", DateTime.UtcNow.ToString());
+            //        parms.Add("CreationDate", DateTime.Now.ToString());
             //        parms.Add("DirectoryPath", e.FullPath);
             //        controllerDB.UpdateData("ScannedDirectoryLogs", " DirectoryPath =" + e.FullPath + "' ", parms);
             //    }
@@ -246,7 +245,7 @@ namespace eSpark_WindowsFIA
             //    {
             //        parms.Add("DirectoryID", e.FullPath.GetHashCode().ToString());
             //        parms.Add("DirectoryPath", e.FullPath);
-            //        parms.Add("CreationDate", DateTime.UtcNow.ToString());
+            //        parms.Add("CreationDate", DateTime.Now.ToString());
             //        parms.Add("ModifiedDate", null);
             //        parms.Add("AccessedDate", null);
             //        parms.Add("ScannedDate", null);
@@ -261,7 +260,7 @@ namespace eSpark_WindowsFIA
             //if file exist then only update the file record for FAST process
             //if (controllerDB.CheckRecordExistManual("Select DISTINCT d.DirectoryPath , f.FileName from ScannedFileLogs f , ScannedDirectoryLogs D where f.DirectoryID=D.DirectoryID and D.DirectoryPath =" + fin.Directory + "' and f.FileName ='" + fin.Name + "'"))
             //{
-            //    parms.Add("CreationDate", DateTime.UtcNow.ToString());
+            //    parms.Add("CreationDate", DateTime.Now.ToString());
             //    controllerDB.UpdateData("ScannedFileLogs", " DirectoryPath =" + e.FullPath + "' ", parms);
             //}
             //else//Inser new record for directory and File
@@ -280,14 +279,11 @@ namespace eSpark_WindowsFIA
                     {
                         DirectoryIDNew = dsTemp.Tables[0].Rows[0]["DirectoryID"].ToString();
 
-                        if (!File.Exists(e.FullPath)) // This is directory
-                        {
                             Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
-                            DirectoryInf.Add("ModifiedDate", DateTime.UtcNow.ToString());
+                            DirectoryInf.Add("ModifiedDate", DateTime.Now.ToString());
                             controllerDB.UpdateData("ScannedDirectoryLogs", " DirectoryID ='" + DirectoryIDNew + "' ", DirectoryInf);
                             Form1.currentfilescan = "FileSystemWatcher Changed > " + e.FullPath;
                             return;
-                        }
 
                     }
                 }
@@ -300,22 +296,26 @@ namespace eSpark_WindowsFIA
                     //Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
                     //DirectoryInf.Add("DirectoryID", DirectoryIDNew);
                     //DirectoryInf.Add("DirectoryPath", fin.Directory.FullName);
-                    //DirectoryInf.Add("ScannedDate", DateTime.UtcNow.ToString());
+                    //DirectoryInf.Add("ScannedDate", DateTime.Now.ToString());
 
                     //controllerDB.InsertOnlyData("ScannedDirectoryLogs", " DirectoryPath='" + fin.Directory.FullName + "' ", DirectoryInf);
 
                     //DirectoryInf.Clear();
-                    //DirectoryInf.Add("ModifiedDate", DateTime.UtcNow.ToString());
+                    //DirectoryInf.Add("ModifiedDate", DateTime.Now.ToString());
 
                     //parms.Add("FileName", fin.Name);
-                    //parms.Add("CreationDate", DateTime.UtcNow.ToString());
+                    //parms.Add("CreationDate", DateTime.Now.ToString());
                     //parms.Add("ModifiedDate", null);
                     //parms.Add("AccessedDate", null);
-                    //parms.Add("ScannedDate", DateTime.UtcNow.ToString());
+                    //parms.Add("ScannedDate", DateTime.Now.ToString());
                     //parms.Add("FileSize", fin.Length.ToString());
 
                     //controllerDB.InsertOnlyData("ScannedFileLogs", " DirectoryID ='" + DirectoryIDNew + "' ", DirectoryInf);
                     dsTemp = controllerDB.ReadData("ScannedDirectoryLogs", " DirectoryPath = '" + fin.Directory.FullName + "' ");
+                    if (dsTemp != null && dsTemp.Tables.Count > 0 && dsTemp.Tables[0].Rows.Count > 0)
+                    {
+                        DirectoryIDNew = dsTemp.Tables[0].Rows[0]["DirectoryID"].ToString();
+                    }
 
                     String fileSizeUnit = "Bytes";
                     double fileLengthKB = Math.Ceiling(fin.Length / 1024D);
@@ -341,9 +341,9 @@ namespace eSpark_WindowsFIA
 
 
                     parms.Clear();
-                    parms.Add("ModifiedDate", DateTime.UtcNow.ToString());
+                    parms.Add("ModifiedDate", DateTime.Now.ToString());
                     parms.Add("FileSize", fileLengthKB.ToString() + fileSizeUnit);
-                    controllerDB.UpdateData("ScannedFileLogs", "  DirectoryID ='" + DirectoryIDNew + "' ", parms);
+                    controllerDB.UpdateData("ScannedFileLogs", "  DirectoryID ='" + DirectoryIDNew + "' and FileName='" + fin.Name + "' ", parms);
                 }
 
             }
@@ -368,7 +368,7 @@ namespace eSpark_WindowsFIA
             //    //If directory already exist
             //    if (controllerDB.CheckRecordExistManual("Select DISTINCT d.DirectoryPath , f.FileName from ScannedFileLogs f , ScannedDirectoryLogs D where f.DirectoryID=D.DirectoryID and D.DirectoryPath =" + fin.Directory + "' "))
             //    {
-            //        parms.Add("CreationDate", DateTime.UtcNow.ToString());
+            //        parms.Add("CreationDate", DateTime.Now.ToString());
             //        parms.Add("DirectoryPath", e.FullPath);
             //        controllerDB.UpdateData("ScannedDirectoryLogs", " DirectoryPath =" + e.FullPath + "' ", parms);
             //    }
@@ -376,7 +376,7 @@ namespace eSpark_WindowsFIA
             //    {
             //        parms.Add("DirectoryID", e.FullPath.GetHashCode().ToString());
             //        parms.Add("DirectoryPath", e.FullPath);
-            //        parms.Add("CreationDate", DateTime.UtcNow.ToString());
+            //        parms.Add("CreationDate", DateTime.Now.ToString());
             //        parms.Add("ModifiedDate", null);
             //        parms.Add("AccessedDate", null);
             //        parms.Add("ScannedDate", null);
@@ -388,16 +388,18 @@ namespace eSpark_WindowsFIA
             //else //This is file                 
             //{                
 
-                //if file exist then only update the file record for FAST process
-                //if (controllerDB.CheckRecordExistManual("Select DISTINCT d.DirectoryPath , f.FileName from ScannedFileLogs f , ScannedDirectoryLogs D where f.DirectoryID=D.DirectoryID and D.DirectoryPath =" + fin.Directory + "' and f.FileName ='" + fin.Name + "'"))
-                //{
-                //    parms.Add("CreationDate", DateTime.UtcNow.ToString());
-                //    controllerDB.UpdateData("ScannedFileLogs", " DirectoryPath =" + e.FullPath + "' ", parms);
-                //}
-                //else//Inser new record for directory and File
-                //{
+            //if file exist then only update the file record for FAST process
+            //if (controllerDB.CheckRecordExistManual("Select DISTINCT d.DirectoryPath , f.FileName from ScannedFileLogs f , ScannedDirectoryLogs D where f.DirectoryID=D.DirectoryID and D.DirectoryPath =" + fin.Directory + "' and f.FileName ='" + fin.Name + "'"))
+            //{
+            //    parms.Add("CreationDate", DateTime.Now.ToString());
+            //    controllerDB.UpdateData("ScannedFileLogs", " DirectoryPath =" + e.FullPath + "' ", parms);
+            //}
+            //else//Inser new record for directory and File
+            //{
 
-            String DirectoryIDNew = e.FullPath.GetHashCode().ToString();
+            Random rnd = new Random();
+            int num = rnd.Next(int.MinValue, e.FullPath.GetHashCode());
+            String DirectoryIDNew = num.ToString();
             try
             {
                 
@@ -414,7 +416,7 @@ namespace eSpark_WindowsFIA
 
                         parms.Add("DirectoryID", DirectoryIDNew);
                         parms.Add("FileName", fin.Name);
-                        parms.Add("CreationDate", DateTime.UtcNow.ToString());
+                        parms.Add("CreationDate", DateTime.Now.ToString());
                         parms.Add("FileSize", fin.Length.ToString());
 
 
@@ -426,16 +428,17 @@ namespace eSpark_WindowsFIA
                         controllerDB.InsertOnlyData("ScannedFileLogs", null, parms);
                     }
                 }
-                else//if (File.Exists(e.FullPath))
+                else//create directory
                 {
                     DataSet dsTemp = controllerDB.ReadData("ScannedDirectoryLogs", " DirectoryPath = '" + e.FullPath + "' ");
 
-                    if (dsTemp.Tables.Count > 0 && dsTemp.Tables[0].Rows.Count < 1)
+                    if (dsTemp.Tables.Count > 0 && dsTemp.Tables[0].Rows.Count < 1)//when no record found
                     {
                         Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
                         DirectoryInf.Add("DirectoryID", DirectoryIDNew);
-                        DirectoryInf.Add("DirectoryPath", Path.GetDirectoryName(e.FullPath));
-                        DirectoryInf.Add("CreationDate", DateTime.UtcNow.ToString());
+                        //DirectoryInf.Add("DirectoryPath", Path.GetDirectoryName(e.FullPath));
+                        DirectoryInf.Add("DirectoryPath", e.FullPath);
+                        DirectoryInf.Add("CreationDate", DateTime.Now.ToString());
 
                         controllerDB.InsertOnlyData("ScannedDirectoryLogs", " DirectoryPath='" + Path.GetDirectoryName(e.FullPath) + "' ", DirectoryInf);
                     }
@@ -447,7 +450,7 @@ namespace eSpark_WindowsFIA
 
                         parms.Add("DirectoryID", DirectoryIDNew);
                         parms.Add("FileName", fin.Name);
-                        parms.Add("CreationDate", DateTime.UtcNow.ToString());
+                        parms.Add("CreationDate", DateTime.Now.ToString());
                         parms.Add("FileSize", fin.Length.ToString());
 
 

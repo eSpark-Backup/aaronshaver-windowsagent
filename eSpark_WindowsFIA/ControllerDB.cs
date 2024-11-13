@@ -66,7 +66,7 @@ namespace eSpark_WindowsFIA
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
+                Form1.loger.Log(LogLevel.Trace, " Database existRecordManual::" + ex.Message);
             }
             return false;
         }
@@ -97,6 +97,7 @@ namespace eSpark_WindowsFIA
             }
             catch (Exception ex)
             {
+                Form1.loger.Log(LogLevel.Trace, " Database ReadData::" + ex.Message);
                 connectString.Close();
                 //MessageBox.Show(ex.Message);
             }
@@ -127,6 +128,7 @@ namespace eSpark_WindowsFIA
             }
             catch (Exception ex)
             {
+                Form1.loger.Log(LogLevel.Trace, " Database DeleteData::" + ex.Message);
             }
             return false;
         }
@@ -165,6 +167,7 @@ namespace eSpark_WindowsFIA
             }
             catch (Exception ex)
             {
+                Form1.loger.Log(LogLevel.Trace, " Database UpdateData::" + ex.Message);
             }
             return false;
         }
@@ -211,6 +214,7 @@ namespace eSpark_WindowsFIA
             }
             catch (Exception ex)
             {
+                Form1.loger.Log(LogLevel.Trace, " Database InsertOnly::" + ex.Message);
                 //MessageBox.Show(ex.Message);
             }
             return false;
@@ -310,6 +314,7 @@ namespace eSpark_WindowsFIA
             }
             catch (Exception ex)
             {
+                Form1.loger.Log(LogLevel.Trace, " Database InsertOrUpdate::" + ex.Message);
                 //MessageBox.Show(ex.Message);
             }
             return false;

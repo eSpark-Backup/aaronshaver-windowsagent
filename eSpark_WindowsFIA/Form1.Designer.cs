@@ -74,8 +74,8 @@ namespace eSpark_WindowsFIA
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.FileSystemWatcherTimer = new System.Windows.Forms.Timer(this.components);
             this.lblFileSystemWatcher = new System.Windows.Forms.Label();
+            this.FileSystemWatcherTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.numMinExcludeFileSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxExcludeFileSize)).BeginInit();
             this.FSW_trayMenu.SuspendLayout();
@@ -458,12 +458,6 @@ namespace eSpark_WindowsFIA
             this.panel1.Size = new System.Drawing.Size(528, 247);
             this.panel1.TabIndex = 0;
             // 
-            // FileSystemWatcherTimer
-            // 
-            this.FileSystemWatcherTimer.Enabled = true;
-            this.FileSystemWatcherTimer.Interval = 1000;
-            this.FileSystemWatcherTimer.Tick += new System.EventHandler(this.FileSystemWatcherTimer_Tick);
-            // 
             // lblFileSystemWatcher
             // 
             this.lblFileSystemWatcher.AutoSize = true;
@@ -472,6 +466,12 @@ namespace eSpark_WindowsFIA
             this.lblFileSystemWatcher.Size = new System.Drawing.Size(148, 13);
             this.lblFileSystemWatcher.TabIndex = 20;
             this.lblFileSystemWatcher.Text = "File System Watcher stopped!";
+            // 
+            // FileSystemWatcherTimer
+            // 
+            this.FileSystemWatcherTimer.Enabled = true;
+            this.FileSystemWatcherTimer.Interval = 1000;
+            this.FileSystemWatcherTimer.Tick += new System.EventHandler(this.FileSystemWatcherTimer_Tick);
             // 
             // Form1
             // 
@@ -488,7 +488,7 @@ namespace eSpark_WindowsFIA
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Form1";
-            this.Text = "Windows File Indexing Agent - By eSpark";
+            this.Text = "Windows File Indexing Agent - By eSpark v1.0";
             this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.Form1_HelpButtonClicked);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -548,9 +548,9 @@ namespace eSpark_WindowsFIA
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Timer FileSystemWatcherTimer;
+        private System.Windows.Forms.Label lblFileSystemWatcher;
         public static System.Windows.Forms.Timer timer1;
         public static System.Windows.Forms.Timer progressbarTimer;
-        private System.Windows.Forms.Label lblFileSystemWatcher;
         //public static System.Windows.Forms.Timer timer1;
         //public static System.Windows.Forms.Timer progressbarTimer;
     }

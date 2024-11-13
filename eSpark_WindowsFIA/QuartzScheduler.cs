@@ -105,12 +105,12 @@ namespace eSpark_WindowsFIA
 
             int cmdNextRepeat = cmbRepeatDuration.SelectedIndex;
 
-            DateTime creationDate = DateTime.UtcNow;
+            DateTime creationDate = DateTime.Now;
             if ((int)numRepeatCntr.Value < 1)
                 newJob.Start(creationDate, this.dtStartDate.Value, txtScanPath.Text, chkHashCalc.Checked, (int)numRepeatCntr.Value, cmdNextRepeat, false);
             else
             {
-                //DateTime.UtcNow.ToString()
+                //DateTime.Now.ToString()
                 DateTime nextRepeatdt = this.dtStartDate.Value;
                 int cntr = 0;
                 for (int repeatcntr = 0; repeatcntr < (int)numRepeatCntr.Value; repeatcntr++)
