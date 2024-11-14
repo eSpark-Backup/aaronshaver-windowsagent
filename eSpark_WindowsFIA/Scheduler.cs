@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NLog;
 using Quartz;
 using Quartz.Impl;
 
@@ -43,8 +44,8 @@ namespace eSpark_WindowsFIA
                 .Build();
 
             // Tell Quartz to schedule the job using our trigger
-
-            await scheduler.ScheduleJob(job, trigger);
+            try { await scheduler.DeleteJob(job.Key); } catch { }
+            try {await scheduler.ScheduleJob(job, trigger);} catch { }
 
             if(!reschedule)
             {
@@ -75,7 +76,7 @@ namespace eSpark_WindowsFIA
             try
             {
                 ControllerDB controllerDB = new ControllerDB();
-                DataSet dsTemp = controllerDB.ReadData("ScheduledQuartzJob", " CreationDate='" + context.JobDetail.Key.Name+"'");
+                DataSet dsTemp = controllerDB.ReadData("ScheduledQuartzJob", " ScannedDate='" + context.JobDetail.Key.Name+ "' and JobCompleted=0 ");
 
                 if (dsTemp != null && dsTemp.Tables[0] != null && dsTemp.Tables[0].Rows.Count > 0)
                 {
@@ -99,10 +100,12 @@ namespace eSpark_WindowsFIA
                     //ScheduledJobRecord.Add("ScannedDate", NextScanDate.ToString());//datetime of nextScan
                     ScheduledJobRecord.Add("ActualCompleteDate", DateTime.Now.ToString());//no of days , 0 means noRepeat
                     ScheduledJobRecord.Add("JobCompleted", "1");//Is job Completed , 0 means False=Notyet
-                    controllerDB.UpdateData("ScheduledQuartzJob", " CreationDate=" + context.JobDetail.Key.Name, ScheduledJobRecord);
+                    controllerDB.UpdateData("ScheduledQuartzJob", " ScannedDate='" + context.JobDetail.Key.Name+"' ", ScheduledJobRecord);
                 }
             }
-            catch { }
+            catch (Exception ee){
+                Form1.loger.Log(LogLevel.Error, "===================SchedullerErr =================== \r\n " + ee.Message);
+            }
 
             return null;
             

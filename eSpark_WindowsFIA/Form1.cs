@@ -350,7 +350,6 @@ namespace eSpark_WindowsFIA
             SelectedFldr = "";
             calculateHash = false;
 
-
             if (!string.IsNullOrWhiteSpace(path))
             {
                 SelectedFldr = path;
@@ -359,7 +358,8 @@ namespace eSpark_WindowsFIA
                 CallFileSystemWatcherAsync();
                 CallBrowseProcessAsync();
                 timer1.Start();
-                progressbarTimer.Start();                
+                progressbarTimer.Start();
+                currentfilescan = ">>>>Scheduled Job Started at: "+DateTime.Now;
             }
 
         }
@@ -493,7 +493,7 @@ namespace eSpark_WindowsFIA
                             continue;
                         }
 
-                        loger.Log(LogLevel.Trace, counter + " > " + file.Name + " : " + file.CreationTime + " : " + file.LastWriteTime + " : " + file.LastAccessTime + " : " + fileLengthKB.ToString() + fileSizeUnit + " : 0x" + file.GetHashCode().ToString() + " : FileType" + file.Directory);
+                        loger.Log(LogLevel.Trace, counter + " > " + file.Name + " : " + file.CreationTime + " : " + file.LastWriteTime + " : " + file.LastAccessTime + " : " + fileLengthKB.ToString() + fileSizeUnit + " : 0x" + file.GetHashCode().ToString() + " : FileDirectory: " + file.Directory);
 
                         if (file.Directory.FullName != rootDir)
                         {
@@ -501,6 +501,9 @@ namespace eSpark_WindowsFIA
                             dirID = file.FullName.GetHashCode();
                             DirectoryInf.Add("DirectoryID", (dirID).ToString());
                             DirectoryInf.Add("DirectoryPath", file.Directory.FullName);
+                            DirectoryInf.Add("CreationDate", file.Directory.CreationTime.ToString());
+                            DirectoryInf.Add("ModifiedDate", file.Directory.LastWriteTime.ToString());
+                            DirectoryInf.Add("AccessedDate", file.Directory.LastAccessTime.ToString());
                             DirectoryInf.Add("ScannedDate", DateTime.Now.ToString());
 
                             rootDir = file.Directory.FullName;
@@ -784,7 +787,9 @@ namespace eSpark_WindowsFIA
 
         private void Quartz_toolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(quartzScheduler!=null)
+            thisForm = this;
+
+            if (quartzScheduler!=null)
                 quartzScheduler.Show();
         }
 

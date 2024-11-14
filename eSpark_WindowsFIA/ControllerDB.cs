@@ -60,7 +60,12 @@ namespace eSpark_WindowsFIA
                 DataTable dt_temp = new DataTable();
                 
                 adapter.Fill(dt_temp);
-                connectString.Close();
+                try
+                {
+                    if (connectString.State != ConnectionState.Closed) connectString.Close();
+                }
+                catch { }
+
 
                 return dt_temp.Rows.Count > 0 ? true : false;
             }
@@ -91,14 +96,24 @@ namespace eSpark_WindowsFIA
                 adapter = new SQLiteDataAdapter(sql, connectString);
                 ds.Reset();
                 adapter.Fill(ds);
-                connectString.Close();
+                try
+                {
+                    if (connectString.State != ConnectionState.Closed) connectString.Close();
+                }
+                catch { }
+
 
                 return ds;
             }
             catch (Exception ex)
             {
                 Form1.loger.Log(LogLevel.Trace, " Database ReadData::" + ex.Message);
-                connectString.Close();
+                try
+                {
+                    if (connectString.State != ConnectionState.Closed) connectString.Close();
+                }
+                catch { }
+
                 //MessageBox.Show(ex.Message);
             }
             return null;
@@ -108,6 +123,7 @@ namespace eSpark_WindowsFIA
         {
             try
             {
+
                 if (connectString.State != ConnectionState.Open)
                     connectString.Open();
 
@@ -122,7 +138,12 @@ namespace eSpark_WindowsFIA
                 ds.Reset();
                 adapter.Fill(ds);
                 //dt = ds.Tables[0];
-                connectString.Close();
+                try
+                {
+                    if (connectString.State != ConnectionState.Closed) connectString.Close();
+                }
+                catch { }
+
 
                 return true;
             }
@@ -161,7 +182,11 @@ namespace eSpark_WindowsFIA
                 ds.Reset();
                 adapter.Fill(ds);
                 //dt = ds.Tables[0];
-                connectString.Close();
+                try
+                {
+                    if (connectString.State != ConnectionState.Closed) connectString.Close();
+                }
+                catch { }
 
                 return true;
             }
@@ -208,7 +233,12 @@ namespace eSpark_WindowsFIA
                 adapter = new SQLiteDataAdapter(sql, connectString);
                 ds.Reset();
                 adapter.Fill(ds);
-                connectString.Close();
+                try
+                {
+                    if (connectString.State != ConnectionState.Closed) connectString.Close();
+                }
+                catch { }
+
 
                 return true;
             }
@@ -242,7 +272,12 @@ namespace eSpark_WindowsFIA
                 adapter.Fill(ds);
                 //dt = ds.Tables[0];
                 //dataGridView1.DataSource = dt;
-                connectString.Close();
+                try
+                {
+                    if (connectString.State != ConnectionState.Closed) connectString.Close();
+                }
+                catch { }
+
 
                 //if record exist then update it else insert it
                 if (ds != null && ds.Tables[0].Rows.Count > 0)
@@ -271,7 +306,12 @@ namespace eSpark_WindowsFIA
                     adapter.Fill(ds);
                     //dt = ds.Tables[0];
                     //dataGridView1.DataSource = dt;
-                    connectString.Close();
+                    try
+                    {
+                        if (connectString.State != ConnectionState.Closed) connectString.Close();
+                    }
+                    catch { }
+
 
                     return true;
                 }
@@ -307,7 +347,12 @@ namespace eSpark_WindowsFIA
                     adapter.Fill(ds);
                     //dt = ds.Tables[0];
                     //dataGridView1.DataSource = dt;
-                    connectString.Close();
+                    try
+                    {
+                        if (connectString.State != ConnectionState.Closed) connectString.Close();
+                    }
+                    catch { }
+
 
                     return true;
                 }

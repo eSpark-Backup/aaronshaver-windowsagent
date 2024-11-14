@@ -151,7 +151,8 @@ namespace eSpark_WindowsFIA
                 this.Hide();
                 Form1.SetOnTop();
             }
-            catch { }
+            catch(Exception ep) { Form1.loger.Log(LogLevel.Error, "===================SchedullerErr =================== \r\n " + ep.Message); 
+            }
         }
 
     private void btnScanPath_Click(object sender, EventArgs e)
