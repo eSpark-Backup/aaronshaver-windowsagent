@@ -26,12 +26,14 @@ namespace eSpark_WindowsFIA
         //public static String collectedText = "";
         //public static StringBuilder sb_collectedText = new StringBuilder();
         public static bool processCompleted = false;
+        private static object processIsRunning = false;
         public static bool calculateHash = false;
         public static bool IsFSWRunning = false;
         public static int progressCounter = 0;
         public static int LogsLevel = 0;
         //public static DateTime StartTime = DateTime.UtcNow;
         //public static DateTime StopTime = DateTime.UtcNow;
+        public static object lockwait = true;
         public static Stopwatch stopwatch = new Stopwatch();
         public static String SelectedFldr = "";
         public static String UserControlLabel = "";
@@ -46,16 +48,25 @@ namespace eSpark_WindowsFIA
         private bool userExit = false;
         private static String filefiltr = "";
         public static String currentfilescan = "";
+        public static String rePattern = "";
         private string[] excFileSize;
-        
+        public static DataTable DS_FSW = null;        
         
 
-        private NLog.Config.LoggingConfiguration config = new NLog.Config.LoggingConfiguration();
+        public static NLog.Config.LoggingConfiguration config = new NLog.Config.LoggingConfiguration();
 
         public Form1(String[] Runit)
         {
             InitializeComponent();
-            
+
+            DS_FSW = new DataTable();
+            DS_FSW.Columns.AddRange(new[] {
+                    new DataColumn("EventType", typeof(int)),//1=create,2=change/modify,3=delete,4=rename
+                    new DataColumn("FullPath", typeof(string)),
+                    new DataColumn("OldFullPath", typeof(string)),
+                    new DataColumn("DatetimeCalled", typeof(DateTime))
+            });
+
             try { this.txtLogsAndDBpath.Text = GetSetting("LogsDBPath"); } catch { }
             try { //this.cmbExcludefileSize.Items.AddRange(); 
                 excFileSize = GetSetting("ExcludeFileSize").Split('~');
@@ -173,8 +184,8 @@ namespace eSpark_WindowsFIA
             NLog.LogManager.Configuration = config;
             loger = NLog.LogManager.GetCurrentClassLogger();
 
-
         }
+
 
         private void btnFilesSearch_Click(object sender, EventArgs e)
         {
@@ -294,10 +305,27 @@ namespace eSpark_WindowsFIA
             }
             catch { }
 
+            fileFilterscanMethod();
+            //this.txtLogsAndDBpath.Text
+
+            loger.Log(LogLevel.Trace, "===================Starting Scan =================== \r\n " + SelectedFldr);
+            if (this.chkHash.Checked)
+                calculateHash = true;
+
+            CallFileSystemWatcherAsync();
+            CallBrowseProcessAsync();
+            timer1.Start();
+            progressbarTimer.Start();
+            this.lblFileSystemWatcher.Text = "File System Watcher RUNNING at:" + cmbScanLocations.SelectedItem.ToString();
+            //this.btnFilesSearch.Enabled = false;
+        }
+
+        private void fileFilterscanMethod()
+        {
             if (this.cmbSrchFileFilter.Items != null && this.cmbSrchFileFilter.Items.Count > 0)
             {
                 bool isValid = true;
-                String rePattern = "";
+                
                 for (int i = 0; i < this.cmbSrchFileFilter.Items.Count; i++)
                 {
                     try
@@ -312,8 +340,11 @@ namespace eSpark_WindowsFIA
                             updatedregexp = updatedregexp.Remove(updatedregexp.Length - 1);
 
                         try { Regex.Match("", updatedregexp); }
-                        catch (ArgumentException) { loger.Log(LogLevel.Trace, "===================FileFilter Bad Expression =================== " + this.cmbSrchFileFilter.Items[i].ToString().Trim());
-                            isValid = false; }
+                        catch (ArgumentException)
+                        {
+                            loger.Log(LogLevel.Trace, "===================FileFilter Bad Expression =================== " + this.cmbSrchFileFilter.Items[i].ToString().Trim());
+                            isValid = false;
+                        }
 
                         rePattern += updatedregexp.Trim() + "|";
                     }
@@ -330,38 +361,108 @@ namespace eSpark_WindowsFIA
 
                 filefiltr = rePattern;
             }
-
-            //this.txtLogsAndDBpath.Text
-
-            loger.Log(LogLevel.Trace, "===================Starting Scan =================== \r\n " + SelectedFldr);
-            if (this.chkHash.Checked)
-                calculateHash = true;
-
-            CallFileSystemWatcherAsync();
-            CallBrowseProcessAsync();
-            timer1.Start();
-            progressbarTimer.Start();
-            this.btnFilesSearch.Enabled = false;
         }
 
-        public static void CalledByScheduler(String path)
+        private static void fileFilterscanMethodstatic()
         {
-            progressCounter = 0;
-            SelectedFldr = "";
-            calculateHash = false;
+            bool isValid = true;
+
+            try
+            {
+                for (int i = 0; i < ConfigurationManager.AppSettings["ExcludeFilterList"].Split('~').Count(); i++)
+                {
+                    try
+                    {
+                        //"!*\bin\*;!*\obj\*;!*\.*~;!*\Windows\*;!*\Program Files\*;!*\Program Files (x86)\*;!*\Users\*"
+                        String updatedregexp = ConfigurationManager.AppSettings["ExcludeFilterList"].Split('~')[i].ToString();
+                        updatedregexp = Regex.Replace(updatedregexp, @"\s+", @"\s*");
+                        updatedregexp = Regex.Replace(updatedregexp, @"\;", @"|");
+                        updatedregexp = Regex.Replace(updatedregexp, @"\\", @"\\\\");
+
+                        if (updatedregexp.Substring(updatedregexp.Length - 3).Contains('|'))
+                            updatedregexp = updatedregexp.Remove(updatedregexp.Length - 1);
+
+                        try { Regex.Match("", updatedregexp); }
+                        catch (ArgumentException)
+                        {
+                            loger.Log(LogLevel.Trace, "===================FileFilter Bad Expression =================== " + ConfigurationManager.AppSettings["ExcludeFilterList"].Split('~')[i].ToString().Trim());
+                            isValid = false;
+                        }
+
+                        rePattern += updatedregexp.Trim() + "|";
+                    }
+                    catch { }
+                }
+                if (!isValid)
+                {
+                    //MessageBox.Show("Search file filter has some invalid values.", "Invalid file filter values!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                if (rePattern.Substring(rePattern.Length - 3).Contains('|'))
+                    rePattern = rePattern.Remove(rePattern.Length - 1);
+
+                filefiltr = rePattern;
+            }
+            catch(Exception ex) { loger.Log(LogLevel.Trace, "===================fileFiltersScanStatic=================== !!! "+ex.StackTrace); }
+        }
+
+        public static void CalledByScheduler(String path,bool calcHsh)
+        {
+                progressCounter = 0;
+                SelectedFldr = path;
+                calculateHash = calcHsh;
+
+            try
+            {
+                LogsLevel = int.Parse(ConfigurationManager.AppSettings["LogsLevel"].ToString());
+                logfilePath = ConfigurationManager.AppSettings["LogsDBPath"].ToString();
+
+                // Targets where to log to: File and Console
+                var logfile = new NLog.Targets.FileTarget("logfile")
+                {
+                    FileName = (logfilePath + "\\logfile.txt").Replace("\\\\", "\\"),
+                    ArchiveFileName = "logfile.{#}.txt",
+                    ArchiveNumbering = NLog.Targets.ArchiveNumberingMode.Date,
+                    ArchiveEvery = NLog.Targets.FileArchivePeriod.Day,
+                    ArchiveDateFormat = "yyyyMMdd"
+                };
+
+                config = new NLog.Config.LoggingConfiguration();
+                if (LogsLevel > 0) config.AddRule(LogLevel.Error, LogLevel.Fatal, logfile);
+                if (LogsLevel > 1) config.AddRule(LogLevel.Trace, LogLevel.Trace, logfile);
+                config.Reload();
+
+                // Apply config           
+                NLog.LogManager.Configuration = config;
+                loger = NLog.LogManager.GetCurrentClassLogger();
+            }
+            catch { }
+
+            try
+            {
+                MaxSize = MaxSize;
+            }
+            catch { }
+
+            try
+            {
+                MinSize = MinSize;
+            }
+            catch { }
 
             if (!string.IsNullOrWhiteSpace(path))
-            {
-                SelectedFldr = path;
-                loger.Log(LogLevel.Trace, "===================Starting Scheduler Scan =================== \r\n " + SelectedFldr);
+                {
+                    SelectedFldr = path;
+                    loger.Log(LogLevel.Trace, "===================Starting Scheduler Scan =================== " + SelectedFldr);
 
-                CallFileSystemWatcherAsync();
-                CallBrowseProcessAsync();
-                timer1.Start();
-                progressbarTimer.Start();
-                currentfilescan = ">>>>Scheduled Job Started at: "+DateTime.Now;
-            }
-
+                    //if(lblFileSystemWatcher.Text.Contains("File System Watcher RUNNING at"))
+                    //    CallFileSystemWatcherAsync();
+                    CallBrowseProcessAsync();
+                    timer1.Start();
+                    progressbarTimer.Start();
+                    currentfilescan = ">>>>Scheduled Job Started at: " + DateTime.Now;
+                }
         }
 
         public static async void CallFileSystemWatcherAsync()
@@ -391,202 +492,228 @@ namespace eSpark_WindowsFIA
 
         public static Task<string> ShowFolderBrowserDialogAsync()
         {
-            if (processCompleted)
+            lock (processIsRunning)
             {
-                loger.Log(LogLevel.Trace, "===================Summary=================== \r\n Process is already running!!! ");
-                return Task.FromResult("Process is already running");
-            }
 
+                //if (processIsRunning)
+                //{
+                //    loger.Log(LogLevel.Trace, "===================Summary=================== \r\n Process is already running!!! ");
+                //    return Task.FromResult("Process is already running");
+                //}
 
-            ControllerDB controllerDB = new ControllerDB();
-            processCompleted = false;
-            int counter = 1;
-            String rootDir = "";
-            //String[] SelectedFldr_single = SelectedFldr.Split(';');
+                //processIsRunning = true;
+                ControllerDB controllerDB = new ControllerDB();
+                processCompleted = false;
+                int counter = 1;
+                String rootDir = "";
+                //String[] SelectedFldr_single = SelectedFldr.Split(';');
 
-            int TotalFiles = 0;
-            //foreach (String fldr in SelectedFldr_single)
-            //{
-            try
-            {
-                TotalFiles += Directory.GetFiles(SelectedFldr, "*", SearchOption.AllDirectories).Length;
-            }
-            catch
-            {
-                loger.Log(LogLevel.Trace, "===================Access denied to scan folder =================== " + SelectedFldr);
-                currentfilescan = "Access Denied to Scan Folder " + SelectedFldr;
-                return Task.FromResult("Access denied to scan folder " + SelectedFldr);
-            }
-
-            //}
-            loger.Log(LogLevel.Trace, "===================TotalFilesToScan=================== " + TotalFiles.ToString());
-
-            String fldr = SelectedFldr;
-            //foreach (String fldr in SelectedFldr_single)
-            //{
-            if (Regex.IsMatch(fldr, filefiltr))
-            {
-                loger.Log(LogLevel.Trace, "===================Exculding folder =================== " + fldr);
-                return Task.FromResult("No Such Folder Exist or Folder is in Exclusion list");
-            }
-
-            string[] files = Directory.GetFiles(fldr, "*", SearchOption.AllDirectories);
-            if (files.Count() > 0)
-            {
-                stopwatch.Reset();
-                stopwatch.Start();
-
-
-                loger.Log(LogLevel.Trace, "0 > FileName  : CreationTime + : LastWriteTime : LastAccessTime : fileLengthKB : 0xGetHashCode() ");
-                String fileSizeUnit = "Bytes";
-                int dirID = 0;
-                controllerDB.InitializeFlexMoldDB();
-                rootDir = "";
-                controllerDB.DeleteData("ScannedFileLogs", " DirectoryID in (Select Distinct DirectoryID as DirectoryID from ScannedDirectoryLogs where DirectoryPath like '" + fldr + "%') ");
-                controllerDB.DeleteData("ScannedDirectoryLogs", " DirectoryPath like '" + fldr + "%'");
-
-                List<Dictionary<string, string>> FileList = new List<Dictionary<string, string>>();
-
-                foreach (string s in files)
+                int TotalFiles = 0;
+                //foreach (String fldr in SelectedFldr_single)
+                //{
+                try
                 {
-                    try
-                    {
-                        FileInfo file = new FileInfo(s);
-                        currentfilescan = file.FullName;
-                        if (comboLastSelectedIndex > -1 && Regex.IsMatch(file.FullName, filefiltr.Replace("\\\\", "\\"))) //filefiltr.IsMatch(fldr))
-                        {
-                            loger.Log(LogLevel.Trace, "===================Exculding folder =================== " + file.FullName);
-                            decimal dd2 = (counter * 1.00M) / TotalFiles;
-                            progressCounter = (int)Math.Ceiling(dd2 * 100.00M);
-                            counter++;
-                            continue;
-                        }
-
-
-                        double fileLengthKB = Math.Ceiling(file.Length / 1024D);
-
-                        if (file.Length < 1024)
-                        {
-                            fileLengthKB = file.Length;
-                            fileSizeUnit = "Bytes";
-                        }
-                        else if (fileLengthKB < 1024)
-                            fileSizeUnit = "KB";
-
-                        if (fileLengthKB > 1024)
-                        {
-                            fileLengthKB = Math.Ceiling(fileLengthKB / 1024D);
-                            fileSizeUnit = "MB";
-                        }
-                        if (fileLengthKB > 1024)
-                        {
-                            fileLengthKB = Math.Ceiling(fileLengthKB / 1024D);
-                            fileSizeUnit = "GB";
-                        }
-
-                        if (fileLengthKB > MaxSize || fileLengthKB < MinSize)
-                        {
-                            loger.Log(LogLevel.Trace, "===================File Max/Min Size exceed =================== " + file.FullName);
-                            decimal dd1 = (counter * 1.00M) / TotalFiles;
-                            progressCounter = (int)Math.Ceiling(dd1 * 100.00M);
-                            counter++;
-                            continue;
-                        }
-
-                        loger.Log(LogLevel.Trace, counter + " > " + file.Name + " : " + file.CreationTime + " : " + file.LastWriteTime + " : " + file.LastAccessTime + " : " + fileLengthKB.ToString() + fileSizeUnit + " : 0x" + file.GetHashCode().ToString() + " : FileDirectory: " + file.Directory);
-
-                        if (file.Directory.FullName != rootDir)
-                        {
-                            Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
-                            dirID = file.FullName.GetHashCode();
-                            DirectoryInf.Add("DirectoryID", (dirID).ToString());
-                            DirectoryInf.Add("DirectoryPath", file.Directory.FullName);
-                            DirectoryInf.Add("CreationDate", file.Directory.CreationTime.ToString());
-                            DirectoryInf.Add("ModifiedDate", file.Directory.LastWriteTime.ToString());
-                            DirectoryInf.Add("AccessedDate", file.Directory.LastAccessTime.ToString());
-                            DirectoryInf.Add("ScannedDate", DateTime.Now.ToString());
-
-                            rootDir = file.Directory.FullName;
-
-                            controllerDB.InsertOnlyData("ScannedDirectoryLogs", " DirectoryPath='" + rootDir + "' ", DirectoryInf);
-
-                        }
-
-                        Dictionary<String, String> fileInf = new Dictionary<string, string>();
-                        fileInf.Add("DirectoryID", dirID.ToString());
-                        fileInf.Add("FileName", file.Name);
-                        fileInf.Add("CreationDate", file.CreationTime.ToString());
-                        fileInf.Add("ModifiedDate", file.LastWriteTime.ToString());
-                        fileInf.Add("AccessedDate", file.LastAccessTime.ToString());
-                        fileInf.Add("ScannedDate", DateTime.Now.ToString());
-                        fileInf.Add("FileSize", (fileLengthKB.ToString() + "" + fileSizeUnit).ToString());
-
-                        try
-                        {
-                            if (calculateHash)
-                            {
-                                fileInf.Add("FileHash", Compute256Hash(file.FullName));
-                            }
-                            else fileInf.Add("FileHash", "0000000");
-
-
-                        }
-                        catch (Exception ex)
-                        { fileInf.Add("FileHash", "0000000"); }
-
-
-
-                        FileList.Add(fileInf);
-
-                        if (FileList.Count() > 102400)//files records count almost in 100MBs???
-                        {
-                            foreach (Dictionary<string, string> fileRecord in FileList)
-                                controllerDB.InsertOnlyData("ScannedFileLogs", "", fileRecord);
-
-                            FileList.Clear();
-
-                        }
-
-                        decimal dd = (counter * 1.00M) / TotalFiles;
-                        progressCounter = (int)Math.Ceiling(dd * 100.00M);
-                        counter++;
-                    }
-                    catch (UnauthorizedAccessException e)
-                    {
-                        loger.Log(LogLevel.Trace, "=================== UnauthorizedAccessException =================== " + e.Message);
-                    }
-                    catch (Exception ex)
-                    {
-                        loger.Log(LogLevel.Trace, "=================== FolderScanning Exception =================== " + ex.Message);
-                        currentfilescan = "FolderScanning Exception:>> " + ex.Message;
-                        Thread.Sleep(1000);
-                    }
+                    TotalFiles += Directory.GetFiles(SelectedFldr, "*", SearchOption.AllDirectories).Length;
+                }
+                catch
+                {
+                    loger.Log(LogLevel.Trace, "===================Access denied to scan folder =================== " + SelectedFldr);
+                    currentfilescan = "Access Denied to Scan Folder " + SelectedFldr;
+                    processCompleted = true;
+                    //processIsRunning = false;
+                    return Task.FromResult("Access denied to scan folder " + SelectedFldr);
                 }
 
-                //StopTime = DateTime.UtcNow;
-                //stopwatch.Stop();
+                //}
+                loger.Log(LogLevel.Trace, "===================TotalFilesToScan=================== " + TotalFiles.ToString());
 
-                foreach (Dictionary<string, string> fileRecord in FileList)
-                    controllerDB.InsertOnlyData("ScannedFileLogs", "", fileRecord);
+                String fldr = SelectedFldr;
+                //foreach (String fldr in SelectedFldr_single)
+                //{
+                if (filefiltr == null || filefiltr.Length < 4)
+                    fileFilterscanMethodstatic();
 
-                loger.Log(LogLevel.Trace, "===================Summary=================== \r\n Folder scanned=" + fldr);
-                loger.Log(LogLevel.Trace, "===================Summary=================== \r\n Total Files Scanned=" + counter);
-                loger.Log(LogLevel.Trace, "===================Summary=================== \r\n TotalTime=" + stopwatch.Elapsed);
+                if (Regex.IsMatch(fldr, filefiltr))
+                {
+                    loger.Log(LogLevel.Trace, "===================ExclusionList=================== " + filefiltr);
+                    loger.Log(LogLevel.Trace, "===================Exculding folder =================== " + fldr);
+                    processCompleted = true;
+                    //processIsRunning = false;
+                    return Task.FromResult("No Such Folder Exist or Folder is in Exclusion list");
+                }
 
+                string[] files = Directory.GetFiles(fldr, "*", SearchOption.AllDirectories);
+                if (files.Count() > 0)
+                {
+                    stopwatch.Reset();
+                    stopwatch.Start();
+
+
+                    loger.Log(LogLevel.Trace, "0 > FileName  : CreationTime + : LastWriteTime : LastAccessTime : fileLengthKB : 0xGetHashCode() ");
+                    String fileSizeUnit = "Bytes";
+                    int dirID = 0;
+                    controllerDB.InitializeFlexMoldDB();
+                    rootDir = "";
+
+                    //remoce all the files and directory on root
+                    controllerDB.DeleteData("ScannedFileLogs", " DirectoryID in (Select Distinct DirectoryID as DirectoryID from ScannedDirectoryLogs where DirectoryPath = '" + fldr + "') ");
+                    controllerDB.DeleteData("ScannedDirectoryLogs", " DirectoryPath = '" + fldr + "'");
+
+                    //remoce all the files and directory on child
+                    controllerDB.DeleteData("ScannedFileLogs", " DirectoryID in (Select Distinct DirectoryID as DirectoryID from ScannedDirectoryLogs where DirectoryPath like '" + fldr + "\\%') ");
+                    controllerDB.DeleteData("ScannedDirectoryLogs", " DirectoryPath like '" + fldr + "\\%'");
+
+                    //remoce all the files and directory that are previously deleted
+                    controllerDB.DeleteData("ScannedFileLogs", " DirectoryID in (Select Distinct DirectoryID as DirectoryID from ScannedDirectoryLogs where DirectoryPath = '~" + fldr + "') ");
+                    controllerDB.DeleteData("ScannedDirectoryLogs", " DirectoryPath = '~" + fldr + "'");
+                    controllerDB.DeleteData("ScannedFileLogs", " DirectoryID in (Select Distinct DirectoryID as DirectoryID from ScannedDirectoryLogs where DirectoryPath like '~" + fldr + "\\%') ");
+                    controllerDB.DeleteData("ScannedDirectoryLogs", " DirectoryPath like '~" + fldr + "\\%'");
+
+
+                    List<Dictionary<string, string>> FileList = new List<Dictionary<string, string>>();
+
+                    foreach (string s in files)
+                    {
+                        try
+                        {
+                            FileInfo file = new FileInfo(s);
+                            currentfilescan = file.FullName;
+                            if (comboLastSelectedIndex > -1 && Regex.IsMatch(file.FullName, filefiltr.Replace("\\\\", "\\"))) //filefiltr.IsMatch(fldr))
+                            {
+                                loger.Log(LogLevel.Trace, "===================Exculding folder =================== " + file.FullName);
+                                decimal dd2 = (counter * 1.00M) / TotalFiles;
+                                progressCounter = (int)Math.Ceiling(dd2 * 100.00M);
+                                counter++;
+                                continue;
+                            }
+
+
+                            double fileLengthKB = Math.Ceiling(file.Length / 1024D);
+
+                            if (file.Length < 1024)
+                            {
+                                fileLengthKB = file.Length;
+                                fileSizeUnit = "Bytes";
+                            }
+                            else if (fileLengthKB < 1024)
+                                fileSizeUnit = "KB";
+
+                            if (fileLengthKB > 1024)
+                            {
+                                fileLengthKB = Math.Ceiling(fileLengthKB / 1024D);
+                                fileSizeUnit = "MB";
+                            }
+                            if (fileLengthKB > 1024)
+                            {
+                                fileLengthKB = Math.Ceiling(fileLengthKB / 1024D);
+                                fileSizeUnit = "GB";
+                            }
+
+                            if (fileLengthKB > MaxSize || fileLengthKB < MinSize)
+                            {
+                                loger.Log(LogLevel.Trace, "===================File Max/Min Size exceed =================== " + file.FullName);
+                                decimal dd1 = (counter * 1.00M) / TotalFiles;
+                                progressCounter = (int)Math.Ceiling(dd1 * 100.00M);
+                                counter++;
+                                continue;
+                            }
+
+                            loger.Log(LogLevel.Trace, counter + " > " + file.Name + " : " + file.CreationTime + " : " + file.LastWriteTime + " : " + file.LastAccessTime + " : " + fileLengthKB.ToString() + fileSizeUnit + " : 0x" + file.GetHashCode().ToString() + " : FileDirectory: " + file.Directory);
+
+                            if (file.Directory.FullName != rootDir)
+                            {
+                                Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
+                                dirID = file.FullName.GetHashCode();
+                                DirectoryInf.Add("DirectoryID", (dirID).ToString());
+                                DirectoryInf.Add("DirectoryPath", file.Directory.FullName);
+                                DirectoryInf.Add("CreationDate", file.Directory.CreationTime.ToString());
+                                DirectoryInf.Add("ModifiedDate", file.Directory.LastWriteTime.ToString());
+                                DirectoryInf.Add("AccessedDate", file.Directory.LastAccessTime.ToString());
+                                DirectoryInf.Add("ScannedDate", DateTime.Now.ToString());
+
+                                rootDir = file.Directory.FullName;
+
+                                controllerDB.InsertOnlyData("ScannedDirectoryLogs", " DirectoryPath='" + rootDir + "' ", DirectoryInf);
+
+                            }
+
+                            Dictionary<String, String> fileInf = new Dictionary<string, string>();
+                            fileInf.Add("DirectoryID", dirID.ToString());
+                            fileInf.Add("FileName", file.Name);
+                            fileInf.Add("CreationDate", file.CreationTime.ToString());
+                            fileInf.Add("ModifiedDate", file.LastWriteTime.ToString());
+                            fileInf.Add("AccessedDate", file.LastAccessTime.ToString());
+                            fileInf.Add("ScannedDate", DateTime.Now.ToString());
+                            fileInf.Add("FileSize", (fileLengthKB.ToString() + "" + fileSizeUnit).ToString());
+
+                            try
+                            {
+                                if (calculateHash)
+                                {
+                                    fileInf.Add("FileHash", Compute256Hash(file.FullName));
+                                }
+                                else fileInf.Add("FileHash", "0000000");
+
+
+                            }
+                            catch
+                            { fileInf.Add("FileHash", "0000000"); }
+
+
+
+                            FileList.Add(fileInf);
+
+                            if (FileList.Count() > 102400)//files records count almost in 100MBs???
+                            {
+                                foreach (Dictionary<string, string> fileRecord in FileList)
+                                    controllerDB.InsertOnlyData("ScannedFileLogs", "", fileRecord);
+
+                                FileList.Clear();
+
+                            }
+
+                            decimal dd = (counter * 1.00M) / TotalFiles;
+                            progressCounter = (int)Math.Ceiling(dd * 100.00M);
+                            counter++;
+                        }
+                        catch (UnauthorizedAccessException e)
+                        {
+                            loger.Log(LogLevel.Trace, "=================== UnauthorizedAccessException =================== " + e.Message);
+                        }
+                        catch (Exception ex)
+                        {
+                            loger.Log(LogLevel.Trace, "=================== FolderScanning Exception =================== " + ex.Message);
+                            currentfilescan = "FolderScanning Exception:>> " + ex.Message;
+                            Thread.Sleep(1000);
+                        }
+                    }
+
+                    //StopTime = DateTime.UtcNow;
+                    //stopwatch.Stop();
+
+                    foreach (Dictionary<string, string> fileRecord in FileList)
+                        controllerDB.InsertOnlyData("ScannedFileLogs", "", fileRecord);
+
+                    loger.Log(LogLevel.Trace, "===================Summary=================== \r\n Folder scanned=" + fldr);
+                    loger.Log(LogLevel.Trace, "===================Summary=================== \r\n Total Files Scanned=" + counter);
+                    loger.Log(LogLevel.Trace, "===================Summary=================== \r\n TotalTime=" + stopwatch.Elapsed);
+
+                }
+                Thread.Sleep(50);// to flush all the messages from collectedText 
+                                 //processCompleted = true;
+                                 //return Task.FromResult(SelectedFldr);
+                                 //}
+                                 //}
+
+
+
+                //loger.Log(LogLevel.Trace, "===================Summary=================== \r\n Total Files Scanned= (0) Files");
+                //loger.Log(LogLevel.Trace, "===================Summary=================== \r\n TotalTime=" + stopwatch.Elapsed);
+
+
+                processCompleted = true;
             }
-            Thread.Sleep(50);// to flush all the messages from collectedText 
-                             //processCompleted = true;
-                             //return Task.FromResult(SelectedFldr);
-                             //}
-                             //}
-
-
-
-            loger.Log(LogLevel.Trace, "===================Summary=================== \r\n Total Files Scanned= (0) Files");
-            loger.Log(LogLevel.Trace, "===================Summary=================== \r\n TotalTime=" + stopwatch.Elapsed);
-
-
-            processCompleted = true;
+            //processIsRunning = false;
             return Task.FromResult(SelectedFldr);
             //return Task.FromResult(ShowFolderBrowserDialog());
         }
@@ -594,37 +721,36 @@ namespace eSpark_WindowsFIA
         static readonly SHA256CryptoServiceProvider _hashAlgorithm2 = new SHA256CryptoServiceProvider();
         public static string Compute256Hash(String fileName)
         {
-            lock (_hashAlgorithm2)
+            byte[] fileData = null;
+            using (FileStream fs = File.OpenRead(fileName))
             {
-                byte[] fileData = null;
-                using (FileStream fs = File.OpenRead(fileName))
+                using (BinaryReader binaryReader = new BinaryReader(fs))
                 {
-                    using (BinaryReader binaryReader = new BinaryReader(fs))
+                    //3515682494 - _Getintopc.com_Blackmagic_Design_DaVinci_Resolve_Studio_18.1.4.0009.rar
+                    if (fs.Length < 2147483647)//2,147,483,647 max value    1073741824=1GB
                     {
-                        //3515682494 - _Getintopc.com_Blackmagic_Design_DaVinci_Resolve_Studio_18.1.4.0009.rar
-                        if (fs.Length < 2147483647)//2,147,483,647 max value    1073741824=1GB
+                        try
                         {
-                            try
-                            {
-                                fileData = binaryReader.ReadBytes((int)fs.Length);
-                                byte[] byteHash = _hashAlgorithm2.ComputeHash(fileData);
-                                return BitConverter.ToString(byteHash);
-                            }
-                            catch {
-                                //sometimes BinaryReader can not handle files
-                                byte[] byteHash = _hashAlgorithm2.ComputeHash(fs);
-                                return BitConverter.ToString(byteHash);
-                            }
+                            fileData = binaryReader.ReadBytes((int)fs.Length);
+                            byte[] byteHash = _hashAlgorithm2.ComputeHash(fileData);
+                            return BitConverter.ToString(byteHash);
                         }
-                        else {
-
+                        catch
+                        {
+                            //sometimes BinaryReader can not handle files
                             byte[] byteHash = _hashAlgorithm2.ComputeHash(fs);
                             return BitConverter.ToString(byteHash);
                         }
                     }
+                    else
+                    {
+
+                        byte[] byteHash = _hashAlgorithm2.ComputeHash(fs);
+                        return BitConverter.ToString(byteHash);
+                    }
                 }
             }
-            return null;
+            //return null;
         }
 
 
@@ -709,6 +835,10 @@ namespace eSpark_WindowsFIA
                 loger.Log(LogLevel.Info, "==================Closing Windows File Logger===============" + DateTime.Now);
 
                 FSW_trayicon.Visible = false;
+
+                if(Scheduler.scheduler !=null)
+                    Scheduler.scheduler.Shutdown();
+
                 NLog.LogManager.Shutdown(); // Flush and close down internal threads and timers
             }
         }
@@ -855,6 +985,7 @@ namespace eSpark_WindowsFIA
         }
 
         public static String txtResult = "";
+
         public void ShowMyDialogBox()
         {
             Form2 testDialog = new Form2();
@@ -1101,21 +1232,57 @@ namespace eSpark_WindowsFIA
 
         private void FileSystemWatcherTimer_Tick(object sender, EventArgs e)
         {
+            //if (IsFSWRunning)
+            //{
+            //    try
+            //    {
+            //        lblFileSystemWatcher.Text = "File System Watcher RUNNING at:" + cmbScanLocations.SelectedItem.ToString();                    
+            //        String sst = this.tootltip1label2.Text.Replace("Process completed successfully!", "");
+            //        if (sst.Length > 1 && !sst.Contains(currentfilescan))
+            //        {
+            //            this.tootltip1label2.Text = currentfilescan;
+            //            IsFSWRunning = false;
+            //            //lblFileSystemWatcher.Text = "File System Watcher Stopped!";
+            //        }
+            //    }
+            //    catch { }
+            //}            
+
+            //dsTemp.Tables[0].Rows[0]["DirectoryID"].ToString()
+            //DS_FSW
+
             if (IsFSWRunning)
             {
-                try
+                if (DS_FSW.Rows.Count > 0)
                 {
-                    lblFileSystemWatcher.Text = "File System Watcher RUNNING at:" + cmbScanLocations.SelectedItem.ToString();                    
-                    String sst = this.tootltip1label2.Text.Replace("Process completed successfully!", "");
-                    if (sst.Length > 1 && !sst.Contains(currentfilescan))
+                    DataTable DS_FSW_Temp = DS_FSW.Copy();
+
+                    lock (DS_FSW)
                     {
-                        this.tootltip1label2.Text = currentfilescan;
-                        IsFSWRunning = false;
-                        //lblFileSystemWatcher.Text = "File System Watcher Stopped!";
+                        DS_FSW.Clear();
+                        DS_FSW.AcceptChanges();
                     }
+
+                    FSW_BulkWriter FSW_BulkWriter_ref = new FSW_BulkWriter();
+                    foreach (DataRow dr in DS_FSW_Temp.Rows)
+                    {
+                        if (dr["EventType"].ToString() == "1")//1=create,2=change/modify,3=delete,4=rename
+                        {FSW_BulkWriter_ref.CreateRecords(dr["FullPath"].ToString(), null, DateTime.Parse(dr["DatetimeCalled"].ToString()));}
+                        else if (dr["EventType"].ToString() == "2")//1=create,2=change/modify,3=delete,4=rename
+                        {FSW_BulkWriter_ref.ChangeRecords(dr["FullPath"].ToString(), null, DateTime.Parse(dr["DatetimeCalled"].ToString()));}
+                        else if (dr["EventType"].ToString() == "3")//1=create,2=change/modify,3=delete,4=rename
+                        { FSW_BulkWriter_ref.DeleteRecords(dr["FullPath"].ToString(), null, DateTime.Parse(dr["DatetimeCalled"].ToString())); }
+                        else if (dr["EventType"].ToString() == "4")//1=create,2=change/modify,3=delete,4=rename
+                        { FSW_BulkWriter_ref.RenameRecords(dr["FullPath"].ToString(), dr["OldFullPath"].ToString(), DateTime.Parse(dr["DatetimeCalled"].ToString())); }
+                    }
+                    IsFSWRunning = false;
                 }
-                catch { }
-            }            
+
+                if (DS_FSW.Rows.Count > 0)
+                    IsFSWRunning = true;
+
+            }
+
         }
     }
 }

@@ -57,6 +57,7 @@ namespace eSpark_WindowsFIA
             }
             catch(Exception eep) {
                 var st = eep.Message;
+                Form1.loger.Log(LogLevel.Error, "===================AutoLoadJob_SchedullerErr =================== \r\n " + eep.StackTrace);
             }
 
             if (totalJobs>0)
@@ -75,7 +76,7 @@ namespace eSpark_WindowsFIA
                 return;
             }
 
-            int cmdRemoveJob = cmbRemoveJobs.SelectedIndex;
+            int cmdRemoveJob = this.cmbRemoveJobs.SelectedIndex;
 
             if (cmdRemoveJob > 0)
             {
@@ -103,29 +104,29 @@ namespace eSpark_WindowsFIA
             }
 
 
-            int cmdNextRepeat = cmbRepeatDuration.SelectedIndex;
+            int cmdNextRepeat = this.cmbRepeatDuration.SelectedIndex;
 
             DateTime creationDate = DateTime.Now;
             if ((int)numRepeatCntr.Value < 1)
-                newJob.Start(creationDate, this.dtStartDate.Value, txtScanPath.Text, chkHashCalc.Checked, (int)numRepeatCntr.Value, cmdNextRepeat, false);
+                newJob.Start(creationDate, this.dtStartDate.Value, this.txtScanPath.Text, this.chkHashCalc.Checked, (int)this.numRepeatCntr.Value, cmdNextRepeat, false);
             else
             {
                 //DateTime.Now.ToString()
                 DateTime nextRepeatdt = this.dtStartDate.Value;
                 int cntr = 0;
-                for (int repeatcntr = 0; repeatcntr < (int)numRepeatCntr.Value; repeatcntr++)
+                for (int repeatcntr = 0; repeatcntr < (int)this.numRepeatCntr.Value; repeatcntr++)
                 {
-                    if (cmbRepeatDuration.SelectedIndex == 1)// daily seleced
+                    if (this.cmbRepeatDuration.SelectedIndex == 1)// daily seleced
                     {
-                        newJob.Start(creationDate, nextRepeatdt, txtScanPath.Text, chkHashCalc.Checked, (int)numRepeatCntr.Value, cmdNextRepeat, false);
+                        newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, this.chkHashCalc.Checked, (int)this.numRepeatCntr.Value, cmdNextRepeat, false);
                         nextRepeatdt = nextRepeatdt.AddDays(1);
                         totalJobs++;
                     }
-                    else if (cmbRepeatDuration.SelectedIndex == 2)// weekly seleced
+                    else if (this.cmbRepeatDuration.SelectedIndex == 2)// weekly seleced
                     {
                         while (cntr < 7)
                         {
-                            newJob.Start(creationDate, nextRepeatdt, txtScanPath.Text, chkHashCalc.Checked, (int)numRepeatCntr.Value, cmdNextRepeat, false);
+                            newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, this.chkHashCalc.Checked, (int)this.numRepeatCntr.Value, cmdNextRepeat, false);
                             cntr++;
                             nextRepeatdt = nextRepeatdt.AddDays(1);
                             totalJobs++;
@@ -134,7 +135,7 @@ namespace eSpark_WindowsFIA
                     else if (cmbRepeatDuration.SelectedIndex == 3)// monthly seleced
                         while (cntr < 30)
                         {
-                            newJob.Start(creationDate, nextRepeatdt, txtScanPath.Text, chkHashCalc.Checked, (int)numRepeatCntr.Value, cmdNextRepeat, false);
+                            newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, this.chkHashCalc.Checked, (int)this.numRepeatCntr.Value, cmdNextRepeat, false);
                             cntr++;
                             nextRepeatdt = nextRepeatdt.AddDays(1);
                             totalJobs++;
@@ -151,7 +152,7 @@ namespace eSpark_WindowsFIA
                 this.Hide();
                 Form1.SetOnTop();
             }
-            catch(Exception ep) { Form1.loger.Log(LogLevel.Error, "===================SchedullerErr =================== \r\n " + ep.Message); 
+            catch(Exception ep) { Form1.loger.Log(LogLevel.Error, "===================SchedullerErr =================== \r\n " + ep.StackTrace); 
             }
         }
 

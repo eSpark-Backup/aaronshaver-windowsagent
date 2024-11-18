@@ -15,7 +15,6 @@ namespace eSpark_WindowsFIA
 {
     public class WindowsFIA_FSW
     {
-        public ControllerDB controllerDB = new ControllerDB();
         public void Initiate(string SubFolder)
         {
 
@@ -41,435 +40,97 @@ namespace eSpark_WindowsFIA
             Watcher.Renamed += FileSystemWatcher_Renamed;
             Watcher.Error += FileSystemWatcher_Error;
 
-            controllerDB = new ControllerDB();
-            Form1.IsFSWRunning = true;
+            //Form1.IsFSWRunning = true;
 
         }
 
         private void FileSystemWatcher_Error(object sender, ErrorEventArgs e)
         {
-            Form1.IsFSWRunning = true;
+            //Form1.IsFSWRunning = true;
             Form1.currentfilescan = "FileSystemWatcher Error > " + e.ToString();
             
                 Form1.loger.Log(LogLevel.Info, "==================FileSystemWatcher Error===============" + DateTime.Now+" --- "+e.ToString());
-            Form1.IsFSWRunning = false;
+            //Form1.IsFSWRunning = false;
         }
 
         private void FileSystemWatcher_Renamed(object sender, RenamedEventArgs e)
         {
             Form1.IsFSWRunning = true;
-            controllerDB.InitializeFlexMoldDB();
-            //controllerDB.DeleteData("ScannedFileLogs", " DirectoryID in (Select Distinct DirectoryID as DirectoryID from ScannedDirectoryLogs where DirectoryPath like '" + SelectedFldr + "%') ");
-            //controllerDB.DeleteData("ScannedDirectoryLogs", " DirectoryPath like '" + SelectedFldr + "%'");
 
-            Dictionary<string, string> parms = new Dictionary<string, string>();
-            FileInfo fin = new FileInfo(e.FullPath);
-
-            //if (!File.Exists(e.FullPath)) // This is directory
-            //{
-            //    //If directory already exist
-            //    if (controllerDB.CheckRecordExistManual("Select DISTINCT d.DirectoryPath , f.FileName from ScannedFileLogs f , ScannedDirectoryLogs D where f.DirectoryID=D.DirectoryID and D.DirectoryPath =" + fin.Directory + "' "))
-            //    {
-            //        parms.Add("CreationDate", DateTime.Now.ToString());
-            //        parms.Add("DirectoryPath", e.FullPath);
-            //        controllerDB.UpdateData("ScannedDirectoryLogs", " DirectoryPath =" + e.FullPath + "' ", parms);
-            //    }
-            //    else//Insert new record for directory
-            //    {
-            //        parms.Add("DirectoryID", e.FullPath.GetHashCode().ToString());
-            //        parms.Add("DirectoryPath", e.FullPath);
-            //        parms.Add("CreationDate", DateTime.Now.ToString());
-            //        parms.Add("ModifiedDate", null);
-            //        parms.Add("AccessedDate", null);
-            //        parms.Add("ScannedDate", null);
-
-            //        controllerDB.InsertOnlyData("ScannedDirectoryLogs", null, parms);
-            //    }
-
-            //}
-            //else //This is file                 
-            //{                
-
-            //if file exist then only update the file record for FAST process
-            //if (controllerDB.CheckRecordExistManual("Select DISTINCT d.DirectoryPath , f.FileName from ScannedFileLogs f , ScannedDirectoryLogs D where f.DirectoryID=D.DirectoryID and D.DirectoryPath =" + fin.Directory + "' and f.FileName ='" + fin.Name + "'"))
-            //{
-            //    parms.Add("CreationDate", DateTime.Now.ToString());
-            //    controllerDB.UpdateData("ScannedFileLogs", " DirectoryPath =" + e.FullPath + "' ", parms);
-            //}
-            //else//Inser new record for directory and File
-            //{
-            String DirectoryIDNew = e.FullPath.GetHashCode().ToString();
-            try
+            //new DataColumn("EventType", typeof(int)),//1=create,2=change/modify,3=delete,4=rename
+            //new DataColumn("FullPath", typeof(string)),
+            //new DataColumn("OldFullPath", typeof(string)),
+            //new DataColumn("DatetimeCalled", typeof(DateTime))
+            lock (Form1.DS_FSW)
             {
-                DataSet dsTemp = null;
+                var result = Form1.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 4 && myRow.Field<string>("FullPath") == e.FullPath);
 
-                //ifthis is directory renamed?
-                if (!File.Exists(e.FullPath)) // This is old directory renamed
+                if (result.Count() < 1)
                 {
-                    //if (!File.Exists(e.FullPath)) // This is new directory
-                    //    dsTemp = controllerDB.ReadData("ScannedDirectoryLogs", " DirectoryPath = '" + e.OldFullPath + "' ");
-                    //else                         
-                    dsTemp = controllerDB.ReadData("ScannedDirectoryLogs", " DirectoryPath = '" + e.OldFullPath + "' ");
-
-                    // if directory already exist then get record else create
-                    if (dsTemp.Tables.Count > 0 && dsTemp.Tables[0].Rows.Count > 0)
-                    {
-                        DirectoryIDNew = dsTemp.Tables[0].Rows[0]["DirectoryID"].ToString();
-
-                        if (!File.Exists(e.FullPath)) // This is directory
-                        {
-                            Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
-                            DirectoryInf.Add("RenamedDate", DateTime.Now.ToString());
-                            DirectoryInf.Add("DirectoryPath", e.FullPath);
-                            DirectoryInf.Add("OldName", Path.GetFileName(e.OldFullPath));
-
-                            controllerDB.UpdateData("ScannedDirectoryLogs", " DirectoryID ='" + DirectoryIDNew + "' ", DirectoryInf);
-                        }
-                    }
-
+                    Form1.DS_FSW.Rows.Add("4", e.FullPath, e.OldFullPath, DateTime.Now); Form1.DS_FSW.AcceptChanges();
                 }
-                else// This is old file renamed 
-                {
-                    dsTemp = controllerDB.ReadData("ScannedDirectoryLogs", " DirectoryPath = '" + Path.GetDirectoryName(e.OldFullPath) + "' ");
 
-                    // if directory already exist then get record else create
-                    if (dsTemp.Tables.Count > 0 && dsTemp.Tables[0].Rows.Count > 0)
-                    {
-                        DirectoryIDNew = dsTemp.Tables[0].Rows[0]["DirectoryID"].ToString();
-
-                        if (!File.Exists(e.OldFullPath)) // This is directory
-                        {
-                            Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
-                            DirectoryInf.Add("RenamedDate", DateTime.Now.ToString());
-                            DirectoryInf.Add("FileName", Path.GetFileName(e.FullPath));
-                            DirectoryInf.Add("OldName", Path.GetFileName(e.OldFullPath));
-
-                            controllerDB.UpdateData("ScannedFileLogs", " DirectoryID ='" + DirectoryIDNew + "' and FileName='" + Path.GetFileName(e.OldFullPath) + "' ", DirectoryInf);
-                        }
-                    }
-
-                }
             }
-            catch { }
-
-
-
-            Form1.currentfilescan = "FileSystemWatcher Renamed > " + e.FullPath;
         }
 
         private void FileSystemWatcher_Deleted(object sender, FileSystemEventArgs e)
         {
             Form1.IsFSWRunning = true;
-            controllerDB.InitializeFlexMoldDB();
-            //controllerDB.DeleteData("ScannedFileLogs", " DirectoryID in (Select Distinct DirectoryID as DirectoryID from ScannedDirectoryLogs where DirectoryPath like '" + SelectedFldr + "%') ");
-            //controllerDB.DeleteData("ScannedDirectoryLogs", " DirectoryPath like '" + SelectedFldr + "%'");
-
-            Dictionary<string, string> parms = new Dictionary<string, string>();
-            FileInfo fin = new FileInfo(e.FullPath);
-
-            String DirectoryIDNew = e.FullPath.GetHashCode().ToString();
-            try
+            //new DataColumn("EventType", typeof(int)),//1=create,2=change/modify,3=delete,4=rename
+            //new DataColumn("FullPath", typeof(string)),
+            //new DataColumn("OldFullPath", typeof(string)),
+            //new DataColumn("DatetimeCalled", typeof(DateTime))
+            lock (Form1.DS_FSW)
             {
+                var result = Form1.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 3 && myRow.Field<string>("FullPath") == e.FullPath);
 
-                DataSet dsTemp = null;
-
-                if (Path.GetExtension(e.FullPath).Length>3 && Path.GetExtension(e.FullPath).Length < 9) // This is File deleted
+                if (result.Count() < 1)
                 {
-                    //dsTemp = controllerDB.ReadData("ScannedDirectoryLogs", " DirectoryPath = '" + e.FullPath + "' ");
-                    dsTemp = controllerDB.ReadData("ScannedDirectoryLogs", " DirectoryPath = '" + Path.GetDirectoryName(e.FullPath) + "' ");
-
-                    if (dsTemp.Tables.Count > 0 && dsTemp.Tables[0].Rows.Count > 0)
-                    {
-                        DirectoryIDNew = dsTemp.Tables[0].Rows[0]["DirectoryID"].ToString();
-                        parms.Clear();
-                        //parms.Add("DeleteDate", DirectoryIDNew);
-                        parms.Add("DeleteDate", DateTime.Now.ToString());
-                        parms.Add("FileName", "~" + e.FullPath);
-                        controllerDB.UpdateData("ScannedFileLogs", " DirectoryID ='" + DirectoryIDNew + "' and FileName='" + Path.GetFileName(e.FullPath) + "' ", parms);
-                        Form1.currentfilescan = "FileSystemWatcher Deleted > " + e.FullPath;
-                    }
-                }
-                else {
-
-                    // This is directory deleted
-                    dsTemp = controllerDB.ReadData("ScannedDirectoryLogs", " DirectoryPath = '" + e.FullPath + "' ");
-                    if (dsTemp.Tables.Count > 0 && dsTemp.Tables[0].Rows.Count > 0)
-                    {
-                        DirectoryIDNew = dsTemp.Tables[0].Rows[0]["DirectoryID"].ToString();
-                            //Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
-                            //DirectoryInf.Add("DirectoryPath", "~"+e.FullPath);
-                            //DirectoryInf.Add("DeleteDate", DateTime.Now.ToString());
-                            
-                        controllerDB.DeleteData("ScannedDirectoryLogs", " DirectoryID ='" + DirectoryIDNew + "' ");
-                            
-                        controllerDB.DeleteData("ScannedFileLogs", " DirectoryID ='" + DirectoryIDNew + "' ");
-
-
-                        Form1.currentfilescan = "FileSystemWatcher Deleted > " + e.FullPath;
-                    }
+                    Form1.DS_FSW.Rows.Add("3", e.FullPath, null, DateTime.Now);
+                    Form1.DS_FSW.AcceptChanges();
                 }
 
-                //else
-                //{
-                //    //Add directory record
-                //    Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
-                //    //DirectoryInf.Add("DirectoryID", DirectoryIDNew);
-                //    DirectoryInf.Add("DeleteDate", DateTime.Now.ToString());
-                //    controllerDB.UpdateData("ScannedDirectoryLogs", " DirectoryID ='" + DirectoryIDNew + "' ", DirectoryInf);
-                //}
-            }
-            catch { }
         }
+
+    }
 
         private void FileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {
             Form1.IsFSWRunning = true;
             //Modified
-            controllerDB.InitializeFlexMoldDB();
-            //controllerDB.DeleteData("ScannedFileLogs", " DirectoryID in (Select Distinct DirectoryID as DirectoryID from ScannedDirectoryLogs where DirectoryPath like '" + SelectedFldr + "%') ");
-            //controllerDB.DeleteData("ScannedDirectoryLogs", " DirectoryPath like '" + SelectedFldr + "%'");
-
-            Dictionary<string, string> parms = new Dictionary<string, string>();
-            FileInfo fin = new FileInfo(e.FullPath);
-
-            //if (!File.Exists(e.FullPath)) // This is directory
-            //{
-            //    //If directory already exist
-            //    if (controllerDB.CheckRecordExistManual("Select DISTINCT d.DirectoryPath , f.FileName from ScannedFileLogs f , ScannedDirectoryLogs D where f.DirectoryID=D.DirectoryID and D.DirectoryPath =" + fin.Directory + "' "))
-            //    {
-            //        parms.Add("CreationDate", DateTime.Now.ToString());
-            //        parms.Add("DirectoryPath", e.FullPath);
-            //        controllerDB.UpdateData("ScannedDirectoryLogs", " DirectoryPath =" + e.FullPath + "' ", parms);
-            //    }
-            //    else//Insert new record for directory
-            //    {
-            //        parms.Add("DirectoryID", e.FullPath.GetHashCode().ToString());
-            //        parms.Add("DirectoryPath", e.FullPath);
-            //        parms.Add("CreationDate", DateTime.Now.ToString());
-            //        parms.Add("ModifiedDate", null);
-            //        parms.Add("AccessedDate", null);
-            //        parms.Add("ScannedDate", null);
-
-            //        controllerDB.InsertOnlyData("ScannedDirectoryLogs", null, parms);
-            //    }
-
-            //}
-            //else //This is file                 
-            //{                
-
-            //if file exist then only update the file record for FAST process
-            //if (controllerDB.CheckRecordExistManual("Select DISTINCT d.DirectoryPath , f.FileName from ScannedFileLogs f , ScannedDirectoryLogs D where f.DirectoryID=D.DirectoryID and D.DirectoryPath =" + fin.Directory + "' and f.FileName ='" + fin.Name + "'"))
-            //{
-            //    parms.Add("CreationDate", DateTime.Now.ToString());
-            //    controllerDB.UpdateData("ScannedFileLogs", " DirectoryPath =" + e.FullPath + "' ", parms);
-            //}
-            //else//Inser new record for directory and File
-            //{
-            String DirectoryIDNew = e.FullPath.GetHashCode().ToString();
-            try
+            //new DataColumn("EventType", typeof(int)),//1=create,2=change/modify,3=delete,4=rename
+            //new DataColumn("FullPath", typeof(string)),
+            //new DataColumn("OldFullPath", typeof(string)),
+            //new DataColumn("DatetimeCalled", typeof(DateTime))
+            lock (Form1.DS_FSW)
             {
-                DataSet dsTemp = null;
+                var result = Form1.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 2 && myRow.Field<string>("FullPath") == e.FullPath);
 
-                if (!File.Exists(e.FullPath)) // This is directory
+                if (result.Count() < 1)
                 {
-                    dsTemp = controllerDB.ReadData("ScannedDirectoryLogs", " DirectoryPath = '" + e.FullPath + "' ");
-                    // if directory already exist then get record else create
-                    // else condition will never happen in change event
-                    if (dsTemp != null && dsTemp.Tables.Count > 0 && dsTemp.Tables[0].Rows.Count > 0)
-                    {
-                        DirectoryIDNew = dsTemp.Tables[0].Rows[0]["DirectoryID"].ToString();
-
-                            Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
-                            DirectoryInf.Add("ModifiedDate", DateTime.Now.ToString());
-                            controllerDB.UpdateData("ScannedDirectoryLogs", " DirectoryID ='" + DirectoryIDNew + "' ", DirectoryInf);
-                            Form1.currentfilescan = "FileSystemWatcher Changed > " + e.FullPath;
-                            return;
-
-                    }
+                    Form1.DS_FSW.Rows.Add("2", e.FullPath, null, DateTime.Now);
+                    Form1.DS_FSW.AcceptChanges();
                 }
-                else
-                {
-                    //Add directory record
-                    // will never happen in change BECAUSE in change directory must exist
-
-
-                    //Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
-                    //DirectoryInf.Add("DirectoryID", DirectoryIDNew);
-                    //DirectoryInf.Add("DirectoryPath", fin.Directory.FullName);
-                    //DirectoryInf.Add("ScannedDate", DateTime.Now.ToString());
-
-                    //controllerDB.InsertOnlyData("ScannedDirectoryLogs", " DirectoryPath='" + fin.Directory.FullName + "' ", DirectoryInf);
-
-                    //DirectoryInf.Clear();
-                    //DirectoryInf.Add("ModifiedDate", DateTime.Now.ToString());
-
-                    //parms.Add("FileName", fin.Name);
-                    //parms.Add("CreationDate", DateTime.Now.ToString());
-                    //parms.Add("ModifiedDate", null);
-                    //parms.Add("AccessedDate", null);
-                    //parms.Add("ScannedDate", DateTime.Now.ToString());
-                    //parms.Add("FileSize", fin.Length.ToString());
-
-                    //controllerDB.InsertOnlyData("ScannedFileLogs", " DirectoryID ='" + DirectoryIDNew + "' ", DirectoryInf);
-                    dsTemp = controllerDB.ReadData("ScannedDirectoryLogs", " DirectoryPath = '" + fin.Directory.FullName + "' ");
-                    if (dsTemp != null && dsTemp.Tables.Count > 0 && dsTemp.Tables[0].Rows.Count > 0)
-                    {
-                        DirectoryIDNew = dsTemp.Tables[0].Rows[0]["DirectoryID"].ToString();
-                    }
-
-                    String fileSizeUnit = "Bytes";
-                    double fileLengthKB = Math.Ceiling(fin.Length / 1024D);
-
-                    if (fin.Length < 1024)
-                    {
-                        fileLengthKB = fin.Length;
-                        fileSizeUnit = "Bytes";
-                    }
-                    else if (fileLengthKB < 1024)
-                        fileSizeUnit = "KB";
-
-                    if (fileLengthKB > 1024)
-                    {
-                        fileLengthKB = Math.Ceiling(fileLengthKB / 1024D);
-                        fileSizeUnit = "MB";
-                    }
-                    if (fileLengthKB > 1024)
-                    {
-                        fileLengthKB = Math.Ceiling(fileLengthKB / 1024D);
-                        fileSizeUnit = "GB";
-                    }
-
-
-                    parms.Clear();
-                    parms.Add("ModifiedDate", DateTime.Now.ToString());
-                    parms.Add("FileSize", fileLengthKB.ToString() + fileSizeUnit);
-                    controllerDB.UpdateData("ScannedFileLogs", "  DirectoryID ='" + DirectoryIDNew + "' and FileName='" + fin.Name + "' ", parms);
-                }
-
             }
-            catch { }
-
-            Form1.currentfilescan = "FileSystemWatcher Changed > " + e.FullPath;
-
         }
 
         private void FileSystemWatcher_Created(object sender, FileSystemEventArgs e)
         {
             Form1.IsFSWRunning = true;
-            controllerDB.InitializeFlexMoldDB();
-            //controllerDB.DeleteData("ScannedFileLogs", " DirectoryID in (Select Distinct DirectoryID as DirectoryID from ScannedDirectoryLogs where DirectoryPath like '" + SelectedFldr + "%') ");
-            //controllerDB.DeleteData("ScannedDirectoryLogs", " DirectoryPath like '" + SelectedFldr + "%'");
-
-            Dictionary<string, string> parms = new Dictionary<string, string>();
-            FileInfo fin = new FileInfo(e.FullPath);
-
-            //if (!File.Exists(e.FullPath)) // This is directory
-            //{
-            //    //If directory already exist
-            //    if (controllerDB.CheckRecordExistManual("Select DISTINCT d.DirectoryPath , f.FileName from ScannedFileLogs f , ScannedDirectoryLogs D where f.DirectoryID=D.DirectoryID and D.DirectoryPath =" + fin.Directory + "' "))
-            //    {
-            //        parms.Add("CreationDate", DateTime.Now.ToString());
-            //        parms.Add("DirectoryPath", e.FullPath);
-            //        controllerDB.UpdateData("ScannedDirectoryLogs", " DirectoryPath =" + e.FullPath + "' ", parms);
-            //    }
-            //    else//Insert new record for directory
-            //    {
-            //        parms.Add("DirectoryID", e.FullPath.GetHashCode().ToString());
-            //        parms.Add("DirectoryPath", e.FullPath);
-            //        parms.Add("CreationDate", DateTime.Now.ToString());
-            //        parms.Add("ModifiedDate", null);
-            //        parms.Add("AccessedDate", null);
-            //        parms.Add("ScannedDate", null);
-
-            //        controllerDB.InsertOnlyData("ScannedDirectoryLogs", null, parms);
-            //    }
-
-            //}
-            //else //This is file                 
-            //{                
-
-            //if file exist then only update the file record for FAST process
-            //if (controllerDB.CheckRecordExistManual("Select DISTINCT d.DirectoryPath , f.FileName from ScannedFileLogs f , ScannedDirectoryLogs D where f.DirectoryID=D.DirectoryID and D.DirectoryPath =" + fin.Directory + "' and f.FileName ='" + fin.Name + "'"))
-            //{
-            //    parms.Add("CreationDate", DateTime.Now.ToString());
-            //    controllerDB.UpdateData("ScannedFileLogs", " DirectoryPath =" + e.FullPath + "' ", parms);
-            //}
-            //else//Inser new record for directory and File
-            //{
-
-            Random rnd = new Random();
-            int num = rnd.Next(int.MinValue, e.FullPath.GetHashCode());
-            String DirectoryIDNew = num.ToString();
-            try
+            //new DataColumn("EventType", typeof(int)),//1=create,2=change/modify,3=delete,4=rename
+            //new DataColumn("FullPath", typeof(string)),
+            //new DataColumn("OldFullPath", typeof(string)),
+            //new DataColumn("DatetimeCalled", typeof(DateTime))
+            lock (Form1.DS_FSW)
             {
-                
-                
-                if(File.Exists(e.FullPath)) //Create a file record
+                var result = Form1.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 1 && myRow.Field<string>("FullPath") == e.FullPath);
+
+                if (result.Count() < 1)
                 {
-                    DataSet dsTemp = controllerDB.ReadData("ScannedDirectoryLogs", " DirectoryPath = '" + Path.GetDirectoryName(e.FullPath) + "' ");
-                    DirectoryIDNew = dsTemp.Tables[0].Rows[0]["DirectoryID"].ToString();
-
-                    dsTemp = controllerDB.ReadData("ScannedFileLogs", " DirectoryID ='" + DirectoryIDNew + "' and FileName='" + e.FullPath + "' ");
-
-                    if (dsTemp.Tables.Count > 0 && dsTemp.Tables[0].Rows.Count < 1)
-                    {
-
-                        parms.Add("DirectoryID", DirectoryIDNew);
-                        parms.Add("FileName", fin.Name);
-                        parms.Add("CreationDate", DateTime.Now.ToString());
-                        parms.Add("FileSize", fin.Length.ToString());
-
-
-                        if (Form1.calculateHash)
-                        {
-                            parms.Add("FileHash", Form1.Compute256Hash(fin.FullName));
-                        }
-                        else parms.Add("FileHash", "0000000");
-                        controllerDB.InsertOnlyData("ScannedFileLogs", null, parms);
-                    }
+                    Form1.DS_FSW.Rows.Add("1", e.FullPath, null, DateTime.Now); Form1.DS_FSW.AcceptChanges();
                 }
-                else//create directory
-                {
-                    DataSet dsTemp = controllerDB.ReadData("ScannedDirectoryLogs", " DirectoryPath = '" + e.FullPath + "' ");
-
-                    if (dsTemp.Tables.Count > 0 && dsTemp.Tables[0].Rows.Count < 1)//when no record found
-                    {
-                        Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
-                        DirectoryInf.Add("DirectoryID", DirectoryIDNew);
-                        //DirectoryInf.Add("DirectoryPath", Path.GetDirectoryName(e.FullPath));
-                        DirectoryInf.Add("DirectoryPath", e.FullPath);
-                        DirectoryInf.Add("CreationDate", DateTime.Now.ToString());
-
-                        controllerDB.InsertOnlyData("ScannedDirectoryLogs", " DirectoryPath='" + Path.GetDirectoryName(e.FullPath) + "' ", DirectoryInf);
-                    }
-
-                    dsTemp = controllerDB.ReadData("ScannedFileLogs", " DirectoryID ='" + DirectoryIDNew + "' and FileName='" + e.FullPath + "' ");
-
-                    if (dsTemp.Tables.Count > 0 && dsTemp.Tables[0].Rows.Count < 1)
-                    {
-
-                        parms.Add("DirectoryID", DirectoryIDNew);
-                        parms.Add("FileName", fin.Name);
-                        parms.Add("CreationDate", DateTime.Now.ToString());
-                        parms.Add("FileSize", fin.Length.ToString());
-
-
-                        if (Form1.calculateHash)
-                        {
-                            parms.Add("FileHash", Form1.Compute256Hash(fin.FullName));
-                        }
-                        else parms.Add("FileHash", "0000000");
-                        controllerDB.InsertOnlyData("ScannedFileLogs", null, parms);
-                    }
-                }
-
-                Form1.currentfilescan = "FileSystemWatcher Created > " + e.FullPath;
 
             }
-            catch { }
-
-            //}
-            //}
         }
 
     }
