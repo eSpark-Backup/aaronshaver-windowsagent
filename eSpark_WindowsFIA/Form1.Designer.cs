@@ -179,7 +179,7 @@ namespace eSpark_WindowsFIA
             this.About_toolStripMenuItem1,
             this.Exit_toolStripMenuItem3});
             this.FSW_trayMenu.Name = "contextMenuStrip1";
-            this.FSW_trayMenu.Size = new System.Drawing.Size(211, 114);
+            this.FSW_trayMenu.Size = new System.Drawing.Size(211, 136);
             // 
             // FSWopen_toolStripMenuItem2
             // 

@@ -40,7 +40,7 @@ namespace eSpark_WindowsFIA
         public static String UserControlLabel = "";
         public static String logfilePath = "";
         public static NLog.Logger loger;
-        private QuartzScheduler quartzScheduler = new QuartzScheduler();
+        public static QuartzScheduler quartzScheduler = new QuartzScheduler();
         private static Form thisForm;
         public static double MaxSize = double.MaxValue;
         public static double MinSize = 0;
@@ -890,7 +890,7 @@ namespace eSpark_WindowsFIA
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
-
+            MessageBox.Show("This release version is 01.00.00 Dated December 2024", "This release version is 01.00.00 Dated December 2024", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
         }
 
         private String GetSetting(string key)

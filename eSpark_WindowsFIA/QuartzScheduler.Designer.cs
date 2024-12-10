@@ -212,6 +212,7 @@ namespace eSpark_WindowsFIA
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "QuartzScheduler";
             this.TopMost = true;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.QuartzScheduler_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.numRepeatCntr)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
