@@ -26,6 +26,7 @@
     <Compile Include="Product.wxs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app.manifest" />
     <Content Include="Crc32C.NET.dll" />
     <Content Include="Crc32C.NET.xml" />
     <Content Include="EntityFramework.dll" />
@@ -35,7 +36,7 @@
     <Content Include="eSpark_FIA.sqlite" />
     <Content Include="eSpark_WindowsFIA.exe" />
     <Content Include="eSpark_WindowsFIA.exe.config" />
-    <Content Include="eSpark_WindowsFIA.pdb" />
+    <Content Include="eSpark_WindowsFIA.manifest" />
     <Content Include="Help.chm" />
     <Content Include="Manual.pdf" />
     <Content Include="Microsoft.Extensions.Logging.Abstractions.dll" />

@@ -13,7 +13,7 @@
     <Directory Id='TARGETDIR' Name='SourceDir'>
       <Directory Id='ProgramFilesFolder' Name='PFiles'>
         <Directory Id='eSpark' Name='eSpark'>
-          <Directory Id='INSTALLDIR' Name='WindowsFIA_Setup'>
+          <Directory Id='INSTALLDIR' Name='WindowsFileAgent'>
 
             <Directory Id='Resources' Name='Resources'>
               <Component Id='Resourcesdirectory' Guid='82fb98a6-f47f-4476-baaa-755fd3c7975f'>
@@ -47,6 +47,8 @@
 				</Shortcut>
              </File>
                 <File Id='eSpark_WindowsFIA.exe.config' Name='eSpark_WindowsFIA.exe.config' DiskId='1' Source='eSpark_WindowsFIA.exe.config'/>
+				<File Id='app.manifest' Name='app.manifest' DiskId='1' Source='app.manifest'/>
+				<File Id='eSpark_WindowsFIA.manifest' Name='eSpark_WindowsFIA.manifest' DiskId='1' Source='eSpark_WindowsFIA.manifest'/>
                 <File Id='System.Runtime.CompilerServices.Unsafe.xml' Name='System.Runtime.CompilerServices.Unsafe.xml' DiskId='1' Source='System.Runtime.CompilerServices.Unsafe.xml'/>
 				<File Id='System.Runtime.CompilerServices.Unsafe.dll' Name='System.Runtime.CompilerServices.Unsafe.dll' DiskId='1' Source='System.Runtime.CompilerServices.Unsafe.dll'/>
 				<File Id='System.Numerics.Vectors.xml' Name='System.Numerics.Vectors.xml' DiskId='1' Source='System.Numerics.Vectors.xml'/>
@@ -80,19 +82,13 @@
               <File Id='HelperDLL' Name='Help.chm' DiskId='1' Source='Help.chm' KeyPath='yes' />
             </Component>
 
-            <Component Id='Manual' Guid='82fb98a6-f47f-4476-baaa-799fd3c8888f'>
-              <File Id='Manual' Name='Manual.pdf' DiskId='1' Source='Manual.pdf' KeyPath='yes'>
-                <Shortcut Id="startmenuManual" Directory="ProgramMenuDir" Name="Instruction Manual" Advertise="yes" />
-              </File>
-            </Component>
-
           </Directory>
         </Directory>
       </Directory>
 
       <Directory Id="ProgramMenuFolder" Name="Programs">
-        <Directory Id="ProgramMenuDir" Name="eSparkWindowsFMAgentInstaller">
-          <Component Id="ProgramMenuDir" Guid="82fb98a6-f47f-4476-baaa-799fd3c77770">
+        <Directory Id="ProgramMenuDir" Name="WindowsFileAgent">
+          <Component Id="ProgramMenuDir" Guid="82fb98a6-f47f-4476-baaa-799fd3c77780">
             <RemoveFolder Id='ProgramMenuDir' On='uninstall' />
             <RegistryValue Root='HKCU' Key='Software\[Manufacturer]\[ProductName]' Type='string' Value='' KeyPath='yes' />
           </Component>
@@ -104,7 +100,6 @@
     <Feature Id='Complete' Level='1'>
       <ComponentRef Id='MainExecutable' />
       <ComponentRef Id='HelperLibrary' />
-      <ComponentRef Id='Manual' />
       <ComponentRef Id='ProgramMenuDir' />
       <ComponentRef Id='x86directory' />
       <ComponentRef Id='x64directory' />
