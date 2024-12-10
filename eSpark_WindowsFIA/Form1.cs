@@ -35,6 +35,7 @@ namespace eSpark_WindowsFIA
         //public static DateTime StopTime = DateTime.UtcNow;
         public static object lockwait = true;
         public static Stopwatch stopwatch = new Stopwatch();
+        private Stopwatch stopwatchFSW = new Stopwatch();
         public static String SelectedFldr = "";
         public static String UserControlLabel = "";
         public static String logfilePath = "";
@@ -1255,25 +1256,62 @@ namespace eSpark_WindowsFIA
             {
                 if (DS_FSW.Rows.Count > 0)
                 {
-                    DataTable DS_FSW_Temp = DS_FSW.Copy();
 
-                    lock (DS_FSW)
+                    DataTable DS_FSW_Temp = new DataTable(); ;
+
+                retrylabel1:
+
+                    try
                     {
-                        DS_FSW.Clear();
-                        DS_FSW.AcceptChanges();
+                        DS_FSW_Temp.Clear();
+                        DS_FSW_Temp = DS_FSW.Copy();
+
+                        lock (DS_FSW)
+                        {
+                            DS_FSW.Clear();
+                            DS_FSW.AcceptChanges();
+                        }
+
                     }
-
-                    FSW_BulkWriter FSW_BulkWriter_ref = new FSW_BulkWriter();
-                    foreach (DataRow dr in DS_FSW_Temp.Rows)
+                    catch (Exception ep1)
                     {
-                        if (dr["EventType"].ToString() == "1")//1=create,2=change/modify,3=delete,4=rename
-                        {FSW_BulkWriter_ref.CreateRecords(dr["FullPath"].ToString(), null, DateTime.Parse(dr["DatetimeCalled"].ToString()));}
-                        else if (dr["EventType"].ToString() == "2")//1=create,2=change/modify,3=delete,4=rename
-                        {FSW_BulkWriter_ref.ChangeRecords(dr["FullPath"].ToString(), null, DateTime.Parse(dr["DatetimeCalled"].ToString()));}
-                        else if (dr["EventType"].ToString() == "3")//1=create,2=change/modify,3=delete,4=rename
-                        { FSW_BulkWriter_ref.DeleteRecords(dr["FullPath"].ToString(), null, DateTime.Parse(dr["DatetimeCalled"].ToString())); }
-                        else if (dr["EventType"].ToString() == "4")//1=create,2=change/modify,3=delete,4=rename
-                        { FSW_BulkWriter_ref.RenameRecords(dr["FullPath"].ToString(), dr["OldFullPath"].ToString(), DateTime.Parse(dr["DatetimeCalled"].ToString())); }
+                        if (stopwatchFSW.IsRunning && stopwatchFSW.Elapsed.TotalSeconds > 2)
+                        {
+                            loger.Log(LogLevel.Info, " FileSystemWatcher Dataset in use,  RETRYING ....... " + DateTime.Now + " >>> " + ep1.Message);
+                            stopwatchFSW.Reset();
+                            stopwatchFSW.Stop();
+                            //Thread.Sleep(2000);
+                            goto retrylabel1;
+                        }
+                        else
+                        {
+                            if (!stopwatchFSW.IsRunning)
+                            {
+                                stopwatchFSW.Reset();
+                                stopwatchFSW.Start();
+                            }
+
+                            return; 
+                        }
+                    }
+                    try
+                    {
+                        FSW_BulkWriter FSW_BulkWriter_ref = new FSW_BulkWriter();
+                        foreach (DataRow dr in DS_FSW_Temp.Rows)
+                        {
+                            if (dr["EventType"].ToString() == "1")//1=create,2=change/modify,3=delete,4=rename
+                            { FSW_BulkWriter_ref.CreateRecords(dr["FullPath"].ToString(), null, DateTime.Parse(dr["DatetimeCalled"].ToString())); }
+                            else if (dr["EventType"].ToString() == "2")//1=create,2=change/modify,3=delete,4=rename
+                            { FSW_BulkWriter_ref.ChangeRecords(dr["FullPath"].ToString(), null, DateTime.Parse(dr["DatetimeCalled"].ToString())); }
+                            else if (dr["EventType"].ToString() == "3")//1=create,2=change/modify,3=delete,4=rename
+                            { FSW_BulkWriter_ref.DeleteRecords(dr["FullPath"].ToString(), null, DateTime.Parse(dr["DatetimeCalled"].ToString())); }
+                            else if (dr["EventType"].ToString() == "4")//1=create,2=change/modify,3=delete,4=rename
+                            { FSW_BulkWriter_ref.RenameRecords(dr["FullPath"].ToString(), dr["OldFullPath"].ToString(), DateTime.Parse(dr["DatetimeCalled"].ToString())); }
+                        }
+                    }
+                    catch(Exception ep2)
+                    {
+                        loger.Log(LogLevel.Info, ">>>>>>>>>>>>> FileSystemWatcher Error>>>>>>>>>>>>> " + DateTime.Now+" >>> "+ ep2.StackTrace);
                     }
                     IsFSWRunning = false;
                 }

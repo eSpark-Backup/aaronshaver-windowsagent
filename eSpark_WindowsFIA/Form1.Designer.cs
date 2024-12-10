@@ -87,7 +87,7 @@ namespace eSpark_WindowsFIA
             // 
             // numMinExcludeFileSize
             // 
-            this.numMinExcludeFileSize.Location = new System.Drawing.Point(151, 52);
+            this.numMinExcludeFileSize.Location = new System.Drawing.Point(151, 60);
             this.numMinExcludeFileSize.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -106,7 +106,7 @@ namespace eSpark_WindowsFIA
             "KB",
             "MB",
             "GB"});
-            this.cmbMinExcludeFileSize.Location = new System.Drawing.Point(223, 52);
+            this.cmbMinExcludeFileSize.Location = new System.Drawing.Point(223, 60);
             this.cmbMinExcludeFileSize.MaxDropDownItems = 50;
             this.cmbMinExcludeFileSize.Name = "cmbMinExcludeFileSize";
             this.cmbMinExcludeFileSize.Size = new System.Drawing.Size(55, 21);
@@ -115,7 +115,7 @@ namespace eSpark_WindowsFIA
             // 
             // numMaxExcludeFileSize
             // 
-            this.numMaxExcludeFileSize.Location = new System.Drawing.Point(323, 52);
+            this.numMaxExcludeFileSize.Location = new System.Drawing.Point(323, 60);
             this.numMaxExcludeFileSize.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -134,7 +134,7 @@ namespace eSpark_WindowsFIA
             "KB",
             "MB",
             "GB"});
-            this.cmbMaxExcludeFileSize.Location = new System.Drawing.Point(395, 52);
+            this.cmbMaxExcludeFileSize.Location = new System.Drawing.Point(395, 60);
             this.cmbMaxExcludeFileSize.MaxDropDownItems = 50;
             this.cmbMaxExcludeFileSize.Name = "cmbMaxExcludeFileSize";
             this.cmbMaxExcludeFileSize.Size = new System.Drawing.Size(55, 21);
@@ -258,14 +258,17 @@ namespace eSpark_WindowsFIA
             // 
             this.tootltip1label2.AutoSize = true;
             this.tootltip1label2.Location = new System.Drawing.Point(9, 294);
+            this.tootltip1label2.MaximumSize = new System.Drawing.Size(530, 50);
             this.tootltip1label2.Name = "tootltip1label2";
-            this.tootltip1label2.Size = new System.Drawing.Size(196, 13);
+            this.tootltip1label2.Size = new System.Drawing.Size(476, 26);
             this.tootltip1label2.TabIndex = 3;
-            this.tootltip1label2.Text = "Press start search files to start scanning!";
+            this.tootltip1label2.Text = "Press start search files to start scanning!......................................" +
+    "................................................................................" +
+    ".......................";
             // 
             // btnFilesSearch
             // 
-            this.btnFilesSearch.Location = new System.Drawing.Point(216, 184);
+            this.btnFilesSearch.Location = new System.Drawing.Point(228, 182);
             this.btnFilesSearch.Name = "btnFilesSearch";
             this.btnFilesSearch.Size = new System.Drawing.Size(120, 52);
             this.btnFilesSearch.TabIndex = 13;
@@ -276,7 +279,7 @@ namespace eSpark_WindowsFIA
             // chkHash
             // 
             this.chkHash.AutoSize = true;
-            this.chkHash.Location = new System.Drawing.Point(124, 161);
+            this.chkHash.Location = new System.Drawing.Point(124, 169);
             this.chkHash.Name = "chkHash";
             this.chkHash.Size = new System.Drawing.Size(98, 17);
             this.chkHash.TabIndex = 12;
@@ -285,7 +288,7 @@ namespace eSpark_WindowsFIA
             // 
             // btnLogs
             // 
-            this.btnLogs.Location = new System.Drawing.Point(456, 26);
+            this.btnLogs.Location = new System.Drawing.Point(456, 34);
             this.btnLogs.Name = "btnLogs";
             this.btnLogs.Size = new System.Drawing.Size(39, 23);
             this.btnLogs.TabIndex = 2;
@@ -296,7 +299,7 @@ namespace eSpark_WindowsFIA
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 55);
+            this.label1.Location = new System.Drawing.Point(11, 63);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(88, 13);
             this.label1.TabIndex = 5;
@@ -304,7 +307,7 @@ namespace eSpark_WindowsFIA
             // 
             // txtLogsAndDBpath
             // 
-            this.txtLogsAndDBpath.Location = new System.Drawing.Point(124, 26);
+            this.txtLogsAndDBpath.Location = new System.Drawing.Point(124, 34);
             this.txtLogsAndDBpath.Name = "txtLogsAndDBpath";
             this.txtLogsAndDBpath.Size = new System.Drawing.Size(326, 20);
             this.txtLogsAndDBpath.TabIndex = 1;
@@ -312,7 +315,7 @@ namespace eSpark_WindowsFIA
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(11, 82);
+            this.label2.Location = new System.Drawing.Point(11, 90);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(79, 13);
             this.label2.TabIndex = 7;
@@ -321,7 +324,7 @@ namespace eSpark_WindowsFIA
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(11, 31);
+            this.label3.Location = new System.Drawing.Point(11, 39);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(97, 13);
             this.label3.TabIndex = 8;
@@ -330,7 +333,7 @@ namespace eSpark_WindowsFIA
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(11, 109);
+            this.label4.Location = new System.Drawing.Point(11, 117);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(82, 13);
             this.label4.TabIndex = 9;
@@ -340,7 +343,7 @@ namespace eSpark_WindowsFIA
             // 
             this.cmbSrchFileFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSrchFileFilter.FormattingEnabled = true;
-            this.cmbSrchFileFilter.Location = new System.Drawing.Point(124, 106);
+            this.cmbSrchFileFilter.Location = new System.Drawing.Point(124, 114);
             this.cmbSrchFileFilter.MaxDropDownItems = 50;
             this.cmbSrchFileFilter.Name = "cmbSrchFileFilter";
             this.cmbSrchFileFilter.Size = new System.Drawing.Size(326, 21);
@@ -351,7 +354,7 @@ namespace eSpark_WindowsFIA
             // 
             this.cmbScanLocations.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbScanLocations.FormattingEnabled = true;
-            this.cmbScanLocations.Location = new System.Drawing.Point(124, 79);
+            this.cmbScanLocations.Location = new System.Drawing.Point(124, 87);
             this.cmbScanLocations.MaxDropDownItems = 50;
             this.cmbScanLocations.Name = "cmbScanLocations";
             this.cmbScanLocations.Size = new System.Drawing.Size(326, 21);
@@ -359,7 +362,7 @@ namespace eSpark_WindowsFIA
             // 
             // btnScanLoc
             // 
-            this.btnScanLoc.Location = new System.Drawing.Point(456, 77);
+            this.btnScanLoc.Location = new System.Drawing.Point(456, 85);
             this.btnScanLoc.Name = "btnScanLoc";
             this.btnScanLoc.Size = new System.Drawing.Size(39, 23);
             this.btnScanLoc.TabIndex = 8;
@@ -369,7 +372,7 @@ namespace eSpark_WindowsFIA
             // 
             // btnSrchFltr
             // 
-            this.btnSrchFltr.Location = new System.Drawing.Point(456, 104);
+            this.btnSrchFltr.Location = new System.Drawing.Point(456, 112);
             this.btnSrchFltr.Name = "btnSrchFltr";
             this.btnSrchFltr.Size = new System.Drawing.Size(39, 23);
             this.btnSrchFltr.TabIndex = 10;
@@ -380,7 +383,7 @@ namespace eSpark_WindowsFIA
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(11, 136);
+            this.label5.Location = new System.Drawing.Point(11, 144);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(91, 13);
             this.label5.TabIndex = 12;
@@ -395,7 +398,7 @@ namespace eSpark_WindowsFIA
             "Errors Only",
             "Errors and Search Results",
             "Full Logs"});
-            this.cmbLogsLevel.Location = new System.Drawing.Point(124, 133);
+            this.cmbLogsLevel.Location = new System.Drawing.Point(124, 141);
             this.cmbLogsLevel.MaxDropDownItems = 50;
             this.cmbLogsLevel.Name = "cmbLogsLevel";
             this.cmbLogsLevel.Size = new System.Drawing.Size(326, 21);
@@ -406,15 +409,17 @@ namespace eSpark_WindowsFIA
             this.tootltip1label1.AutoSize = true;
             this.tootltip1label1.Dock = System.Windows.Forms.DockStyle.Right;
             this.tootltip1label1.Location = new System.Drawing.Point(436, 0);
+            this.tootltip1label1.MaximumSize = new System.Drawing.Size(92, 25);
+            this.tootltip1label1.MinimumSize = new System.Drawing.Size(92, 25);
             this.tootltip1label1.Name = "tootltip1label1";
-            this.tootltip1label1.Size = new System.Drawing.Size(92, 13);
+            this.tootltip1label1.Size = new System.Drawing.Size(92, 25);
             this.tootltip1label1.TabIndex = 3;
             this.tootltip1label1.Text = "execution time: 0s";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(121, 55);
+            this.label6.Location = new System.Drawing.Point(121, 63);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(30, 13);
             this.label6.TabIndex = 18;
@@ -423,7 +428,7 @@ namespace eSpark_WindowsFIA
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(284, 55);
+            this.label7.Location = new System.Drawing.Point(284, 63);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(33, 13);
             this.label7.TabIndex = 19;
@@ -462,10 +467,13 @@ namespace eSpark_WindowsFIA
             // 
             this.lblFileSystemWatcher.AutoSize = true;
             this.lblFileSystemWatcher.Location = new System.Drawing.Point(3, 0);
+            this.lblFileSystemWatcher.MaximumSize = new System.Drawing.Size(408, 35);
+            this.lblFileSystemWatcher.MinimumSize = new System.Drawing.Size(408, 25);
             this.lblFileSystemWatcher.Name = "lblFileSystemWatcher";
-            this.lblFileSystemWatcher.Size = new System.Drawing.Size(148, 13);
+            this.lblFileSystemWatcher.Size = new System.Drawing.Size(408, 25);
             this.lblFileSystemWatcher.TabIndex = 20;
-            this.lblFileSystemWatcher.Text = "File System Watcher stopped!";
+            this.lblFileSystemWatcher.Text = "File System Watcher stopped!....................................................." +
+    ".............................";
             // 
             // FileSystemWatcherTimer
             // 
@@ -478,7 +486,7 @@ namespace eSpark_WindowsFIA
             this.AcceptButton = this.btnFilesSearch;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(551, 316);
+            this.ClientSize = new System.Drawing.Size(551, 322);
             this.Controls.Add(this.tootltip1label2);
             this.Controls.Add(this.toolStripContainer2);
             this.Controls.Add(this.panel1);
