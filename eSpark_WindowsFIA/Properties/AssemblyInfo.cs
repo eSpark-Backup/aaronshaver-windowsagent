@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("eSpark_WindowsFIA")]
-[assembly: AssemblyDescription("Windows File System Watcher By eSpark")]
+[assembly: AssemblyTitle("eSpark_WindowsFIA ღ")]
+[assembly: AssemblyDescription("Windows File System Watcher By eSpark ღ")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("eSpark Consulting Group")]
-[assembly: AssemblyProduct("Windows File System Watcher By eSpark Consulting Group")]
-[assembly: AssemblyCopyright("Copyright ©  2024")]
+[assembly: AssemblyCompany("eSpark Consulting Group ღ")]
+[assembly: AssemblyProduct("Windows File System Watcher By eSpark Consulting Group ღ")]
+[assembly: AssemblyCopyright("Copyright ©  2025 ღ")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

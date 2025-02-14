@@ -14,7 +14,7 @@ namespace eSpark_WindowsFIA
     {
         public static IScheduler scheduler;
         public static IJobDetail job;
-        public async void Start(DateTime CreationDate, DateTime NextScanDate, String scanPath,bool calcHash,int repeatAfter,int duration,bool reschedule)
+        public async void Start(DateTime CreationDate, DateTime NextScanDate, String scanPath,bool calcHash,int repeatAfter,int duration,bool reschedule,bool IsquartzJob)
         {
             //LogProvider.SetCurrentLogProvider(new ConsoleLogProvider());
 
@@ -57,8 +57,9 @@ namespace eSpark_WindowsFIA
                 ScheduledJobRecord.Add("ScannedDate", NextScanDate.ToString());//datetime of nextScan
                 ScheduledJobRecord.Add("RepeatAfter", repeatAfter.ToString());//no of days , 0 means noRepeat
                 ScheduledJobRecord.Add("duration", duration.ToString());//Daily , Weekly , Monthly
+                ScheduledJobRecord.Add("IsQuartzJob", IsquartzJob?"1":"0");//Is job for Quartz scheduler
                 //ScheduledJobRecord.Add("ActualCompleteDate", duration.ToString());//Daily , Weekly , Monthly
-                ScheduledJobRecord.Add("JobCompleted", "0");//Is job Completed , 0 means False=Notyet
+                ScheduledJobRecord.Add("JobCompleted", "0");//Is job Completed , 0 means False=Notyet                
                 controllerDB.InsertOnlyData("ScheduledQuartzJob", null, ScheduledJobRecord);
 
             }
@@ -73,20 +74,14 @@ namespace eSpark_WindowsFIA
             try
             {
                 ControllerDB controllerDB = new ControllerDB();
-                DataSet dsTemp = controllerDB.ReadData("ScheduledQuartzJob", " ScannedDate='" + context.JobDetail.Key.Name+ "' and JobCompleted=0 ");
+                DataSet dsTemp = controllerDB.ReadData("ScheduledQuartzJob", " ScannedDate='" + context.JobDetail.Key.Name+ "' and JobCompleted=0 and IsQuartzJob=1 ");
+                String ScanPath = "";
+                bool calcHash = false;
 
                 if (dsTemp != null && dsTemp.Tables[0] != null && dsTemp.Tables[0].Rows.Count > 0)
                 {
-                    String ScanPath = dsTemp.Tables[0].Rows[0]["ScanPath"].ToString();
-                    bool calcHash = dsTemp.Tables[0].Rows[0]["CalculateHash"].ToString()=="1"?true:false;
-
-                    //Form1.IsFSWRunning = true;
-                    Form1.CalledByScheduler(ScanPath,calcHash);
-                    
-
-
-                    // some sleep to show what's happening
-                    Task.Delay(TimeSpan.FromSeconds(60));
+                    ScanPath = dsTemp.Tables[0].Rows[0]["ScanPath"].ToString();
+                    calcHash = dsTemp.Tables[0].Rows[0]["CalculateHash"].ToString()=="1"?true:false;
 
                     //// and last shut down the scheduler when you are ready to close your program
                     //Scheduler.scheduler.Shutdown();
@@ -98,11 +93,18 @@ namespace eSpark_WindowsFIA
                     //ScheduledJobRecord.Add("ScannedDate", NextScanDate.ToString());//datetime of nextScan
                     ScheduledJobRecord.Add("ActualCompleteDate", DateTime.Now.ToString());//no of days , 0 means noRepeat
                     ScheduledJobRecord.Add("JobCompleted", "1");//Is job Completed , 0 means False=Notyet
-                    controllerDB.UpdateData("ScheduledQuartzJob", " ScannedDate='" + context.JobDetail.Key.Name+"' ", ScheduledJobRecord);
+                    //ScheduledJobRecord.Add("IsQuartzJob", "1");//Is job Completed , 0 means False=Notyet
+                    controllerDB.UpdateData("ScheduledQuartzJob", " ScannedDate='" + context.JobDetail.Key.Name+ "' and IsQuartzJob=1", ScheduledJobRecord);
                 }
+
+                // some sleep to show what's happening
+                Task.Delay(TimeSpan.FromSeconds(60));
+
+                //MainForm.IsFSWRunning = true;
+                MainForm.CalledByScheduler(ScanPath, calcHash);
             }
             catch (Exception ee){
-                Form1.loger.Log(LogLevel.Error, "===================SchedullerErr =================== \r\n " + ee.StackTrace);
+                MainForm.loger.Log(LogLevel.Error, "===================SchedullerErr =================== \r\n " + ee.StackTrace);
             }
 
             return Task.FromResult("Job Executed Succeccfully"+DateTime.Now.ToString());

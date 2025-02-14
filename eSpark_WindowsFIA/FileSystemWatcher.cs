@@ -40,22 +40,22 @@ namespace eSpark_WindowsFIA
             Watcher.Renamed += FileSystemWatcher_Renamed;
             Watcher.Error += FileSystemWatcher_Error;
 
-            //Form1.IsFSWRunning = true;
+            //MainForm.IsFSWRunning = true;
 
         }
 
         private void FileSystemWatcher_Error(object sender, ErrorEventArgs e)
         {
-            //Form1.IsFSWRunning = true;
-            Form1.currentfilescan = "FileSystemWatcher Error > " + e.ToString();
+            //MainForm.IsFSWRunning = true;
+            MainForm.currentfilescan = "FileSystemWatcher Error > " + e.ToString();
 
-            Form1.loger.Log(LogLevel.Info, "==================FileSystemWatcher Error===============" + DateTime.Now + " --- " + e.ToString());
-            //Form1.IsFSWRunning = false;
+            MainForm.loger.Log(LogLevel.Info, "==================FileSystemWatcher Error===============" + DateTime.Now + " --- " + e.ToString());
+            //MainForm.IsFSWRunning = false;
         }
 
         private void FileSystemWatcher_Renamed(object sender, RenamedEventArgs e)
         {
-            Form1.IsFSWRunning = true;
+            MainForm.IsFSWRunning = true;
 
         //new DataColumn("EventType", typeof(int)),//1=create,2=change/modify,3=delete,4=rename
         //new DataColumn("FullPath", typeof(string)),
@@ -64,14 +64,14 @@ namespace eSpark_WindowsFIA
         retrylab3:
             try
             {
-                lock (Form1.DS_FSW)
+                lock (MainForm.DS_FSW)
                 {
-                    var result = Form1.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 4 && myRow.Field<string>("FullPath") == e.FullPath);
+                    var result = MainForm.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 4 && myRow.Field<string>("FullPath") == e.FullPath);
 
                     if (result.Count() < 1)
                     {
-                        Form1.DS_FSW.Rows.Add("4", e.FullPath, e.OldFullPath, DateTime.Now); 
-                        Form1.DS_FSW.AcceptChanges();
+                        MainForm.DS_FSW.Rows.Add("4", e.FullPath, e.OldFullPath, DateTime.Now); 
+                        MainForm.DS_FSW.AcceptChanges();
                     }
 
 
@@ -82,21 +82,21 @@ namespace eSpark_WindowsFIA
 
         private void FileSystemWatcher_Deleted(object sender, FileSystemEventArgs e)
         {
-            Form1.IsFSWRunning = true;
+            MainForm.IsFSWRunning = true;
         //new DataColumn("EventType", typeof(int)),//1=create,2=change/modify,3=delete,4=rename
         //new DataColumn("FullPath", typeof(string)),
         //new DataColumn("OldFullPath", typeof(string)),
         //new DataColumn("DatetimeCalled", typeof(DateTime))
         retrylab4: try
             {
-                lock (Form1.DS_FSW)
+                lock (MainForm.DS_FSW)
                 {
-                    var result = Form1.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 3 && myRow.Field<string>("FullPath") == e.FullPath);
+                    var result = MainForm.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 3 && myRow.Field<string>("FullPath") == e.FullPath);
 
                     if (result.Count() < 1)
                     {
-                        Form1.DS_FSW.Rows.Add("3", e.FullPath, null, DateTime.Now);
-                        Form1.DS_FSW.AcceptChanges();
+                        MainForm.DS_FSW.Rows.Add("3", e.FullPath, null, DateTime.Now);
+                        MainForm.DS_FSW.AcceptChanges();
                     }
 
                 }
@@ -106,7 +106,7 @@ namespace eSpark_WindowsFIA
 
         private void FileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {
-            Form1.IsFSWRunning = true;
+            MainForm.IsFSWRunning = true;
         //Modified
         //new DataColumn("EventType", typeof(int)),//1=create,2=change/modify,3=delete,4=rename
         //new DataColumn("FullPath", typeof(string)),
@@ -115,14 +115,14 @@ namespace eSpark_WindowsFIA
         retrylab1:
             try
             {
-                lock (Form1.DS_FSW)
+                lock (MainForm.DS_FSW)
                 {
-                    var result = Form1.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 2 && myRow.Field<string>("FullPath") == e.FullPath);
+                    var result = MainForm.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 2 && myRow.Field<string>("FullPath") == e.FullPath);
 
                     if (result.Count() < 1)
                     {
-                        Form1.DS_FSW.Rows.Add("2", e.FullPath, null, DateTime.Now);
-                        Form1.DS_FSW.AcceptChanges();
+                        MainForm.DS_FSW.Rows.Add("2", e.FullPath, null, DateTime.Now);
+                        MainForm.DS_FSW.AcceptChanges();
                     }
                 }
             }
@@ -131,7 +131,7 @@ namespace eSpark_WindowsFIA
 
         private void FileSystemWatcher_Created(object sender, FileSystemEventArgs e)
         {
-            Form1.IsFSWRunning = true;
+            MainForm.IsFSWRunning = true;
         //new DataColumn("EventType", typeof(int)),//1=create,2=change/modify,3=delete,4=rename
         //new DataColumn("FullPath", typeof(string)),
         //new DataColumn("OldFullPath", typeof(string)),
@@ -139,14 +139,14 @@ namespace eSpark_WindowsFIA
 
         retrylab2: try
             {
-                lock (Form1.DS_FSW)
+                lock (MainForm.DS_FSW)
                 {
-                    var result = Form1.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 1 && myRow.Field<string>("FullPath") == e.FullPath);
+                    var result = MainForm.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 1 && myRow.Field<string>("FullPath") == e.FullPath);
 
                     if (result.Count() < 1)
                     {
-                        Form1.DS_FSW.Rows.Add("1", e.FullPath, null, DateTime.Now); 
-                        Form1.DS_FSW.AcceptChanges();
+                        MainForm.DS_FSW.Rows.Add("1", e.FullPath, null, DateTime.Now); 
+                        MainForm.DS_FSW.AcceptChanges();
                     }
 
                 }

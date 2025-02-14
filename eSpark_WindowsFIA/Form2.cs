@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MetroSet_UI.Forms;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,27 +11,27 @@ using System.Windows.Forms;
 
 namespace eSpark_WindowsFIA
 {
-    public partial class Form2 : Form
+    public partial class Form2 : MetroSetForm
     {
 
         public Form2()
         {
             InitializeComponent();
             this.textBox1.Focus();
-            this.label1.Text = Form1.UserControlLabel;
-            this.textBox1.Text = Form1.txtResult;
+            this.label1.Text = MainForm.UserControlLabel;
+            this.textBox1.Text = MainForm.txtResult;
 
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            Form1.txtResult = this.textBox1.Text;
+            MainForm.txtResult = this.textBox1.Text;
             this.Close();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             this.textBox1.Text = "";
-            //Form1.txtResult = this.textBox1.Text;
+            //MainForm.txtResult = this.textBox1.Text;
             this.Close();
         }
 
@@ -38,7 +39,7 @@ namespace eSpark_WindowsFIA
         {
             if (e.KeyCode == Keys.Enter)
             {
-                Form1.txtResult = this.textBox1.Text;
+                MainForm.txtResult = this.textBox1.Text;
                 this.Close();
 
             }

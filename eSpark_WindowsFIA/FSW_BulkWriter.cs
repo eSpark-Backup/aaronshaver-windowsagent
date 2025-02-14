@@ -42,9 +42,9 @@ namespace eSpark_WindowsFIA
                         parms.Add("FileSize", fin.Length.ToString());
 
 
-                        if (Form1.calculateHash)
+                        if (MainForm.calculateHash)
                         {
-                            parms.Add("FileHash", Form1.Compute256Hash(fin.FullName));
+                            parms.Add("FileHash", MainForm.Compute256Hash(fin.FullName));
                         }
                         else parms.Add("FileHash", "0000000");
                         controllerDB.InsertOnlyData("ScannedFileLogs", null, parms);
@@ -90,9 +90,9 @@ namespace eSpark_WindowsFIA
                             parms.Add("FileSize", fin.Length.ToString());
 
 
-                            if (Form1.calculateHash)
+                            if (MainForm.calculateHash)
                             {
-                                parms.Add("FileHash", Form1.Compute256Hash(fin.FullName));
+                                parms.Add("FileHash", MainForm.Compute256Hash(fin.FullName));
                             }
                             else parms.Add("FileHash", "0000000");
                             controllerDB.InsertOnlyData("ScannedFileLogs", null, parms);
@@ -100,7 +100,7 @@ namespace eSpark_WindowsFIA
                     }
                 }
 
-                Form1.currentfilescan = "FileSystemWatcher Created > " + FullPath;
+                MainForm.currentfilescan = "FileSystemWatcher Created > " + FullPath;
 
             }
             catch { }
@@ -131,7 +131,7 @@ namespace eSpark_WindowsFIA
                         Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
                         DirectoryInf.Add("ModifiedDate", DateTime.Now.ToString());
                         controllerDB.UpdateData("ScannedDirectoryLogs", " DirectoryID ='" + DirectoryIDNew + "' ", DirectoryInf);
-                        Form1.currentfilescan = "FileSystemWatcher Changed > " + FullPath;
+                        MainForm.currentfilescan = "FileSystemWatcher Changed > " + FullPath;
                         return;
 
                     }
@@ -198,7 +198,7 @@ namespace eSpark_WindowsFIA
             }
             catch { }
 
-            Form1.currentfilescan = "FileSystemWatcher Changed > " + FullPath;
+            MainForm.currentfilescan = "FileSystemWatcher Changed > " + FullPath;
 
         }
 
@@ -228,7 +228,7 @@ namespace eSpark_WindowsFIA
                         parms.Add("DeleteDate", DateTime.Now.ToString());
                         parms.Add("FileName", "~" + FullPath);
                         controllerDB.UpdateData("ScannedFileLogs", " DirectoryID ='" + DirectoryIDNew + "' and FileName='" + Path.GetFileName(FullPath) + "' ", parms);
-                        Form1.currentfilescan = "FileSystemWatcher Deleted > " + FullPath;
+                        MainForm.currentfilescan = "FileSystemWatcher Deleted > " + FullPath;
                     }
                 }
                 else
@@ -245,7 +245,7 @@ namespace eSpark_WindowsFIA
                         //controllerDB.DeleteData("ScannedDirectoryLogs", " DirectoryID ='" + DirectoryIDNew + "' ");
                         //controllerDB.DeleteData("ScannedFileLogs", " DirectoryID ='" + DirectoryIDNew + "' ");
                         controllerDB.UpdateData("ScannedDirectoryLogs", " DirectoryPath ='" + FullPath + "' ", DirectoryInf);
-                        Form1.currentfilescan = "FileSystemWatcher Deleted > " + FullPath;
+                        MainForm.currentfilescan = "FileSystemWatcher Deleted > " + FullPath;
                     }
                 }
 
@@ -322,7 +322,7 @@ namespace eSpark_WindowsFIA
                 }
             }
             catch { }
-            Form1.currentfilescan = "FileSystemWatcher Renamed > " + FullPath;
+            MainForm.currentfilescan = "FileSystemWatcher Renamed > " + FullPath;
         }
     }
 }

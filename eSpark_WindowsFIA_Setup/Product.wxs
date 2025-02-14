@@ -18,6 +18,12 @@
             <Directory Id='Resources' Name='Resources'>
               <Component Id='Resourcesdirectory' Guid='82fb98a6-f47f-4476-baaa-755fd3c7975f'>
                 <File Id='logop256.ico' Name='logo-p256.ico' DiskId='1' Source='Resources\logo-p256.ico'/>
+				<File Id='filter.png' Name='filter.png' DiskId='1' Source='Resources\filter.png'/>
+				  <File Id='About.png' Name='About.png' DiskId='1' Source='Resources\About.png'/>
+				  <File Id='FileSystemAgent.png' Name='FileSystemAgent.png' DiskId='1' Source='Resources\FileSystemAgent.png'/>
+				  <File Id='Scheduler.png' Name='Scheduler.png' DiskId='1' Source='Resources\Scheduler.png'/>
+				  <File Id='Settings.png' Name='Settings.png' DiskId='1' Source='Resources\Settings.png'/>				  
+				  <File Id='Settings2.png' Name='Settings2.png' DiskId='1' Source='Resources\Settings2.png'/>
               </Component>
             </Directory>
 
@@ -48,6 +54,8 @@
              </File>
                 <File Id='eSpark_WindowsFIA.exe.config' Name='eSpark_WindowsFIA.exe.config' DiskId='1' Source='eSpark_WindowsFIA.exe.config'/>
 				<File Id='app.manifest' Name='app.manifest' DiskId='1' Source='app.manifest'/>
+				<File Id='MetroSetUI.dll' Name='MetroSet UI.dll' DiskId='1' Source='MetroSet UI.dll'/>
+				<File Id='sqlite3.exe' Name='sqlite3.exe' DiskId='1' Source='sqlite3.exe'/>
 				<File Id='eSpark_WindowsFIA.manifest' Name='eSpark_WindowsFIA.manifest' DiskId='1' Source='eSpark_WindowsFIA.manifest'/>
                 <File Id='System.Runtime.CompilerServices.Unsafe.xml' Name='System.Runtime.CompilerServices.Unsafe.xml' DiskId='1' Source='System.Runtime.CompilerServices.Unsafe.xml'/>
 				<File Id='System.Runtime.CompilerServices.Unsafe.dll' Name='System.Runtime.CompilerServices.Unsafe.dll' DiskId='1' Source='System.Runtime.CompilerServices.Unsafe.dll'/>
@@ -104,10 +112,20 @@
       <ComponentRef Id='x86directory' />
       <ComponentRef Id='x64directory' />
       <ComponentRef Id='Resourcesdirectory' />
-      
+	  <ComponentRef Id="RegistryEntries"/>
+		
     </Feature>
 
     <Icon Id="logop256.ico" SourceFile="eSpark_WindowsFIA.exe" />
 
   </Product>
+	<Fragment>
+		<DirectoryRef Id="INSTALLDIR">
+			<Component Id="RegistryEntries" Guid="82fb98a6-f47f-4476-baaa-799fd3c7975e">
+				<RegistryKey Root="HKCU" Key="Software\Microsoft\Windows\CurrentVersion\Run" Action="createAndRemoveOnUninstall">
+					<RegistryValue Type="string" Name="eSpark_WindowsFIA.exe" Value="&quot;eSpark_WindowsFIA.exe&quot;" KeyPath="yes"/>
+				</RegistryKey>
+			</Component>
+		</DirectoryRef>
+	</Fragment>
 </Wix>

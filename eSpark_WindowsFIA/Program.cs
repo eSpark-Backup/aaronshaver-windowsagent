@@ -5,6 +5,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Security.Principal;
 using System.Threading;
@@ -18,13 +19,37 @@ namespace eSpark_WindowsFIA
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
+        /// 
+
+
+        [DllImport("user32.dll")]
+        static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr ProcessId);
+
+
         [STAThread]
         [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
         static void Main(String[] args)
         {
             bool instanceCountOne = false;
+            Mutex mtex;
 
-            using (Mutex mtex = new Mutex(true, "eSparkWindowsFIA", out instanceCountOne))
+            //if (Mutex.TryOpenExisting("eSparkWindowsFIA", out mtex))
+            //{
+            //    //MainForm.ShowFolderBrowserDialogAsync();  
+            //    MessageBox.Show("Task Scheduler Called!");
+            //    try { MainForm.timer_callByTaskSched.Start(); } catch (Exception x) { MessageBox.Show("Task Scheduler Called!2222" + x.Message); }
+
+
+            //    //https://stackoverflow.com/questions/2461171/why-does-getwindowthreadprocessid-return-0-when-called-from-a-service
+            //    var processesToAttachTo = Process.GetProcessesByName("eSparkWindowsFIA");
+            //    var threadID = (uint)0;
+            //    foreach (var process in processesToAttachTo)
+            //        threadID = GetWindowThreadProcessId(process.MainWindowHandle, IntPtr.Zero);
+
+            //}
+            //else
+            //{
+            using (mtex = new Mutex(true, "eSparkWindowsFIA", out instanceCountOne))
             {
                 if (instanceCountOne)
                 {
@@ -60,62 +85,64 @@ namespace eSpark_WindowsFIA
                     {
                         // We are running as administrator
                         Application.EnableVisualStyles();
-                        Application.SetCompatibleTextRenderingDefault(false);
-                        Application.Run(new Form1(args));
-                    }
+                        //Application.SetCompatibleTextRenderingDefault(false);
+                        //Application.Run(new Form1());
+                        Application.Run(new Dashboard());
 
+                    }
                     mtex.ReleaseMutex();
                 }
                 else
                 {
-                    MessageBox.Show("Only one instance of application can be run at a time!", "Application Already Running",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                    System.IO.File.AppendAllText(MainForm.AssemblyDirectory + "\\callTaskScheduler", string.Join(" ", args));
+                    //MessageBox.Show("Only one instance of application can be run at a time!", "Application Already Running", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-
+            //}
         }
 
-        private static void UpdateLogdbEntryMain()
-        {
-            try
-            {//Logs level
-             //0=None
-             //1=Errors Only
-             //Errors and Search Results
-             //Full Logs
+        //private static void UpdateLogdbEntryMain()
+        //{
+        //    try
+        //    {//Logs level
+        //     //0=None
+        //     //1=Errors Only
+        //     //Errors and Search Results
+        //     //Full Logs
 
-                Form1.LogsLevel = int.Parse(ConfigurationManager.AppSettings["LogsLevel"]);
-            }
-            catch { }
-
-
-                String logfilePath = ConfigurationManager.AppSettings["LogsDBPath"];
+        //        MainForm.LogsLevel = int.Parse(ConfigurationManager.AppSettings["LogsLevel"]);
+        //    }
+        //    catch { }
 
 
-            // Targets where to log to: File and Console
-            var logfile = new NLog.Targets.FileTarget("logfile")
-            {
-                FileName = (logfilePath + "\\logfile.txt").Replace("\\\\", "\\"),
-                ArchiveFileName = "logfile.{#}.txt",
-                ArchiveNumbering = NLog.Targets.ArchiveNumberingMode.Date,
-                ArchiveEvery = NLog.Targets.FileArchivePeriod.Day,
-                ArchiveDateFormat = "yyyyMMdd"
-            };
+        //        String logfilePath = ConfigurationManager.AppSettings["LogsDBPath"];
 
-            // Rules for mapping loggers to targets            
-            //config.AddRule(LogLevel.Info, LogLevel.Info, logfile);
-            //config.AddRule(LogLevel.Debug, LogLevel.Debug, logfile);            
-            if (Form1.LogsLevel == 0) Form1.config.AddRule(LogLevel.Info, LogLevel.Info, logfile);
-            else if (Form1.LogsLevel == 1) Form1.config.AddRule(LogLevel.Error, LogLevel.Fatal, logfile);
-            else if (Form1.LogsLevel == 2) Form1.config.AddRule(LogLevel.Trace, LogLevel.Info, logfile);
-            else if (Form1.LogsLevel == 3) Form1.config.AddRule(LogLevel.Trace, LogLevel.Fatal, logfile);
 
-            Form1.config.Reload();
+        //    // Targets where to log to: File and Console
+        //    var logfile = new NLog.Targets.FileTarget("logfile")
+        //    {
+        //        FileName = (logfilePath + "\\logfile.txt").Replace("\\\\", "\\"),
+        //        ArchiveFileName = "logfile.{#}.txt",
+        //        ArchiveNumbering = NLog.Targets.ArchiveNumberingMode.Date,
+        //        ArchiveEvery = NLog.Targets.FileArchivePeriod.Day,
+        //        ArchiveDateFormat = "yyyyMMdd"
+        //    };
 
-            // Apply config           
-            NLog.LogManager.Configuration = Form1.config;
-            Form1.loger = NLog.LogManager.GetCurrentClassLogger();
+        //    // Rules for mapping loggers to targets            
+        //    //config.AddRule(LogLevel.Info, LogLevel.Info, logfile);
+        //    //config.AddRule(LogLevel.Debug, LogLevel.Debug, logfile);            
+        //    if (MainForm.LogsLevel == 0) MainForm.config.AddRule(LogLevel.Info, LogLevel.Info, logfile);
+        //    else if (MainForm.LogsLevel == 1) MainForm.config.AddRule(LogLevel.Error, LogLevel.Fatal, logfile);
+        //    else if (MainForm.LogsLevel == 2) MainForm.config.AddRule(LogLevel.Trace, LogLevel.Info, logfile);
+        //    else if (MainForm.LogsLevel == 3) MainForm.config.AddRule(LogLevel.Trace, LogLevel.Fatal, logfile);
 
-        }
+        //    MainForm.config.Reload();
+
+        //    // Apply config           
+        //    NLog.LogManager.Configuration = MainForm.config;
+        //    MainForm.loger = NLog.LogManager.GetCurrentClassLogger();
+
+        //}
 
     }
 }
