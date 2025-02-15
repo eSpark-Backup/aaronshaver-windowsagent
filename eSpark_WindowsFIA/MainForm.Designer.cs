@@ -53,11 +53,11 @@ namespace eSpark_WindowsFIA
             timer_callByTaskSched = new System.Windows.Forms.Timer(this.components);
             this.tootltip1label2 = new MetroSet_UI.Controls.MetroSetLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.numMinExcludeFileSize = new MetroSet_UI.Controls.MetroSetNumeric();
             this.cmbMaxExcludeFileSize = new MetroSet_UI.Controls.MetroSetComboBox();
-            this.numMaxExcludeFileSize = new MetroSet_UI.Controls.MetroSetNumeric();
             this.cmbMinExcludeFileSize = new MetroSet_UI.Controls.MetroSetComboBox();
             this.panel1 = new MetroSet_UI.Controls.MetroSetPanel();
+            this.numMaxExcludeFileSize = new System.Windows.Forms.NumericUpDown();
+            this.numMinExcludeFileSize = new System.Windows.Forms.NumericUpDown();
             this.metroSetLabel1 = new MetroSet_UI.Controls.MetroSetLabel();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.directorySearcher1 = new System.DirectoryServices.DirectorySearcher();
@@ -77,6 +77,8 @@ namespace eSpark_WindowsFIA
             this.metroSetProgressBar1 = new MetroSet_UI.Controls.MetroSetProgressBar();
             this.metroSetLabel9 = new MetroSet_UI.Controls.MetroSetLabel();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numMaxExcludeFileSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numMinExcludeFileSize)).BeginInit();
             this.FSW_trayMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -110,7 +112,7 @@ namespace eSpark_WindowsFIA
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.label7.IsDerivedStyle = true;
-            this.label7.Location = new System.Drawing.Point(352, 91);
+            this.label7.Location = new System.Drawing.Point(348, 84);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(41, 17);
             this.label7.Style = MetroSet_UI.Enums.Style.Light;
@@ -125,7 +127,7 @@ namespace eSpark_WindowsFIA
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.label6.IsDerivedStyle = true;
-            this.label6.Location = new System.Drawing.Point(158, 91);
+            this.label6.Location = new System.Drawing.Point(150, 87);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(36, 17);
             this.label6.Style = MetroSet_UI.Enums.Style.Light;
@@ -509,30 +511,6 @@ namespace eSpark_WindowsFIA
             this.tootltip1label2.ThemeAuthor = "Narwin";
             this.tootltip1label2.ThemeName = "MetroLite";
             // 
-            // numMinExcludeFileSize
-            // 
-            this.numMinExcludeFileSize.BackColor = System.Drawing.Color.Transparent;
-            this.numMinExcludeFileSize.BackgroundColor = System.Drawing.Color.Empty;
-            this.numMinExcludeFileSize.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
-            this.numMinExcludeFileSize.DisabledBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.numMinExcludeFileSize.DisabledBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(155)))), ((int)(((byte)(155)))));
-            this.numMinExcludeFileSize.DisabledForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(136)))), ((int)(((byte)(136)))));
-            this.numMinExcludeFileSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.numMinExcludeFileSize.IsDerivedStyle = true;
-            this.numMinExcludeFileSize.Location = new System.Drawing.Point(197, 82);
-            this.numMinExcludeFileSize.Maximum = 9999;
-            this.numMinExcludeFileSize.Minimum = 0;
-            this.numMinExcludeFileSize.Name = "numMinExcludeFileSize";
-            this.numMinExcludeFileSize.Size = new System.Drawing.Size(76, 26);
-            this.numMinExcludeFileSize.Style = MetroSet_UI.Enums.Style.Light;
-            this.numMinExcludeFileSize.StyleManager = null;
-            this.numMinExcludeFileSize.SymbolsColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.numMinExcludeFileSize.TabIndex = 3;
-            this.numMinExcludeFileSize.ThemeAuthor = "Narwin";
-            this.numMinExcludeFileSize.ThemeName = "MetroLite";
-            this.toolTip1.SetToolTip(this.numMinExcludeFileSize, "Minimum file size here");
-            this.numMinExcludeFileSize.Value = 0;
-            // 
             // cmbMaxExcludeFileSize
             // 
             this.cmbMaxExcludeFileSize.AllowDrop = true;
@@ -566,30 +544,6 @@ namespace eSpark_WindowsFIA
             this.cmbMaxExcludeFileSize.ThemeAuthor = "Narwin";
             this.cmbMaxExcludeFileSize.ThemeName = "MetroLite";
             this.toolTip1.SetToolTip(this.cmbMaxExcludeFileSize, "Maximum file size here");
-            // 
-            // numMaxExcludeFileSize
-            // 
-            this.numMaxExcludeFileSize.BackColor = System.Drawing.Color.Transparent;
-            this.numMaxExcludeFileSize.BackgroundColor = System.Drawing.Color.Empty;
-            this.numMaxExcludeFileSize.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
-            this.numMaxExcludeFileSize.DisabledBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(204)))), ((int)(((byte)(204)))));
-            this.numMaxExcludeFileSize.DisabledBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(155)))), ((int)(((byte)(155)))));
-            this.numMaxExcludeFileSize.DisabledForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(136)))), ((int)(((byte)(136)))), ((int)(((byte)(136)))));
-            this.numMaxExcludeFileSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.numMaxExcludeFileSize.IsDerivedStyle = true;
-            this.numMaxExcludeFileSize.Location = new System.Drawing.Point(399, 82);
-            this.numMaxExcludeFileSize.Maximum = 9999;
-            this.numMaxExcludeFileSize.Minimum = 0;
-            this.numMaxExcludeFileSize.Name = "numMaxExcludeFileSize";
-            this.numMaxExcludeFileSize.Size = new System.Drawing.Size(76, 26);
-            this.numMaxExcludeFileSize.Style = MetroSet_UI.Enums.Style.Light;
-            this.numMaxExcludeFileSize.StyleManager = null;
-            this.numMaxExcludeFileSize.SymbolsColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.numMaxExcludeFileSize.TabIndex = 5;
-            this.numMaxExcludeFileSize.ThemeAuthor = "Narwin";
-            this.numMaxExcludeFileSize.ThemeName = "MetroLite";
-            this.toolTip1.SetToolTip(this.numMaxExcludeFileSize, "Maximum file size here");
-            this.numMaxExcludeFileSize.Value = 0;
             // 
             // cmbMinExcludeFileSize
             // 
@@ -630,14 +584,14 @@ namespace eSpark_WindowsFIA
             this.panel1.BackgroundColor = System.Drawing.Color.White;
             this.panel1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
             this.panel1.BorderThickness = 1;
+            this.panel1.Controls.Add(this.numMaxExcludeFileSize);
+            this.panel1.Controls.Add(this.numMinExcludeFileSize);
             this.panel1.Controls.Add(this.metroSetLabel1);
             this.panel1.Controls.Add(this.lblFileSystemWatcher);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.label6);
             this.panel1.Controls.Add(this.cmbMaxExcludeFileSize);
-            this.panel1.Controls.Add(this.numMaxExcludeFileSize);
             this.panel1.Controls.Add(this.cmbMinExcludeFileSize);
-            this.panel1.Controls.Add(this.numMinExcludeFileSize);
             this.panel1.Controls.Add(this.tootltip1label1);
             this.panel1.Controls.Add(this.cmbLogsLevel);
             this.panel1.Controls.Add(this.label5);
@@ -662,6 +616,32 @@ namespace eSpark_WindowsFIA
             this.panel1.TabIndex = 4;
             this.panel1.ThemeAuthor = "Narwin";
             this.panel1.ThemeName = "MetroLite";
+            // 
+            // numMaxExcludeFileSize
+            // 
+            this.numMaxExcludeFileSize.Font = new System.Drawing.Font("Times New Roman", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numMaxExcludeFileSize.Location = new System.Drawing.Point(391, 81);
+            this.numMaxExcludeFileSize.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numMaxExcludeFileSize.Name = "numMaxExcludeFileSize";
+            this.numMaxExcludeFileSize.Size = new System.Drawing.Size(84, 29);
+            this.numMaxExcludeFileSize.TabIndex = 5;
+            // 
+            // numMinExcludeFileSize
+            // 
+            this.numMinExcludeFileSize.Font = new System.Drawing.Font("Times New Roman", 14.25F);
+            this.numMinExcludeFileSize.Location = new System.Drawing.Point(189, 82);
+            this.numMinExcludeFileSize.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numMinExcludeFileSize.Name = "numMinExcludeFileSize";
+            this.numMinExcludeFileSize.Size = new System.Drawing.Size(84, 29);
+            this.numMinExcludeFileSize.TabIndex = 3;
             // 
             // metroSetLabel1
             // 
@@ -883,6 +863,8 @@ namespace eSpark_WindowsFIA
             this.HelpRequested += new System.Windows.Forms.HelpEventHandler(this.Form1_HelpButtonClicked);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numMaxExcludeFileSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numMinExcludeFileSize)).EndInit();
             this.FSW_trayMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -899,8 +881,6 @@ namespace eSpark_WindowsFIA
         private MetroSet_UI.Controls.MetroSetSwitch chkHash;
         private MetroSet_UI.Controls.MetroSetButton btnFilesSearch;        
         private System.Windows.Forms.ToolTip toolTip1;
-        private MetroSet_UI.Controls.MetroSetNumeric numMinExcludeFileSize;
-        private MetroSet_UI.Controls.MetroSetNumeric numMaxExcludeFileSize;
         private MetroSet_UI.Controls.MetroSetPanel panel1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.DirectoryServices.DirectorySearcher directorySearcher1;
@@ -933,6 +913,8 @@ namespace eSpark_WindowsFIA
         private MetroSet_UI.Controls.MetroSetControlBox metroSetControlBox1;
         private MetroSet_UI.Controls.MetroSetProgressBar metroSetProgressBar1;
         private MetroSet_UI.Controls.MetroSetLabel metroSetLabel9;
+        private System.Windows.Forms.NumericUpDown numMaxExcludeFileSize;
+        private System.Windows.Forms.NumericUpDown numMinExcludeFileSize;
         public static System.Windows.Forms.Timer timer1;
         public static System.Windows.Forms.Timer progressbarTimer;
         public static System.Windows.Forms.Timer timer_callByTaskSched;

@@ -214,6 +214,12 @@ namespace eSpark_WindowsFIA
 
         public void btnFilesSearch_Click(object sender, EventArgs e)
         {
+            if (this.numMinExcludeFileSize.Value > 0 && this.numMaxExcludeFileSize.Value < 1)
+            {
+                MetroSetMessageBox.Show(this, "Please check the ExcludeFileSize?", "ExcludeFileSize Incorrect...........", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                return;
+            }
+
             if (excFileSize[0].ToString() != this.numMinExcludeFileSize.Value + ":" + this.cmbMinExcludeFileSize.SelectedIndex
                 || excFileSize[1].ToString() != this.numMaxExcludeFileSize.Value + ":" + this.cmbMaxExcludeFileSize.SelectedIndex)
             {
@@ -636,7 +642,7 @@ namespace eSpark_WindowsFIA
                                 counter++;
                                 continue;
                             }
-
+                                
 
                             double fileLengthKB = 0;//Math.Ceiling(file.Length / 1024D);
 
@@ -1493,7 +1499,9 @@ namespace eSpark_WindowsFIA
                         File.Delete(MainForm.AssemblyDirectory + "\\callTaskScheduler");
 
                         String ScannedDateTime = schdtls.Split(' ')[1].Replace("ScannedDate=", "");
-                        ScannedDateTime += " " + schdtls.Split(' ')[2];
+                        try { ScannedDateTime += " " + schdtls.Split(' ')[2]; } catch { }
+                        try{ScannedDateTime += " " + schdtls.Split(' ')[3];} catch { }
+                        try { ScannedDateTime += " " + schdtls.Split(' ')[4]; } catch { }
 
                         if (Dashboard.mainForm.notifyIcon1 == null || Dashboard.mainForm.notifyIcon1.Container == null)
                         {

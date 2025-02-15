@@ -44,6 +44,7 @@
     <Content Include="MetroSetUI.dll" />
     <Content Include="Microsoft.Extensions.Logging.Abstractions.dll" />
     <Content Include="Microsoft.Extensions.Logging.Abstractions.xml" />
+    <Content Include="Microsoft.Win32.TaskScheduler.dll" />
     <Content Include="NLog.dll" />
     <Content Include="NLog.xml" />
     <Content Include="Quartz.dll" />

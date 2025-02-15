@@ -1,3 +1,5 @@
+Resources\About.png
+app.manifest
 Crc32C.NET.dll
 Crc32C.NET.xml
 EntityFramework.dll
@@ -7,15 +9,23 @@ EntityFramework.xml
 eSpark_FIA.sqlite
 eSpark_WindowsFIA.exe
 eSpark_WindowsFIA.exe.config
+eSpark_WindowsFIA.manifest
+Resources\FileSystemAgent.png
+Resources\filter.png
 Help.chm
 Resources\logo-p256.ico
-Manual.pdf
+MetroSet UI.dll
 Microsoft.Extensions.Logging.Abstractions.dll
 Microsoft.Extensions.Logging.Abstractions.xml
+Microsoft.Win32.TaskScheduler.dll
 NLog.dll
 NLog.xml
 Quartz.dll
 Quartz.xml
+Resources\Scheduler.png
+Resources\Settings.png
+Resources\Settings2.png
+sqlite3.exe
 System.Buffers.dll
 System.Buffers.xml
 System.Data.SQLite.dll

@@ -61,6 +61,7 @@
 				<File Id='System.Runtime.CompilerServices.Unsafe.dll' Name='System.Runtime.CompilerServices.Unsafe.dll' DiskId='1' Source='System.Runtime.CompilerServices.Unsafe.dll'/>
 				<File Id='System.Numerics.Vectors.xml' Name='System.Numerics.Vectors.xml' DiskId='1' Source='System.Numerics.Vectors.xml'/>
 				<File Id='System.Numerics.Vectors.dll' Name='System.Numerics.Vectors.dll' DiskId='1' Source='System.Numerics.Vectors.dll'/>
+				<File Id='Microsoft.Win32.TaskScheduler.dll' Name='Microsoft.Win32.TaskScheduler.dll' DiskId='1' Source='Microsoft.Win32.TaskScheduler.dll'/>
 				<File Id='System.Memory.xml' Name='System.Memory.xml' DiskId='1' Source='System.Memory.xml'/>
 				<File Id='System.Memory.dll' Name='System.Memory.dll' DiskId='1' Source='System.Memory.dll'/>
 				<File Id='System.Diagnostics.DiagnosticSource.xml' Name='System.Diagnostics.DiagnosticSource.xml' DiskId='1' Source='System.Diagnostics.DiagnosticSource.xml'/>

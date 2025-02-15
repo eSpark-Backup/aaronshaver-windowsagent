@@ -372,8 +372,20 @@ namespace eSpark_WindowsFIA
                                                            // if Name id empty or null, System will create a task with name as GUID
                 try { rootFolder.CreateFolder("eSpark", TaskSecurity.DefaultTaskSecurity); } catch(Exception tep) { }
 
-                ts.RootFolder.SubFolders["eSpark"].RegisterTaskDefinition(@"WindowsFIA_" + TaskStartDT.ToString().Replace('/', '-').Replace(' ', '-'), td);
-                
+                //"WindowsFIA_07-02-2025-6:00:00-am"
+                //NotAllowedChars//\ / : * ? " < > |
+                try { 
+                String pat = "WindowsFIA_" + TaskStartDT.ToString().Replace('/', '-').Replace(' ', '_').Replace(":", "");
+                ts.RootFolder.SubFolders["eSpark"].RegisterTaskDefinition(pat, td);
+                    //Microsoft.Win32.TaskScheduler.Task task = ts.RootFolder.SubFolders["eSpark"].RegisterTaskDefinition(pat, td);
+
+                    //ts.RootFolder.SubFolders["eSpark"].RegisterTaskDefinition(@"WindowsFIA_" + TaskStartDT.ToString().Replace('/', '-').Replace(' ', '-'), td);
+                }
+                catch
+                {
+                    MainForm.loger.Log(LogLevel.Error, "===================ErrorCreatingWindowsTaskSchedulerJobs =================== \r\n ");
+                    //MetroSetMessageBox.Show(this, "Error loading Application! Please contact vendor!...", "Information not available...........", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                }
 
             }
         }
