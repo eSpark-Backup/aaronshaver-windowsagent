@@ -369,7 +369,7 @@ namespace eSpark_WindowsFIA
 
             if (errcnt > 2)
             {
-                MetroSetMessageBox.Show(Dashboard.mainForm, "Errors occured while updating database>>>"+ MainForm.outputResultsErr, "Upload database errors occured.........", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                MetroSetMessageBox.Show(Dashboard.mainForm, "Errors occured while updating database>>>"+ MainForm.outputResultsErr, "Upload database errors occured.........", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 

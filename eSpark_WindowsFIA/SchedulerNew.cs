@@ -64,7 +64,7 @@ namespace eSpark_WindowsFIA
             }
 
             if (totalJobs>0)
-                MessageBox.Show("Total " + totalJobs + " Jobs rescheduled!", "Process completed successfully!", MessageBoxButtons.OK);
+                MessageBox.Show("Total " + totalJobs + " Jobs rescheduled!", "Process completed successfully! @ " + DateTime.Now.ToString(), MessageBoxButtons.OK);
 
         }
 
@@ -80,7 +80,8 @@ namespace eSpark_WindowsFIA
             }
 
             int cmdRemoveJob = this.cmbRemoveJobs.SelectedIndex;
-
+            
+            metroSetLabel3.Text = "Please wait.....";
             if (cmdRemoveJob > 0)
             {
                 ControllerDB controllerDB = new ControllerDB();
@@ -101,7 +102,7 @@ namespace eSpark_WindowsFIA
 
                 if (this.chkRemove.Checked)
                 {
-                    MessageBox.Show("Removed Scheduler Data Successfully!", "Process completed successfully!", MessageBoxButtons.OK);
+                    MessageBox.Show("Removed Scheduler Data Successfully!", "Process completed successfully! @ " + DateTime.Now.ToString(), MessageBoxButtons.OK);
                     return;
                 }
             }
@@ -239,7 +240,7 @@ namespace eSpark_WindowsFIA
                 totalJobs++;
             }
 
-            MessageBox.Show("Total " + totalJobs + " Jobs added!", "Process completed successfully!", MessageBoxButtons.OK);
+            MessageBox.Show("Total " + totalJobs + " Jobs added!", "Process completed successfully! @ " + DateTime.Now.ToString(), MessageBoxButtons.OK);
             try
             {
                 this.Hide();
@@ -247,6 +248,8 @@ namespace eSpark_WindowsFIA
             }
             catch(Exception ep) { MainForm.loger.Log(LogLevel.Error, "===================SchedullerErr =================== \r\n " + ep.StackTrace); 
             }
+
+            metroSetLabel3.Text = "";
         }
 
     private void btnScanPath_Click(object sender, EventArgs e)
@@ -362,7 +365,7 @@ namespace eSpark_WindowsFIA
 
                 // Create an action that will launch my jobs whenever the trigger fires -- Path,Argument,WorkingDir
                 td.Actions.Add(new ExecAction(System.Reflection.Assembly.GetExecutingAssembly().Location, " r=taskschd.msc ScannedDate=" + TaskStartDT.ToString(), Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)));
-                //System.Reflection.Assembly.GetExecutingAssembly().FullName
+                //"eSpark_WindowsFIA"
 
                 // Register the task in the root folder
                 //ts.RootFolder.RegisterTaskDefinition(@"WindowsFIA_" + TaskStartDT.ToString().Replace('/', '-').Replace(' ', '-'), td);

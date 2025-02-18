@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("eSpark_WindowsFIA ღ")]
-[assembly: AssemblyDescription("Windows File System Watcher By eSpark ღ")]
+[assembly: AssemblyTitle("eSpark_WindowsFIA")]
+[assembly: AssemblyDescription("Windows File System Watcher By eSpark v2.2.3")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("eSpark Consulting Group ღ")]
-[assembly: AssemblyProduct("Windows File System Watcher By eSpark Consulting Group ღ")]
-[assembly: AssemblyCopyright("Copyright ©  2025 ღ")]
+[assembly: AssemblyCompany("eSpark Consulting Group")]
+[assembly: AssemblyProduct("Windows File System Watcher By eSpark Consulting Group v2.2.3")]
+[assembly: AssemblyCopyright("Copyright ©  2025 v2.2.3")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.1.0")]
-[assembly: AssemblyFileVersion("1.0.1.0")]
+[assembly: AssemblyVersion("2.0.2.3")]
+[assembly: AssemblyFileVersion("2.0.2.3")]

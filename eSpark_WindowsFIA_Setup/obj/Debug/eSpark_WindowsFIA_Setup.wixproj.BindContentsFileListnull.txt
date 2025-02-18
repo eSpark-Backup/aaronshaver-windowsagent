@@ -1,4 +1,4 @@
-Resources\About.png
+Resources\Aboutx180.png
 app.manifest
 Crc32C.NET.dll
 Crc32C.NET.xml
@@ -10,7 +10,7 @@ eSpark_FIA.sqlite
 eSpark_WindowsFIA.exe
 eSpark_WindowsFIA.exe.config
 eSpark_WindowsFIA.manifest
-Resources\FileSystemAgent.png
+Resources\OFSx180.png
 Resources\filter.png
 Help.chm
 Resources\logo-p256.ico
@@ -22,8 +22,8 @@ NLog.dll
 NLog.xml
 Quartz.dll
 Quartz.xml
-Resources\Scheduler.png
-Resources\Settings.png
+Resources\FileSystemAgentx180.png
+Resources\Settingx180.png
 Resources\Settings2.png
 sqlite3.exe
 System.Buffers.dll

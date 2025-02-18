@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
   <Product Name='Windows File Management Agent' Id='82fb98a6-f47f-4476-baaa-799fd3c7975f' UpgradeCode='82fb98a6-f47f-4476-baaa-799fd3c7975f'
-    Language='1033' Codepage='1252' Version='1.0.0' Manufacturer='eSpark Consulting Group'>
+    Language='1033' Codepage='1252' Version='2.2.3' Manufacturer='eSpark Consulting Group'>
 
     <Package InstallPrivileges='elevated' Id='*' Keywords='Installer' Description="eSpark_WindowsFIA Installer"
       Comments='Windows File Management Agent is a registered trademark of eSpark Consulting Solutions.' Manufacturer='eSpark_consulting '
@@ -19,10 +19,10 @@
               <Component Id='Resourcesdirectory' Guid='82fb98a6-f47f-4476-baaa-755fd3c7975f'>
                 <File Id='logop256.ico' Name='logo-p256.ico' DiskId='1' Source='Resources\logo-p256.ico'/>
 				<File Id='filter.png' Name='filter.png' DiskId='1' Source='Resources\filter.png'/>
-				  <File Id='About.png' Name='About.png' DiskId='1' Source='Resources\About.png'/>
-				  <File Id='FileSystemAgent.png' Name='FileSystemAgent.png' DiskId='1' Source='Resources\FileSystemAgent.png'/>
-				  <File Id='Scheduler.png' Name='Scheduler.png' DiskId='1' Source='Resources\Scheduler.png'/>
-				  <File Id='Settings.png' Name='Settings.png' DiskId='1' Source='Resources\Settings.png'/>				  
+				  <File Id='About.png' Name='About.png' DiskId='1' Source='Resources\Aboutx180.png'/>
+				  <File Id='FileSystemAgent.png' Name='FileSystemAgent.png' DiskId='1' Source='Resources\OFSx180.png'/>
+				  <File Id='Scheduler.png' Name='Scheduler.png' DiskId='1' Source='Resources\FileSystemAgentx180.png'/>
+				  <File Id='Settings.png' Name='Settings.png' DiskId='1' Source='Resources\Settingx180.png'/>				  
 				  <File Id='Settings2.png' Name='Settings2.png' DiskId='1' Source='Resources\Settings2.png'/>
               </Component>
             </Directory>

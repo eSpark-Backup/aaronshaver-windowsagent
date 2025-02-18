@@ -61,6 +61,9 @@ namespace eSpark_WindowsFIA
 
         public static NLog.Config.LoggingConfiguration config = new NLog.Config.LoggingConfiguration();
 
+        private static List<DirectoryInfo> failed_Spider;
+        private static List<FileInfo> files_Spider;
+
         public MainForm()
         {
             InitializeComponent();
@@ -114,7 +117,8 @@ namespace eSpark_WindowsFIA
             FSW_trayicon.Visible = true;
 
             loger.Log(LogLevel.Info, "==================Starting Windows File Logger===============" + DateTime.Now);
-
+            cmbMaxExcludeFileSize.SelectedIndex = 2;
+            cmbMinExcludeFileSize.SelectedIndex = 0;
             //resheduled Jobs from database
             SchedulerNew.autoLoadJobsStartUp();
 
@@ -199,13 +203,21 @@ namespace eSpark_WindowsFIA
 
         private void SetStartup()
         {
-            RegistryKey rk = Registry.CurrentUser.OpenSubKey
+            RegistryKey rkusr = Registry.CurrentUser.OpenSubKey
                 ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
-            if (rk.GetValue(System.Reflection.Assembly.GetExecutingAssembly().FullName) == null || rk.GetValue(System.Reflection.Assembly.GetExecutingAssembly().FullName).ToString().Length < 1)
-                rk.SetValue(System.Reflection.Assembly.GetExecutingAssembly().FullName, Application.ExecutablePath);
+            if (rkusr.GetValue("eSpark_WindowsFIA") == null || rkusr.GetValue("eSpark_WindowsFIA").ToString().Length < 1)
+                rkusr.SetValue("eSpark_WindowsFIA", Application.ExecutablePath);
+
+            RegistryKey rkHKLM = Registry.LocalMachine.OpenSubKey
+                (@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
+
+            if (rkHKLM.GetValue("eSpark_WindowsFIA") == null || rkHKLM.GetValue("eSpark_WindowsFIA").ToString().Length < 1)
+                rkHKLM.SetValue("eSpark_WindowsFIA", Application.ExecutablePath);
+
+            
             //else
-            //    rk.DeleteValue(System.Reflection.Assembly.GetExecutingAssembly().FullName, false);
+            //    rk.DeleteValue("eSpark_WindowsFIA", false);
 
             //SetSetting("RunWithWindows", chkStartUp.Checked ? "1" : "0");
             SetSetting("RunWithWindows", "1");
@@ -214,12 +226,6 @@ namespace eSpark_WindowsFIA
 
         public void btnFilesSearch_Click(object sender, EventArgs e)
         {
-            if (this.numMinExcludeFileSize.Value > 0 && this.numMaxExcludeFileSize.Value < 1)
-            {
-                MetroSetMessageBox.Show(this, "Please check the ExcludeFileSize?", "ExcludeFileSize Incorrect...........", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
-                return;
-            }
-
             if (excFileSize[0].ToString() != this.numMinExcludeFileSize.Value + ":" + this.cmbMinExcludeFileSize.SelectedIndex
                 || excFileSize[1].ToString() != this.numMaxExcludeFileSize.Value + ":" + this.cmbMaxExcludeFileSize.SelectedIndex)
             {
@@ -234,7 +240,7 @@ namespace eSpark_WindowsFIA
             //DialogResult result = folderDlg.ShowDialog();
             progressCounter = 0;
             metroSetProgressBar1.Value = progressCounter;
-            metroSetProgressBar1.Text = progressCounter+"%";
+            metroSetProgressBar1.Text = progressCounter + "%";
             //StartTime = DateTime.Now;
             //StopTime = DateTime.Now;
             SelectedFldr = "";
@@ -344,6 +350,13 @@ namespace eSpark_WindowsFIA
                 return;
                 //this.txtLogsAndDBpath.Text
             }
+
+            if (MinSize >= MaxSize)
+            {
+                MetroSetMessageBox.Show(this, "Please check the ExcludeFileSize?", "ExcludeFileSize Incorrect...........", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+                return;
+            }
+
 
             loger.Log(LogLevel.Trace, "===================Starting Scan =================== \r\n " + SelectedFldr);
             if (this.chkHash.Switched)
@@ -543,6 +556,21 @@ namespace eSpark_WindowsFIA
                 //    return Task.FromResult("Process is already running");
                 //}
 
+                if (!File.Exists(logfilePath + "\\eSpark_FIA.sqlite") || !File.Exists(logfilePath + "\\sqlite3.exe"))
+                {
+                    try { File.Copy(AssemblyDirectory + "\\eSpark_FIA.sqlite", (logfilePath + "\\eSpark_FIA.sqlite").Replace("\\\\", "\\"), false); } catch { }
+                    try { File.Copy(AssemblyDirectory + "\\sqlite3.exe", (logfilePath + "\\sqlite3.exe").Replace("\\\\", "\\"), false); } catch { }
+
+                    if (!File.Exists(logfilePath + "\\eSpark_FIA.sqlite") || !File.Exists(logfilePath + "\\sqlite3.exe"))
+                    {
+                        loger.Log(LogLevel.Error, "===================Destination DB sqlite3 eSpark_FIA.sqlite Not exist  =================== " + logfilePath);
+                        currentfilescan = "Destination DB sqlite3 eSpark_FIA.sqlite Not exist  " + logfilePath;
+                        processCompleted = true;
+                        processIsRunning = false;
+                        return Task.FromResult("Access denied to scan folder " + logfilePath);
+                    }
+                }
+
                 processIsRunning = true;
                 ControllerDB controllerDB = new ControllerDB();
                 processCompleted = false;
@@ -550,12 +578,19 @@ namespace eSpark_WindowsFIA
                 String rootDir = "";
                 //String[] SelectedFldr_single = SelectedFldr.Split(';');
 
-                int TotalFiles = 0;
+                //int TotalFiles = 0;
                 //foreach (String fldr in SelectedFldr_single)
                 //{
                 try
                 {
-                    TotalFiles += Directory.GetFiles(SelectedFldr, "*", SearchOption.AllDirectories).Length;
+                    stopwatch.Reset();
+                    stopwatch.Start();
+
+                    //TotalFiles += Directory.GetFiles(SelectedFldr, "*", SearchOption.AllDirectories).Length;
+                    files_Spider = new List<FileInfo>();
+                    DirectoryInfo di = new DirectoryInfo(SelectedFldr);
+                    Spider(di);
+
                 }
                 catch
                 {
@@ -567,7 +602,7 @@ namespace eSpark_WindowsFIA
                 }
 
                 //}
-                loger.Log(LogLevel.Trace, "===================TotalFilesToScan=================== " + TotalFiles.ToString());
+                loger.Log(LogLevel.Trace, "===================TotalFilesToScan=================== " + files_Spider.Count.ToString());
 
                 String fldr = SelectedFldr;
                 //foreach (String fldr in SelectedFldr_single)
@@ -584,15 +619,13 @@ namespace eSpark_WindowsFIA
                     return Task.FromResult("No Such Folder Exist or Folder is in Exclusion list");
                 }
 
-                string[] files = Directory.GetFiles(fldr, "*", SearchOption.AllDirectories);
+                //string[] files = Directory.GetFiles(fldr, "*", SearchOption.AllDirectories);
+
                 //Dictionary<int, String> WhereClauseDirDict = new Dictionary<int, string>();
                 //Dictionary<int, String> WhereClauseDirFile = new Dictionary<int, string>();
 
-                if (files.Count() > 0)
+                if (files_Spider.Count > 0)
                 {
-                    stopwatch.Reset();
-                    stopwatch.Start();
-
 
                     loger.Log(LogLevel.Trace, "0 > FileName  : CreationTime + : LastWriteTime : LastAccessTime : fileLengthKB : 0xGetHashCode() ");
                     String fileSizeUnit = "Bytes";
@@ -616,67 +649,70 @@ namespace eSpark_WindowsFIA
 
                     int DirMaxID = 0;
                     int FileMaxID = 0;
+                    bool skipLongFiles = ConfigurationManager.AppSettings["skipLongNames"]=="1"?true:false;
+                    try { DirMaxID = int.Parse(controllerDB.SingleRecordManually(" SELECT COALESCE(MAX(ID),0) FROM ScannedDirectoryLogs").ToString()); } catch { }
+                    try { FileMaxID = int.Parse(controllerDB.SingleRecordManually("SELECT COALESCE(MAX(ID),0) FROM ScannedFileLogs").ToString()); } catch { }
 
-                    try {   DirMaxID = int.Parse(controllerDB.SingleRecordManually(" SELECT COALESCE(MAX(ID),0) FROM ScannedDirectoryLogs").ToString()); } catch { }
-                    try {   FileMaxID = int.Parse(controllerDB.SingleRecordManually("SELECT COALESCE(MAX(ID),0) FROM ScannedFileLogs").ToString());} catch { }
-
-                //List<Dictionary<string, string>> DirectList = new List<Dictionary<string, string>>();
-                List<String> DirectListImport = new List<string>();
+                    //List<Dictionary<string, string>> DirectList = new List<Dictionary<string, string>>();
+                    List<String> DirectListImport = new List<string>();
 
 
                     //List<Dictionary<string, string>> FileList = new List<Dictionary<string, string>>();
                     List<String> FileListImport = new List<string>();
-
-                    foreach (string s in files)
+                    int dbWritecntr = 0;
+                    foreach (FileInfo s in files_Spider)
                     {
                         try
                         {
-                            FileInfo file = new FileInfo(s);
-                            currentfilescan = file.FullName;
+                            //FileInfo file = new FileInfo(s);currentfilescan = " Phase1::Reading disk:::........."+di.FullName;
+                            currentfilescan = " Phase2::Updating Database:::........." + s.FullName;
                             //if (comboLastSelectedIndex > -1 && Regex.IsMatch(file.FullName, filefiltr.Replace("\\\\", "\\"))) //filefiltr.IsMatch(fldr))
-                            if(Regex.IsMatch(file.FullName, filefiltr.Replace("\\\\", "\\")))
+                            if (Regex.IsMatch(s.FullName, filefiltr.Replace("\\\\", "\\")))
                             {
-                                loger.Log(LogLevel.Trace, "===================Exculding file/folder =================== " + file.FullName);
-                                decimal dd2 = (counter * 1.00M) / TotalFiles;
+                                loger.Log(LogLevel.Trace, "===================Exculding file/folder =================== " + s.FullName);
+                                decimal dd2 = (counter * 1.00M) / files_Spider.Count;
                                 progressCounter = (int)Math.Ceiling(dd2 * 100.00M);
                                 counter++;
                                 continue;
                             }
-                                
 
-                            double fileLengthKB = 0;//Math.Ceiling(file.Length / 1024D);
+
+                            double fileLengthKB = s.Length;
 
                             try
                             {
-                                if (file.FullName.Length > 259)
+                                if (skipLongFiles && s.FullName.Length > 259)
                                 {
-                                    loger.Log(LogLevel.Trace, "===================File Path limit exceed =================== " + file.FullName);
-                                    fileLengthKB = 0;
-                                    fileSizeUnit = "Bytes";
-                                }
-                                else
-                                {
-                                    fileLengthKB = Math.Ceiling(file.Length / 1024D);
-
-                                    if (file.Length < 1024)
-                                    {
-                                        fileLengthKB = file.Length;
+                                    //if (skipLongFiles)
+                                    //{
+                                        loger.Log(LogLevel.Trace, "===================File Path limit exceed =================== " + s.FullName);
+                                        fileLengthKB = 0;
                                         fileSizeUnit = "Bytes";
-                                    }
-                                    else if (fileLengthKB < 1024)
-                                        fileSizeUnit = "KB";
 
-                                    if (fileLengthKB > 1024)
-                                    {
-                                        fileLengthKB = Math.Ceiling(fileLengthKB / 1024D);
-                                        fileSizeUnit = "MB";
-                                    }
-                                    if (fileLengthKB > 1024)
-                                    {
-                                        fileLengthKB = Math.Ceiling(fileLengthKB / 1024D);
+                                        decimal dd2 = (counter * 1.00M) / files_Spider.Count;
+                                        progressCounter = (int)Math.Ceiling(dd2 * 100.00M);
+                                        counter++;
+                                        continue;
+                                    //}
+                                }
+
+                                    //fileLengthKB = Math.Ceiling(s.Length / 1024D);
+
+                                    if (fileLengthKB >= (1024 * 1024 * 1024))
+                                    { 
+                                        fileLengthKB = Math.Ceiling(s.Length / (1024D * 1024D * 1024D));
                                         fileSizeUnit = "GB";
                                     }
-                                }
+                                    else if (fileLengthKB >= (1024 * 1024))
+                                    {
+                                        fileLengthKB = Math.Ceiling(s.Length / (1024D * 1024D));
+                                        fileSizeUnit = "MB";
+                                    }
+                                    else //if (fileLengthKB >= (1024 * 1024))
+                                    {
+                                        fileLengthKB = Math.Ceiling(s.Length / (1024D));
+                                        fileSizeUnit = "KB";
+                                    }
                             }
                             catch
                             {
@@ -686,34 +722,36 @@ namespace eSpark_WindowsFIA
 
                             if (fileLengthKB > MaxSize || fileLengthKB < MinSize)
                             {
-                                loger.Log(LogLevel.Trace, "===================File Max/Min Size exceed =================== " + file.FullName);
-                                decimal dd1 = (counter * 1.00M) / TotalFiles;
+                                loger.Log(LogLevel.Trace, "===================File Max/Min Size exceed =================== " + s.FullName);
+                                decimal dd1 = (counter * 1.00M) / files_Spider.Count;
                                 progressCounter = (int)Math.Ceiling(dd1 * 100.00M);
                                 counter++;
                                 continue;
                             }
 
-                            loger.Log(LogLevel.Trace, counter + " > " + file.Name + " : " + file.CreationTime + " : " + file.LastWriteTime + " : " + file.LastAccessTime + " : " + fileLengthKB.ToString() + fileSizeUnit + " : 0x" + file.GetHashCode().ToString() + " : FileDirectory: " + file.Directory);
+                            loger.Log(LogLevel.Trace, counter + " > " + s.Name + " : " + s.CreationTime + " : " + s.LastWriteTime + " : " + s.LastAccessTime + " : " + fileLengthKB.ToString() + fileSizeUnit + " : 0x" + s.GetHashCode().ToString() + " : FileDirectory: " + s.Directory);
 
-                            if (file.Directory.FullName != rootDir)
+                            if (s.Directory.FullName != rootDir)
                             {
                                 //Dictionary<String, String> DirectoryInf = new Dictionary<string, string>();
-                                dirID = file.FullName.GetHashCode();
+                                dirID = s.FullName.GetHashCode();
                                 //DirectoryInf.Add("DirectoryID", (dirID).ToString());
                                 //DirectoryInf.Add("DirectoryPath", file.Directory.FullName);
                                 //DirectoryInf.Add("CreationDate", file.Directory.CreationTime.ToString());
                                 //DirectoryInf.Add("ModifiedDate", file.Directory.LastWriteTime.ToString());
                                 //DirectoryInf.Add("AccessedDate", file.Directory.LastAccessTime.ToString());
                                 //DirectoryInf.Add("ScannedDate", DateTime.Now.ToString());
-
-                                rootDir = file.Directory.FullName;
-                                //WhereClauseDirDict.Add(counter, " DirectoryPath='" + rootDir + "' ");
-
+                                try
+                                {
+                                    rootDir = s.Directory.FullName;
+                                    //WhereClauseDirDict.Add(counter, " DirectoryPath='" + rootDir + "' ");
+                                }
+                                catch { try { rootDir = "PathTooLong-" + rootDir.Substring(rootDir.Length - 20).Replace('\\', '_'); } catch { rootDir = "PathTooLong"; } }
                                 //DirectList.Add(DirectoryInf);
 
                                 DirMaxID++;
-                                DirectListImport.Add((dirID).ToString() + "|" + file.Directory.FullName + "|" + file.Directory.CreationTime.ToString() + "|" + file.Directory.LastWriteTime.ToString() + "|" + file.Directory.LastAccessTime.ToString()
-                                    + "||||" + DateTime.Now.ToString()+"|"+DirMaxID);
+                                DirectListImport.Add((dirID).ToString() + "|" + s.Directory.FullName + "|" + s.Directory.CreationTime.ToString() + "|" + s.Directory.LastWriteTime.ToString() + "|" + s.Directory.LastAccessTime.ToString()
+                                    + "||||" + DateTime.Now.ToString() + "|" + DirMaxID);
                                 //controllerDB.InsertOnlyData("ScannedDirectoryLogs", " DirectoryPath='" + rootDir + "' ", DirectoryInf);
 
                             }
@@ -734,7 +772,7 @@ namespace eSpark_WindowsFIA
                             {
                                 if (calculateHash)
                                 {
-                                    strHashCalc = Compute256Hash(file.FullName);
+                                    strHashCalc = Compute256Hash(s.FullName);
                                     //fileInf.Add("FileHash", strHashCalc);
                                 }
                                 //else fileInf.Add("FileHash", strHashCalc);
@@ -749,10 +787,10 @@ namespace eSpark_WindowsFIA
                             //WhereClauseDirFile.Add(counter, "");
                             //FileList.Add(fileInf);
                             FileMaxID++;
-                            FileListImport.Add((dirID).ToString() + "|" + file.Name + "|" + file.CreationTime.ToString() + "|" + file.LastWriteTime.ToString() + "|" + file.LastAccessTime.ToString()
-                                + "||||" + DateTime.Now.ToString() + "|" + (fileLengthKB.ToString() + "" + fileSizeUnit).ToString() + "|" + strHashCalc+"|"+FileMaxID);
+                            FileListImport.Add((dirID).ToString() + "|" + s.Name + "|" + s.CreationTime.ToString() + "|" + s.LastWriteTime.ToString() + "|" + s.LastAccessTime.ToString()
+                                + "||||" + DateTime.Now.ToString() + "|" + (fileLengthKB.ToString() + "" + fileSizeUnit).ToString() + "|" + strHashCalc + "|" + FileMaxID);
 
-                            if (counter > 102400)//FileList.Count() > 102400)//files records count almost in 100MBs??? //102400
+                            if (dbWritecntr > 102400)//FileList.Count() > 102400)//files records count almost in 100MBs??? //102400
                             {
                                 //foreach (Dictionary<string, string> fileRecord in FileList)
                                 //    controllerDB.InsertOnlyData("ScannedFileLogs", "", fileRecord);
@@ -764,12 +802,13 @@ namespace eSpark_WindowsFIA
                                 controllerDB.InsertOnlyBulkImport("ScannedFileLogs", "ScannedFileLogs.csv", FileListImport);
                                 FileListImport.Clear();
                                 //FileList.Clear();
-
+                                dbWritecntr = 0;
                             }
 
-                            decimal dd = (counter * 1.00M) / TotalFiles;
+                            decimal dd = (counter * 1.00M) / files_Spider.Count;
                             progressCounter = (int)Math.Ceiling(dd * 100.00M);
                             counter++;
+                            dbWritecntr++;
                         }
                         catch (UnauthorizedAccessException e)
                         {
@@ -816,6 +855,14 @@ namespace eSpark_WindowsFIA
                         loger.Log(LogLevel.Trace, "===================DBFileErrorLogs=================== \r\n" + outputResultsErr);
                         loger.Log(LogLevel.Trace, "\r\n");
 
+
+                        if (failed_Spider!=null && failed_Spider.Count > 0)
+                            foreach (DirectoryInfo s_failed_Spider in failed_Spider)
+                            {
+                                loger.Log(LogLevel.Trace, "===================AccessDenied for Folder(s)=================== >>> " + s_failed_Spider.FullName + "\r\n");
+                            }
+
+
                     }
                     catch { }
                     //}
@@ -842,6 +889,17 @@ namespace eSpark_WindowsFIA
             processIsRunning = false;
             return Task.FromResult(SelectedFldr);
             //return Task.FromResult(ShowFolderBrowserDialog());
+        }
+
+        public static string LimitLength(string source)
+        {
+            int maxLength = 120;
+            if (source.Length <= maxLength)
+            {
+                return source;
+            }
+
+            return source.Substring(0, maxLength)+".......";
         }
 
         static readonly SHA256CryptoServiceProvider _hashAlgorithm2 = new SHA256CryptoServiceProvider();
@@ -904,9 +962,9 @@ namespace eSpark_WindowsFIA
                 NLog.LogManager.SuspendLogging();
                 NLog.LogManager.ResumeLogging();
                 this.btnFilesSearch.Enabled = true;
-                tootltip1label2.Text = "Process completed successfully!";
-                tootltip1label2.Text = "Process completed successfully!";
-                tootltip1label2.Text = "Process completed successfully!";
+                tootltip1label2.Text = "Process completed successfully! @ "+DateTime.Now.ToString();
+                tootltip1label2.Text = "Process completed successfully! @ " + DateTime.Now.ToString();
+                tootltip1label2.Text = "Process completed successfully! @ " + DateTime.Now.ToString();
                 progressbarTimer.Stop();
                 stopwatch.Stop();
                 Thread.Sleep(300);//Do wait to write all the logs to output file
@@ -915,7 +973,7 @@ namespace eSpark_WindowsFIA
             else
             {
                 tootltip1label1.Text = stopwatch.Elapsed + " elapsed";
-                tootltip1label2.Text = currentfilescan;
+                tootltip1label2.Text = LimitLength(currentfilescan);
             }
             //this.textBox1.Text += sb_collectedText.ToString();
             //sb_collectedText.Clear();
@@ -925,7 +983,8 @@ namespace eSpark_WindowsFIA
         {
             //progressbarTimer
             if (!processCompleted)
-            { metroSetProgressBar1.Value = progressCounter;
+            {
+                metroSetProgressBar1.Value = progressCounter;
                 metroSetProgressBar1.Text = progressCounter + "%";
             }
 
@@ -964,9 +1023,14 @@ namespace eSpark_WindowsFIA
                     this.notifyIcon1.BalloonTipClicked += new System.EventHandler(this.notifyIcon1_Click);
                     this.notifyIcon1.ShowBalloonTip(100);
                     this.FSW_trayicon.Visible = false;
+
+                    loger.Log(LogLevel.Warn, "==================RunningInBackground Windows File Logger===============" + DateTime.Now);
+
                 }
                 else
                 {
+                    loger.Log(LogLevel.Warn, "==================Closing Windows File Logger===============" + DateTime.Now);
+                    loger.Log(LogLevel.Error, "==================Closing Windows File Logger===============" + DateTime.Now);
                     loger.Log(LogLevel.Info, "==================Closing Windows File Logger===============" + DateTime.Now);
 
                     FSW_trayicon.Visible = false;
@@ -1002,7 +1066,7 @@ namespace eSpark_WindowsFIA
             Dashboard.mainForm.Show();
             Dashboard.mainForm.WindowState = FormWindowState.Normal;
 
-            
+
         }
 
         public static string AssemblyDirectory
@@ -1036,12 +1100,12 @@ namespace eSpark_WindowsFIA
             this.MinimizeBox = false;
             this.HelpButton = true;
             this.HelpButtonClicked += Form1_HelpButtonClicked;
-            
+
         }
 
         private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("This release version is 02.00.00 Dated 14th Feburary 2025 ღ", "This release version is 02.00.00 Dated 14th Feburary 2025 ღ", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+            MessageBox.Show("This release version is v2.2.3 Dated 17th Feburary 2025", "This release version is v2.2.3 Dated 17th Feburary 2025", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
         }
 
         private String GetSetting(string key)
@@ -1135,7 +1199,14 @@ namespace eSpark_WindowsFIA
                 this.txtLogsAndDBpath.Text = SelectedPath;
 
                 if (SelectedPath.Length > 0)
-                    SetSetting("LogsDBPath", SelectedPath);
+                { SetSetting("LogsDBPath", SelectedPath); logfilePath = SelectedPath; }
+            }
+
+            
+            if (!File.Exists(logfilePath + "\\eSpark_FIA.sqlite"))
+            {
+                try { File.Copy(AssemblyDirectory + "\\eSpark_FIA.sqlite", (logfilePath + "\\eSpark_FIA.sqlite").Replace("\\\\", "\\"), false); } catch { }
+                try { File.Copy(AssemblyDirectory + "\\sqlite3.exe", (logfilePath + "\\sqlite3.exe").Replace("\\\\", "\\"), false); } catch { }
             }
 
         }
@@ -1296,7 +1367,7 @@ namespace eSpark_WindowsFIA
                 }
             }
 
-
+            this.cmbScanLocations.SelectedIndex = this.cmbScanLocations.Items.Count - 1;
             txtResult = "";
         }
 
@@ -1311,7 +1382,7 @@ namespace eSpark_WindowsFIA
             String CollectCollection = "";
 
             //if (comboLastSelectedIndex > 0 && txtResult != this.cmbSrchFileFilter.Items[comboLastSelectedIndex].ToString())
-            if(this.cmbSrchFileFilter.SelectedIndex>0)
+            if (this.cmbSrchFileFilter.SelectedIndex > 0)
             {
                 if (txtResult.Length < 3)
                     this.cmbSrchFileFilter.Items.RemoveAt(this.cmbSrchFileFilter.SelectedIndex);
@@ -1500,7 +1571,7 @@ namespace eSpark_WindowsFIA
 
                         String ScannedDateTime = schdtls.Split(' ')[1].Replace("ScannedDate=", "");
                         try { ScannedDateTime += " " + schdtls.Split(' ')[2]; } catch { }
-                        try{ScannedDateTime += " " + schdtls.Split(' ')[3];} catch { }
+                        try { ScannedDateTime += " " + schdtls.Split(' ')[3]; } catch { }
                         try { ScannedDateTime += " " + schdtls.Split(' ')[4]; } catch { }
 
                         if (Dashboard.mainForm.notifyIcon1 == null || Dashboard.mainForm.notifyIcon1.Container == null)
@@ -1567,18 +1638,96 @@ namespace eSpark_WindowsFIA
                         //btnFilesSearch_Click(this, null);
                     }
                 }
-                catch(Exception eep) { try { MainForm.loger.Log(LogLevel.Error, "===================SchedullerErrNotExist =================== \r\n " + eep.StackTrace); } catch { } }
+                catch (Exception eep) { try { MainForm.loger.Log(LogLevel.Error, "===================SchedullerErrNotExist =================== \r\n " + eep.StackTrace); } catch { } }
             }
 
         }
         private void Form1_FormClosing(object sender, FormClosedEventArgs e)
         {
             //MessageBox.Show("***************Form1_FormClosing");
+
+            loger.Log(LogLevel.Warn, "==================Closing Windows File Logger===============" + DateTime.Now);
+            loger.Log(LogLevel.Error, "==================Closing Windows File Logger===============" + DateTime.Now);
+            loger.Log(LogLevel.Info, "==================Closing Windows File Logger===============" + DateTime.Now);
+
         }
 
         private void Form1_HelpButtonClicked(object sender, HelpEventArgs hlpevent)
         {
             try { System.Diagnostics.Process.Start(AssemblyDirectory + "\\Help.chm"); } catch { }
+        }
+
+
+        static void Spider(DirectoryInfo directoryInfo)
+        {
+            //Stopwatch sw = new Stopwatch();
+            //sw.Start();
+            loger.Log(LogLevel.Trace, "===================Starting ReadingDisk=================== ");
+
+            List<DirectoryInfo> directories_Spider = new List<DirectoryInfo>();
+            failed_Spider = new List<DirectoryInfo>();
+            int counter = 1;
+            Queue<DirectoryInfo> unvisited = new Queue<DirectoryInfo>();
+            unvisited.Enqueue(directoryInfo);
+
+            //This portion just attempts to map the directory structure 
+            while (unvisited.Count > 0)
+            {
+                var di = unvisited.Dequeue();
+                directories_Spider.Add(di);
+                //Console.WriteLine($"Enumerating {di.FullName}");
+                try
+                {
+                    var subfolders = di.GetDirectories();
+                    foreach (var t in subfolders)
+                    {
+                        unvisited.Enqueue(t);
+                        currentfilescan = " Phase1::Reading disk:::........." + di.FullName;
+                    }
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    //Console.WriteLine($"Failed Enumerating {di.FullName}");
+                    failed_Spider.Add(di);
+                }
+                catch (Exception ep) { }
+
+            }
+
+            //string report = $"Ran through {directories_Spider.Count} directories in [{sw.ElapsedMilliseconds} (ms);{sw.ElapsedTicks}]";
+
+            //Run through the structure that was just created
+            decimal dd2 = 1M;
+            
+
+            for (int i = 0; i < directories_Spider.Count; i++)
+            {
+                dd2 = (counter * 1.00M) / directories_Spider.Count;
+                progressCounter = (int)Math.Ceiling(dd2 * 100.00M);
+                counter++;
+
+                var di = directories_Spider[i];
+                try
+                {
+                    currentfilescan = " Phase1::Reading disk:::........." + di.FullName;
+                    //Console.WriteLine($"File Enumerating : {di.FullName}");
+                    files_Spider.AddRange(di.GetFiles());
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    //Console.WriteLine($"File Enumerating failed to enumerate {di.FullName}");
+                    failed_Spider.Add(di);
+                }
+                catch(Exception ep) { }
+            }
+
+
+            //Console.WriteLine(report);
+            //Console.WriteLine($"{failed.Count} directories were not able to be enumerated.");
+            //Console.WriteLine($"Ran through {files.Count} files in [{sw.ElapsedMilliseconds} (ms);{sw.ElapsedTicks}]");
+
+            //Console.WriteLine("Press any key to continue...");
+            //Console.ReadLine();
         }
     }
 }

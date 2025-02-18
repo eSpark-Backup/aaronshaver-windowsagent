@@ -118,3 +118,87 @@ C:\Users\AFFAN\Downloads\aaronshaver-windowsagent-masb_Updates (1)\aaronshaver-w
 C:\Users\AFFAN\Downloads\aaronshaver-windowsagent-masb_Updates (1)\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.exe
 C:\Users\AFFAN\Downloads\aaronshaver-windowsagent-masb_Updates (1)\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.pdb
 C:\Users\AFFAN\Downloads\aaronshaver-windowsagent-masb_Updates (1)\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.csproj.AssemblyReference.cache
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\eSpark_WindowsFIA.exe.config
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\eSpark_WindowsFIA.exe
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\eSpark_WindowsFIA.pdb
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\Crc32C.NET.dll
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\EntityFramework.dll
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\MetroSet UI.dll
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\NLog.dll
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\Quartz.dll
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\System.Buffers.dll
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\System.Data.SQLite.dll
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\System.Data.SQLite.EF6.dll
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\System.Data.SQLite.Linq.dll
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\System.Memory.dll
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\Crc32C.NET.xml
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\EntityFramework.xml
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\Microsoft.Extensions.Logging.Abstractions.xml
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\NLog.xml
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\Quartz.xml
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\System.Buffers.xml
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\System.Data.SQLite.xml
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\System.Memory.xml
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.Dashboard.resources
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.eSpark_WindowsFIA.resources
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.Form2.resources
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.MainForm.resources
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.Properties.Resources.resources
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.SchedulerNew.resources
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.csproj.GenerateResource.cache
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.csproj.CoreCompileInputs.cache
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.csproj.CopyComplete
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.exe
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.pdb
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.csproj.AssemblyReference.cache
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\eSpark_WindowsFIA.exe.config
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\eSpark_WindowsFIA.exe
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\eSpark_WindowsFIA.pdb
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\Crc32C.NET.dll
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\EntityFramework.dll
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\EntityFramework.SqlServer.dll
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\MetroSet UI.dll
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\Microsoft.Extensions.Logging.Abstractions.dll
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\NLog.dll
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\Quartz.dll
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\System.Buffers.dll
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\System.Data.SQLite.dll
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\System.Data.SQLite.EF6.dll
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\System.Data.SQLite.Linq.dll
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\System.Memory.dll
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\System.Numerics.Vectors.dll
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\Crc32C.NET.xml
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\EntityFramework.xml
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\EntityFramework.SqlServer.xml
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\Microsoft.Extensions.Logging.Abstractions.xml
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\NLog.xml
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\Quartz.xml
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\System.Buffers.xml
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\System.Data.SQLite.xml
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\System.Memory.xml
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\System.Numerics.Vectors.xml
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.Dashboard.resources
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.eSpark_WindowsFIA.resources
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.Form2.resources
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.MainForm.resources
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.Properties.Resources.resources
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.SchedulerNew.resources
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.csproj.GenerateResource.cache
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.csproj.CoreCompileInputs.cache
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.csproj.CopyComplete
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.exe
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.pdb
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA\obj\Debug\eSpark_WindowsFIA.csproj.AssemblyReference.cache

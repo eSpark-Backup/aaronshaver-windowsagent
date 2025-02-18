@@ -56,103 +56,115 @@ namespace eSpark_WindowsFIA
         private void FileSystemWatcher_Renamed(object sender, RenamedEventArgs e)
         {
             MainForm.IsFSWRunning = true;
-
-        //new DataColumn("EventType", typeof(int)),//1=create,2=change/modify,3=delete,4=rename
-        //new DataColumn("FullPath", typeof(string)),
-        //new DataColumn("OldFullPath", typeof(string)),
-        //new DataColumn("DatetimeCalled", typeof(DateTime))
-        retrylab3:
-            try
+            if (!e.FullPath.Contains(MainForm.logfilePath))
             {
-                lock (MainForm.DS_FSW)
+            //new DataColumn("EventType", typeof(int)),//1=create,2=change/modify,3=delete,4=rename
+            //new DataColumn("FullPath", typeof(string)),
+            //new DataColumn("OldFullPath", typeof(string)),
+            //new DataColumn("DatetimeCalled", typeof(DateTime))
+            retrylab3:
+                try
                 {
-                    var result = MainForm.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 4 && myRow.Field<string>("FullPath") == e.FullPath);
-
-                    if (result.Count() < 1)
+                    lock (MainForm.DS_FSW)
                     {
-                        MainForm.DS_FSW.Rows.Add("4", e.FullPath, e.OldFullPath, DateTime.Now); 
-                        MainForm.DS_FSW.AcceptChanges();
+                        var result = MainForm.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 4 && myRow.Field<string>("FullPath") == e.FullPath);
+
+                        if (result.Count() < 1)
+                        {
+                            MainForm.DS_FSW.Rows.Add("4", e.FullPath, e.OldFullPath, DateTime.Now);
+                            MainForm.DS_FSW.AcceptChanges();
+                        }
+
+
                     }
-
-
                 }
+                catch (Exception ee) { goto retrylab3; }
             }
-            catch (Exception ee) { goto retrylab3; }
         }
 
         private void FileSystemWatcher_Deleted(object sender, FileSystemEventArgs e)
         {
             MainForm.IsFSWRunning = true;
-        //new DataColumn("EventType", typeof(int)),//1=create,2=change/modify,3=delete,4=rename
-        //new DataColumn("FullPath", typeof(string)),
-        //new DataColumn("OldFullPath", typeof(string)),
-        //new DataColumn("DatetimeCalled", typeof(DateTime))
-        retrylab4: try
+            if (!e.FullPath.Contains(MainForm.logfilePath))
             {
-                lock (MainForm.DS_FSW)
+
+            //new DataColumn("EventType", typeof(int)),//1=create,2=change/modify,3=delete,4=rename
+            //new DataColumn("FullPath", typeof(string)),
+            //new DataColumn("OldFullPath", typeof(string)),
+            //new DataColumn("DatetimeCalled", typeof(DateTime))
+            retrylab4: try
                 {
-                    var result = MainForm.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 3 && myRow.Field<string>("FullPath") == e.FullPath);
-
-                    if (result.Count() < 1)
+                    lock (MainForm.DS_FSW)
                     {
-                        MainForm.DS_FSW.Rows.Add("3", e.FullPath, null, DateTime.Now);
-                        MainForm.DS_FSW.AcceptChanges();
-                    }
+                        var result = MainForm.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 3 && myRow.Field<string>("FullPath") == e.FullPath);
 
+                        if (result.Count() < 1)
+                        {
+                            MainForm.DS_FSW.Rows.Add("3", e.FullPath, null, DateTime.Now);
+                            MainForm.DS_FSW.AcceptChanges();
+                        }
+
+                    }
                 }
+                catch (Exception ee) { goto retrylab4; }
             }
-            catch (Exception ee) { goto retrylab4; }
         }
 
         private void FileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {
             MainForm.IsFSWRunning = true;
-        //Modified
-        //new DataColumn("EventType", typeof(int)),//1=create,2=change/modify,3=delete,4=rename
-        //new DataColumn("FullPath", typeof(string)),
-        //new DataColumn("OldFullPath", typeof(string)),
-        //new DataColumn("DatetimeCalled", typeof(DateTime))
-        retrylab1:
-            try
+            //Modified
+            //new DataColumn("EventType", typeof(int)),//1=create,2=change/modify,3=delete,4=rename
+            //new DataColumn("FullPath", typeof(string)),
+            //new DataColumn("OldFullPath", typeof(string)),
+            //new DataColumn("DatetimeCalled", typeof(DateTime))
+            if (!e.FullPath.Contains(MainForm.logfilePath))
             {
-                lock (MainForm.DS_FSW)
+            retrylab1:
+                try
                 {
-                    var result = MainForm.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 2 && myRow.Field<string>("FullPath") == e.FullPath);
-
-                    if (result.Count() < 1)
+                    lock (MainForm.DS_FSW)
                     {
-                        MainForm.DS_FSW.Rows.Add("2", e.FullPath, null, DateTime.Now);
-                        MainForm.DS_FSW.AcceptChanges();
+                        var result = MainForm.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 2 && myRow.Field<string>("FullPath") == e.FullPath);
+
+                        if (result.Count() < 1)
+                        {
+                            MainForm.DS_FSW.Rows.Add("2", e.FullPath, null, DateTime.Now);
+                            MainForm.DS_FSW.AcceptChanges();
+                        }
                     }
                 }
+                catch (Exception ee) { goto retrylab1; }
             }
-            catch (Exception ee) { goto retrylab1; }
         }
 
         private void FileSystemWatcher_Created(object sender, FileSystemEventArgs e)
         {
             MainForm.IsFSWRunning = true;
-        //new DataColumn("EventType", typeof(int)),//1=create,2=change/modify,3=delete,4=rename
-        //new DataColumn("FullPath", typeof(string)),
-        //new DataColumn("OldFullPath", typeof(string)),
-        //new DataColumn("DatetimeCalled", typeof(DateTime))
-
-        retrylab2: try
+            //new DataColumn("EventType", typeof(int)),//1=create,2=change/modify,3=delete,4=rename
+            //new DataColumn("FullPath", typeof(string)),
+            //new DataColumn("OldFullPath", typeof(string)),
+            //new DataColumn("DatetimeCalled", typeof(DateTime))
+            if (!e.FullPath.Contains(MainForm.logfilePath))
             {
-                lock (MainForm.DS_FSW)
+
+            retrylab2: try
                 {
-                    var result = MainForm.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 1 && myRow.Field<string>("FullPath") == e.FullPath);
-
-                    if (result.Count() < 1)
+                    lock (MainForm.DS_FSW)
                     {
-                        MainForm.DS_FSW.Rows.Add("1", e.FullPath, null, DateTime.Now); 
-                        MainForm.DS_FSW.AcceptChanges();
+                        var result = MainForm.DS_FSW.AsEnumerable().Where(myRow => myRow.Field<int>("EventType") == 1 && myRow.Field<string>("FullPath") == e.FullPath);
+
+                        if (result.Count() < 1)
+                        {
+                            MainForm.DS_FSW.Rows.Add("1", e.FullPath, null, DateTime.Now);
+                            MainForm.DS_FSW.AcceptChanges();
+                        }
+
                     }
-
                 }
-            }
-            catch (Exception ee) { goto retrylab2; }
+                catch (Exception ee) { goto retrylab2; }
 
+            }
         }
     }
 }

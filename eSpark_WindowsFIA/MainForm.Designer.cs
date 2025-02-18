@@ -65,7 +65,7 @@ namespace eSpark_WindowsFIA
             timer1 = new System.Windows.Forms.Timer(this.components);
             progressbarTimer = new System.Windows.Forms.Timer(this.components);
             this.FSW_trayicon = new System.Windows.Forms.NotifyIcon(this.components);
-            this.FSW_trayMenu = new MetroSet_UI.Controls.MetroSetContextMenuStrip();
+            this.FSW_trayMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.FSWopen_toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.Quartz_toolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.TaskScheduler_toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -495,7 +495,6 @@ namespace eSpark_WindowsFIA
             // 
             // tootltip1label2
             // 
-            this.tootltip1label2.AutoSize = true;
             this.tootltip1label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.tootltip1label2.IsDerivedStyle = false;
             this.tootltip1label2.Location = new System.Drawing.Point(34, 465);
@@ -629,6 +628,11 @@ namespace eSpark_WindowsFIA
             this.numMaxExcludeFileSize.Name = "numMaxExcludeFileSize";
             this.numMaxExcludeFileSize.Size = new System.Drawing.Size(84, 29);
             this.numMaxExcludeFileSize.TabIndex = 5;
+            this.numMaxExcludeFileSize.Value = new decimal(new int[] {
+            99,
+            0,
+            0,
+            0});
             // 
             // numMinExcludeFileSize
             // 
@@ -639,9 +643,19 @@ namespace eSpark_WindowsFIA
             0,
             0,
             0});
+            this.numMinExcludeFileSize.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
             this.numMinExcludeFileSize.Name = "numMinExcludeFileSize";
             this.numMinExcludeFileSize.Size = new System.Drawing.Size(84, 29);
             this.numMinExcludeFileSize.TabIndex = 3;
+            this.numMinExcludeFileSize.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
             // 
             // metroSetLabel1
             // 
@@ -689,7 +703,6 @@ namespace eSpark_WindowsFIA
             // 
             // FSW_trayMenu
             // 
-            this.FSW_trayMenu.IsDerivedStyle = true;
             this.FSW_trayMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FSWopen_toolStripMenuItem2,
             this.Quartz_toolStripMenuItem,
@@ -698,10 +711,6 @@ namespace eSpark_WindowsFIA
             this.Exit_toolStripMenuItem3});
             this.FSW_trayMenu.Name = "contextMenuStrip1";
             this.FSW_trayMenu.Size = new System.Drawing.Size(233, 114);
-            this.FSW_trayMenu.Style = MetroSet_UI.Enums.Style.Light;
-            this.FSW_trayMenu.StyleManager = null;
-            this.FSW_trayMenu.ThemeAuthor = "Narwin";
-            this.FSW_trayMenu.ThemeName = "MetroLite";
             // 
             // FSWopen_toolStripMenuItem2
             // 
@@ -800,7 +809,7 @@ namespace eSpark_WindowsFIA
             this.metroSetProgressBar1.DisabledBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(238)))), ((int)(((byte)(238)))));
             this.metroSetProgressBar1.DisabledBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(238)))), ((int)(((byte)(238)))));
             this.metroSetProgressBar1.DisabledProgressColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(65)))), ((int)(((byte)(177)))), ((int)(((byte)(225)))));
-            this.metroSetProgressBar1.Font = new System.Drawing.Font("Wingdings 2", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
+            this.metroSetProgressBar1.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(2)));
             this.metroSetProgressBar1.IsDerivedStyle = true;
             this.metroSetProgressBar1.Location = new System.Drawing.Point(28, 437);
             this.metroSetProgressBar1.Maximum = 100;
@@ -847,7 +856,7 @@ namespace eSpark_WindowsFIA
             this.Controls.Add(this.metroSetControlBox1);
             this.Controls.Add(this.tootltip1label2);
             this.Controls.Add(this.panel1);
-            this.Font = new System.Drawing.Font("Cooper Black", 12.75F);
+            this.Font = new System.Drawing.Font("Bookman Old Style", 12.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.HeaderHeight = 10;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
@@ -856,6 +865,7 @@ namespace eSpark_WindowsFIA
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "File System Scanner";
+            this.TextColor = System.Drawing.Color.Black;
             this.HelpButtonClicked += new System.ComponentModel.CancelEventHandler(this.Form1_HelpButtonClicked);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosing);
@@ -867,7 +877,6 @@ namespace eSpark_WindowsFIA
             ((System.ComponentModel.ISupportInitialize)(this.numMinExcludeFileSize)).EndInit();
             this.FSW_trayMenu.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -886,7 +895,7 @@ namespace eSpark_WindowsFIA
         private System.DirectoryServices.DirectorySearcher directorySearcher1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.NotifyIcon FSW_trayicon;
-        private MetroSet_UI.Controls.MetroSetContextMenuStrip FSW_trayMenu;
+        private System.Windows.Forms.ContextMenuStrip FSW_trayMenu;
         private System.Windows.Forms.ToolStripMenuItem FSWopen_toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem Quartz_toolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem TaskScheduler_toolStripMenuItem1;

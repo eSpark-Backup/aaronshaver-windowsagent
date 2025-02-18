@@ -229,6 +229,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\Aboutx180.png" />
+    <None Include="Resources\FileSystemAgentx180.png" />
+    <None Include="Resources\OFSx180.png" />
+    <None Include="Resources\Settingx180.png" />
     <None Include="Resources\Schedular.png" />
     <None Include="Resources\FileSystemAgent.png" />
     <None Include="Resources\Scheduler.png" />
@@ -241,6 +245,10 @@
     <None Include="bin\Settings.png" />
     <None Include="bin\Settings2.png" />
     <None Include="bin\MetroSetUI.dll" />
+    <None Include="bin\Debug\Resources\FileSystemAgentx256.png" />
+    <None Include="bin\Debug\Resources\Schedulerx256.png" />
+    <None Include="bin\Debug\Resources\Aboutx256.png" />
+    <None Include="bin\Debug\Resources\Settingsx256.png" />
     <Content Include="eSpark_WindowsFIA.ico" />
     <Content Include="logo-p256.ico" />
   </ItemGroup>

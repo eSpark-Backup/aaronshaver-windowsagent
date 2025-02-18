@@ -37,6 +37,7 @@ namespace eSpark_WindowsFIA
             this.chkHashCalc = new MetroSet_UI.Controls.MetroSetSwitch();
             this.lblScanPath = new MetroSet_UI.Controls.MetroSetLabel();
             this.panel1 = new MetroSet_UI.Controls.MetroSetPanel();
+            this.metroSetLabel3 = new MetroSet_UI.Controls.MetroSetLabel();
             this.metroSetLabel2 = new MetroSet_UI.Controls.MetroSetLabel();
             this.metroSetLabel1 = new MetroSet_UI.Controls.MetroSetLabel();
             this.chkQuartzJobs = new MetroSet_UI.Controls.MetroSetSwitch();
@@ -213,6 +214,7 @@ namespace eSpark_WindowsFIA
             this.panel1.BackgroundColor = System.Drawing.Color.White;
             this.panel1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
             this.panel1.BorderThickness = 1;
+            this.panel1.Controls.Add(this.metroSetLabel3);
             this.panel1.Controls.Add(this.metroSetLabel2);
             this.panel1.Controls.Add(this.metroSetLabel1);
             this.panel1.Controls.Add(this.chkQuartzJobs);
@@ -237,6 +239,22 @@ namespace eSpark_WindowsFIA
             this.panel1.TabIndex = 16;
             this.panel1.ThemeAuthor = "Narwin";
             this.panel1.ThemeName = "MetroLite";
+            // 
+            // metroSetLabel3
+            // 
+            this.metroSetLabel3.AutoSize = true;
+            this.metroSetLabel3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.metroSetLabel3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.metroSetLabel3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.metroSetLabel3.IsDerivedStyle = true;
+            this.metroSetLabel3.Location = new System.Drawing.Point(275, 234);
+            this.metroSetLabel3.Name = "metroSetLabel3";
+            this.metroSetLabel3.Size = new System.Drawing.Size(2, 18);
+            this.metroSetLabel3.Style = MetroSet_UI.Enums.Style.Light;
+            this.metroSetLabel3.StyleManager = null;
+            this.metroSetLabel3.TabIndex = 31;
+            this.metroSetLabel3.ThemeAuthor = "Narwin";
+            this.metroSetLabel3.ThemeName = "MetroLite";
             // 
             // metroSetLabel2
             // 
@@ -585,11 +603,11 @@ namespace eSpark_WindowsFIA
             this.metroSetLabel9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.metroSetLabel9.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.metroSetLabel9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.metroSetLabel9.Font = new System.Drawing.Font("Bookman Old Style", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.metroSetLabel9.IsDerivedStyle = true;
-            this.metroSetLabel9.Location = new System.Drawing.Point(15, 70);
+            this.metroSetLabel9.Location = new System.Drawing.Point(25, 70);
             this.metroSetLabel9.Name = "metroSetLabel9";
-            this.metroSetLabel9.Size = new System.Drawing.Size(469, 27);
+            this.metroSetLabel9.Size = new System.Drawing.Size(436, 27);
             this.metroSetLabel9.Style = MetroSet_UI.Enums.Style.Dark;
             this.metroSetLabel9.StyleManager = null;
             this.metroSetLabel9.TabIndex = 32;
@@ -600,6 +618,7 @@ namespace eSpark_WindowsFIA
             // SchedulerNew
             // 
             this.AllowResize = false;
+            this.TextColor = System.Drawing.Color.Black;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
@@ -609,7 +628,7 @@ namespace eSpark_WindowsFIA
             this.Controls.Add(this.metroSetLabel9);
             this.Controls.Add(this.metroSetControlBox1);
             this.Controls.Add(this.panel1);
-            this.Font = new System.Drawing.Font("Cooper Black", 12.75F);
+            this.Font = new System.Drawing.Font("Bookman Old Style", 12.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.HeaderHeight = 10;
             this.Name = "SchedulerNew";
             this.ShowBorder = true;
@@ -655,5 +674,6 @@ namespace eSpark_WindowsFIA
         private MetroSet_UI.Controls.MetroSetLabel metroSetLabel1;
         private MetroSet_UI.Controls.MetroSetControlBox metroSetControlBox1;
         private MetroSet_UI.Controls.MetroSetLabel metroSetLabel9;
+        private MetroSet_UI.Controls.MetroSetLabel metroSetLabel3;
     }
 }

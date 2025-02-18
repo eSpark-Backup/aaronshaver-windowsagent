@@ -1,5 +1,0 @@
-2025-02-13 23:19:28.6645|INFO|eSpark_WindowsFIA.MainForm|==================Starting Windows File Logger===============13/02/2025 23.19.28
-2025-02-13 23:31:40.0806|INFO|eSpark_WindowsFIA.MainForm|==================Starting Windows File Logger===============13/02/2025 23.31.40
-2025-02-13 23:31:55.5573|INFO|eSpark_WindowsFIA.MainForm|==================Closing Windows File Logger===============13/02/2025 23.31.55
-2025-02-13 23:34:33.6631|INFO|eSpark_WindowsFIA.MainForm|==================Starting Windows File Logger===============13/02/2025 23.34.33
-2025-02-13 23:34:44.6887|INFO|eSpark_WindowsFIA.MainForm|==================Closing Windows File Logger===============13/02/2025 23.34.44
