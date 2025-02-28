@@ -120,17 +120,6 @@
   <metadata name="FileSystemWatcherTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>480, 56</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="txtLogsAndDBpath.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAN
-        1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAADBSURBVEhL7ZM9
-        DsIwDEYj7sBVuAVsLEjchbFn4Sr5EedgYAchGRs+S5GqNm3cMPVJVhQ7fl+XuhACtay/BHS4PGOMe2fE
-        e38QF5ydNi9ovLlO32YFsgsHiRPtH9YQ2cFuX67Uhshb7AzLlbkh8gZvy3JlaojM8Ga6XCmFSA+z+XIl
-        CxmsarkyFmKWKyrEtXc3swYUWQOK5EIi2jQL4B9rx+etWQDXC+eDw84Y28kCpK4ppS1GywDxneuI1rLU
-        f7VzH+P4P+rQMzE9AAAAAElFTkSuQmCC
-</value>
-  </data>
   <metadata name="timer_callByTaskSched.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>665, 56</value>
   </metadata>
@@ -161,6 +150,7 @@
   <metadata name="FSW_trayMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>289, 95</value>
   </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="FSW_trayicon.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAkAEBAAAAEAIABoBAAAlgAAABgYAAABACAAiAkAAP4EAAAgIAAAAQAgAKgQAACGDgAAMDAAAAEA

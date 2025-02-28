@@ -34,9 +34,10 @@ namespace eSpark_WindowsFIA
             this.lblStart = new MetroSet_UI.Controls.MetroSetLabel();
             this.txtScanPath = new MetroSet_UI.Controls.MetroSetTextBox();
             this.btnScanPath = new MetroSet_UI.Controls.MetroSetButton();
-            this.chkHashCalc = new MetroSet_UI.Controls.MetroSetSwitch();
             this.lblScanPath = new MetroSet_UI.Controls.MetroSetLabel();
             this.panel1 = new MetroSet_UI.Controls.MetroSetPanel();
+            this.metroSetLabel4 = new MetroSet_UI.Controls.MetroSetLabel();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             this.metroSetLabel3 = new MetroSet_UI.Controls.MetroSetLabel();
             this.metroSetLabel2 = new MetroSet_UI.Controls.MetroSetLabel();
             this.metroSetLabel1 = new MetroSet_UI.Controls.MetroSetLabel();
@@ -57,6 +58,7 @@ namespace eSpark_WindowsFIA
             this.metroSetControlBox1 = new MetroSet_UI.Controls.MetroSetControlBox();
             this.metroSetLabel9 = new MetroSet_UI.Controls.MetroSetLabel();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -70,7 +72,7 @@ namespace eSpark_WindowsFIA
             this.btnNewJob.HoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(207)))), ((int)(((byte)(255)))));
             this.btnNewJob.HoverTextColor = System.Drawing.Color.White;
             this.btnNewJob.IsDerivedStyle = true;
-            this.btnNewJob.Location = new System.Drawing.Point(150, 234);
+            this.btnNewJob.Location = new System.Drawing.Point(185, 239);
             this.btnNewJob.Name = "btnNewJob";
             this.btnNewJob.NormalBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(177)))), ((int)(((byte)(225)))));
             this.btnNewJob.NormalColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(177)))), ((int)(((byte)(225)))));
@@ -89,12 +91,14 @@ namespace eSpark_WindowsFIA
             // 
             // dtStartDate
             // 
-            this.dtStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.dtStartDate.CustomFormat = "dd/MMM/yyyy hh:mm:ss tttt";
+            this.dtStartDate.Font = new System.Drawing.Font("Bookman Old Style", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dtStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtStartDate.Location = new System.Drawing.Point(150, 16);
             this.dtStartDate.MaxDate = new System.DateTime(2030, 12, 31, 0, 0, 0, 0);
             this.dtStartDate.MinDate = new System.DateTime(2025, 2, 4, 1, 0, 0, 0);
             this.dtStartDate.Name = "dtStartDate";
-            this.dtStartDate.Size = new System.Drawing.Size(301, 27);
+            this.dtStartDate.Size = new System.Drawing.Size(301, 25);
             this.dtStartDate.TabIndex = 1;
             this.dtStartDate.Value = new System.DateTime(2025, 2, 4, 1, 0, 0, 0);
             // 
@@ -127,7 +131,7 @@ namespace eSpark_WindowsFIA
             this.txtScanPath.Image = null;
             this.txtScanPath.IsDerivedStyle = true;
             this.txtScanPath.Lines = null;
-            this.txtScanPath.Location = new System.Drawing.Point(150, 106);
+            this.txtScanPath.Location = new System.Drawing.Point(150, 137);
             this.txtScanPath.MaxLength = 32767;
             this.txtScanPath.Multiline = false;
             this.txtScanPath.Name = "txtScanPath";
@@ -152,7 +156,7 @@ namespace eSpark_WindowsFIA
             this.btnScanPath.HoverColor = System.Drawing.Color.FromArgb(((int)(((byte)(95)))), ((int)(((byte)(207)))), ((int)(((byte)(255)))));
             this.btnScanPath.HoverTextColor = System.Drawing.Color.White;
             this.btnScanPath.IsDerivedStyle = true;
-            this.btnScanPath.Location = new System.Drawing.Point(356, 105);
+            this.btnScanPath.Location = new System.Drawing.Point(356, 136);
             this.btnScanPath.Name = "btnScanPath";
             this.btnScanPath.NormalBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(177)))), ((int)(((byte)(225)))));
             this.btnScanPath.NormalColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(177)))), ((int)(((byte)(225)))));
@@ -169,37 +173,12 @@ namespace eSpark_WindowsFIA
             this.btnScanPath.ThemeName = "MetroLite";
             this.btnScanPath.Click += new System.EventHandler(this.btnScanPath_Click);
             // 
-            // chkHashCalc
-            // 
-            this.chkHashCalc.BackColor = System.Drawing.Color.Transparent;
-            this.chkHashCalc.BackgroundColor = System.Drawing.Color.Empty;
-            this.chkHashCalc.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(165)))), ((int)(((byte)(159)))), ((int)(((byte)(147)))));
-            this.chkHashCalc.CheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(177)))), ((int)(((byte)(225)))));
-            this.chkHashCalc.CheckState = MetroSet_UI.Enums.CheckState.Unchecked;
-            this.chkHashCalc.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.chkHashCalc.DisabledBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(205)))), ((int)(((byte)(205)))), ((int)(((byte)(205)))));
-            this.chkHashCalc.DisabledCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(65)))), ((int)(((byte)(177)))), ((int)(((byte)(225)))));
-            this.chkHashCalc.DisabledUnCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(205)))), ((int)(((byte)(205)))), ((int)(((byte)(205)))));
-            this.chkHashCalc.IsDerivedStyle = true;
-            this.chkHashCalc.Location = new System.Drawing.Point(150, 173);
-            this.chkHashCalc.Name = "chkHashCalc";
-            this.chkHashCalc.Size = new System.Drawing.Size(58, 22);
-            this.chkHashCalc.Style = MetroSet_UI.Enums.Style.Light;
-            this.chkHashCalc.StyleManager = null;
-            this.chkHashCalc.Switched = false;
-            this.chkHashCalc.SymbolColor = System.Drawing.Color.FromArgb(((int)(((byte)(92)))), ((int)(((byte)(92)))), ((int)(((byte)(92)))));
-            this.chkHashCalc.TabIndex = 13;
-            this.chkHashCalc.Text = "SHA256 calculate";
-            this.chkHashCalc.ThemeAuthor = "Narwin";
-            this.chkHashCalc.ThemeName = "MetroLite";
-            this.chkHashCalc.UnCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(155)))), ((int)(((byte)(155)))), ((int)(((byte)(155)))));
-            // 
             // lblScanPath
             // 
             this.lblScanPath.AutoSize = true;
             this.lblScanPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.lblScanPath.IsDerivedStyle = true;
-            this.lblScanPath.Location = new System.Drawing.Point(16, 106);
+            this.lblScanPath.Location = new System.Drawing.Point(16, 137);
             this.lblScanPath.Name = "lblScanPath";
             this.lblScanPath.Size = new System.Drawing.Size(73, 17);
             this.lblScanPath.Style = MetroSet_UI.Enums.Style.Light;
@@ -214,6 +193,8 @@ namespace eSpark_WindowsFIA
             this.panel1.BackgroundColor = System.Drawing.Color.White;
             this.panel1.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(150)))), ((int)(((byte)(150)))));
             this.panel1.BorderThickness = 1;
+            this.panel1.Controls.Add(this.metroSetLabel4);
+            this.panel1.Controls.Add(this.numericUpDown1);
             this.panel1.Controls.Add(this.metroSetLabel3);
             this.panel1.Controls.Add(this.metroSetLabel2);
             this.panel1.Controls.Add(this.metroSetLabel1);
@@ -229,7 +210,6 @@ namespace eSpark_WindowsFIA
             this.panel1.Controls.Add(this.lblStart);
             this.panel1.Controls.Add(this.txtScanPath);
             this.panel1.Controls.Add(this.btnScanPath);
-            this.panel1.Controls.Add(this.chkHashCalc);
             this.panel1.IsDerivedStyle = true;
             this.panel1.Location = new System.Drawing.Point(15, 103);
             this.panel1.Name = "panel1";
@@ -240,6 +220,44 @@ namespace eSpark_WindowsFIA
             this.panel1.ThemeAuthor = "Narwin";
             this.panel1.ThemeName = "MetroLite";
             // 
+            // metroSetLabel4
+            // 
+            this.metroSetLabel4.AutoSize = true;
+            this.metroSetLabel4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.metroSetLabel4.IsDerivedStyle = true;
+            this.metroSetLabel4.Location = new System.Drawing.Point(226, 54);
+            this.metroSetLabel4.Name = "metroSetLabel4";
+            this.metroSetLabel4.Size = new System.Drawing.Size(28, 17);
+            this.metroSetLabel4.Style = MetroSet_UI.Enums.Style.Light;
+            this.metroSetLabel4.StyleManager = null;
+            this.metroSetLabel4.TabIndex = 33;
+            this.metroSetLabel4.Text = "hrs";
+            this.metroSetLabel4.ThemeAuthor = "Narwin";
+            this.metroSetLabel4.ThemeName = "MetroLite";
+            // 
+            // numericUpDown1
+            // 
+            this.numericUpDown1.Font = new System.Drawing.Font("Bookman Old Style", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numericUpDown1.Location = new System.Drawing.Point(150, 48);
+            this.numericUpDown1.Maximum = new decimal(new int[] {
+            24,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDown1.Name = "numericUpDown1";
+            this.numericUpDown1.Size = new System.Drawing.Size(68, 25);
+            this.numericUpDown1.TabIndex = 2;
+            this.numericUpDown1.Value = new decimal(new int[] {
+            24,
+            0,
+            0,
+            0});
+            // 
             // metroSetLabel3
             // 
             this.metroSetLabel3.AutoSize = true;
@@ -247,7 +265,7 @@ namespace eSpark_WindowsFIA
             this.metroSetLabel3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.metroSetLabel3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.metroSetLabel3.IsDerivedStyle = true;
-            this.metroSetLabel3.Location = new System.Drawing.Point(275, 234);
+            this.metroSetLabel3.Location = new System.Drawing.Point(216, 207);
             this.metroSetLabel3.Name = "metroSetLabel3";
             this.metroSetLabel3.Size = new System.Drawing.Size(2, 18);
             this.metroSetLabel3.Style = MetroSet_UI.Enums.Style.Light;
@@ -261,7 +279,7 @@ namespace eSpark_WindowsFIA
             this.metroSetLabel2.AutoSize = true;
             this.metroSetLabel2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.metroSetLabel2.IsDerivedStyle = true;
-            this.metroSetLabel2.Location = new System.Drawing.Point(16, 204);
+            this.metroSetLabel2.Location = new System.Drawing.Point(16, 207);
             this.metroSetLabel2.Name = "metroSetLabel2";
             this.metroSetLabel2.Size = new System.Drawing.Size(118, 17);
             this.metroSetLabel2.Style = MetroSet_UI.Enums.Style.Light;
@@ -276,13 +294,13 @@ namespace eSpark_WindowsFIA
             this.metroSetLabel1.AutoSize = true;
             this.metroSetLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.metroSetLabel1.IsDerivedStyle = true;
-            this.metroSetLabel1.Location = new System.Drawing.Point(17, 172);
+            this.metroSetLabel1.Location = new System.Drawing.Point(17, 54);
             this.metroSetLabel1.Name = "metroSetLabel1";
-            this.metroSetLabel1.Size = new System.Drawing.Size(72, 17);
+            this.metroSetLabel1.Size = new System.Drawing.Size(94, 17);
             this.metroSetLabel1.Style = MetroSet_UI.Enums.Style.Light;
             this.metroSetLabel1.StyleManager = null;
             this.metroSetLabel1.TabIndex = 29;
-            this.metroSetLabel1.Text = "Calc Hash";
+            this.metroSetLabel1.Text = "Repeat Every";
             this.metroSetLabel1.ThemeAuthor = "Narwin";
             this.metroSetLabel1.ThemeName = "MetroLite";
             // 
@@ -298,7 +316,7 @@ namespace eSpark_WindowsFIA
             this.chkQuartzJobs.DisabledCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(65)))), ((int)(((byte)(177)))), ((int)(((byte)(225)))));
             this.chkQuartzJobs.DisabledUnCheckColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(205)))), ((int)(((byte)(205)))), ((int)(((byte)(205)))));
             this.chkQuartzJobs.IsDerivedStyle = true;
-            this.chkQuartzJobs.Location = new System.Drawing.Point(150, 202);
+            this.chkQuartzJobs.Location = new System.Drawing.Point(150, 205);
             this.chkQuartzJobs.Name = "chkQuartzJobs";
             this.chkQuartzJobs.Size = new System.Drawing.Size(58, 22);
             this.chkQuartzJobs.Style = MetroSet_UI.Enums.Style.Light;
@@ -320,7 +338,7 @@ namespace eSpark_WindowsFIA
             this.groupBox1.Controls.Add(this.Saturday);
             this.groupBox1.Controls.Add(this.Thursday);
             this.groupBox1.Controls.Add(this.Friday);
-            this.groupBox1.Location = new System.Drawing.Point(150, 43);
+            this.groupBox1.Location = new System.Drawing.Point(150, 74);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(301, 57);
             this.groupBox1.TabIndex = 27;
@@ -492,7 +510,7 @@ namespace eSpark_WindowsFIA
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.label2.IsDerivedStyle = true;
-            this.label2.Location = new System.Drawing.Point(15, 74);
+            this.label2.Location = new System.Drawing.Point(15, 105);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(129, 17);
             this.label2.Style = MetroSet_UI.Enums.Style.Light;
@@ -514,7 +532,7 @@ namespace eSpark_WindowsFIA
             this.chkRemove.DisabledBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(205)))), ((int)(((byte)(205)))), ((int)(((byte)(205)))));
             this.chkRemove.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.chkRemove.IsDerivedStyle = true;
-            this.chkRemove.Location = new System.Drawing.Point(341, 149);
+            this.chkRemove.Location = new System.Drawing.Point(341, 180);
             this.chkRemove.Name = "chkRemove";
             this.chkRemove.SignStyle = MetroSet_UI.Enums.SignStyle.Sign;
             this.chkRemove.Size = new System.Drawing.Size(110, 16);
@@ -530,7 +548,7 @@ namespace eSpark_WindowsFIA
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
             this.label1.IsDerivedStyle = true;
-            this.label1.Location = new System.Drawing.Point(16, 139);
+            this.label1.Location = new System.Drawing.Point(16, 170);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(80, 17);
             this.label1.Style = MetroSet_UI.Enums.Style.Light;
@@ -561,7 +579,7 @@ namespace eSpark_WindowsFIA
             "None",
             "Scan Path",
             "All"});
-            this.cmbRemoveJobs.Location = new System.Drawing.Point(150, 140);
+            this.cmbRemoveJobs.Location = new System.Drawing.Point(150, 171);
             this.cmbRemoveJobs.Name = "cmbRemoveJobs";
             this.cmbRemoveJobs.SelectedItemBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(65)))), ((int)(((byte)(177)))), ((int)(((byte)(225)))));
             this.cmbRemoveJobs.SelectedItemForeColor = System.Drawing.Color.White;
@@ -618,7 +636,6 @@ namespace eSpark_WindowsFIA
             // SchedulerNew
             // 
             this.AllowResize = false;
-            this.TextColor = System.Drawing.Color.Black;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
@@ -637,10 +654,12 @@ namespace eSpark_WindowsFIA
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Task Scheduler";
+            this.TextColor = System.Drawing.Color.Black;
             this.TopMost = true;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SchedulerNew_FormClosing);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -653,7 +672,6 @@ namespace eSpark_WindowsFIA
         private MetroSet_UI.Controls.MetroSetLabel lblStart;
         private MetroSet_UI.Controls.MetroSetTextBox txtScanPath;
         private MetroSet_UI.Controls.MetroSetButton btnScanPath;
-        private MetroSet_UI.Controls.MetroSetSwitch chkHashCalc;
         private MetroSet_UI.Controls.MetroSetLabel lblScanPath;
         private MetroSet_UI.Controls.MetroSetPanel panel1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
@@ -675,5 +693,7 @@ namespace eSpark_WindowsFIA
         private MetroSet_UI.Controls.MetroSetControlBox metroSetControlBox1;
         private MetroSet_UI.Controls.MetroSetLabel metroSetLabel9;
         private MetroSet_UI.Controls.MetroSetLabel metroSetLabel3;
+        private MetroSet_UI.Controls.MetroSetLabel metroSetLabel4;
+        private System.Windows.Forms.NumericUpDown numericUpDown1;
     }
 }

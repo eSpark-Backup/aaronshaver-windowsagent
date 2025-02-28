@@ -303,7 +303,7 @@ namespace eSpark_WindowsFIA
             }
             catch (Exception ex)
             {
-                MainForm.loger.Log(LogLevel.Trace, " Database InsertOnly::" + ex.Message);
+                MainForm.loger.Log(LogLevel.Trace, " Error>>>> Database InsertOnly::" + ex.Message);
                 //MessageBox.Show(ex.Message);
             }
             return false;

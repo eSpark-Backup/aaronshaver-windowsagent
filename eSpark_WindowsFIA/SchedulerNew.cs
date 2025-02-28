@@ -22,6 +22,7 @@ namespace eSpark_WindowsFIA
         {
             InitializeComponent();
             cmbRemoveJobs.SelectedIndex = 0;
+            dtStartDate.MinDate = DateTime.Now;//dd / MMM / yyyy hh: mm: ss tttt
         }
 
         public static void autoLoadJobsStartUp()
@@ -168,76 +169,99 @@ namespace eSpark_WindowsFIA
                 MessageBox.Show("Application settings parameter -> createJobDays has incorrect value!", "Application settings error!", MessageBoxButtons.OK);
                 return;
             }
+            bool chkHashCalc = MainForm.chkHashCalc;
+            int hrlyRepeat = (int)(24/this.numericUpDown1.Value);
 
             for (int repeatcntrYear = 0; repeatcntrYear <= createJobsfor; repeatcntrYear++)//create whole year jobs
             {
-                if (!this.Monday.Checked && nextRepeatdt.ToString("dddd") == this.Monday.Name)//Monday
+                //Saturday//when holiday then not create
+                if (this.Saturday.Checked && nextRepeatdt.ToString("dddd") == this.Saturday.Name ||
+                    this.Sunday.Checked && nextRepeatdt.ToString("dddd") == this.Sunday.Name ||
+                    this.Monday.Checked && nextRepeatdt.ToString("dddd") == this.Monday.Name ||
+                    this.Tuesday.Checked && nextRepeatdt.ToString("dddd") == this.Tuesday.Name ||
+                    this.Wednesday.Checked && nextRepeatdt.ToString("dddd") == this.Wednesday.Name ||
+                    this.Thursday.Checked && nextRepeatdt.ToString("dddd") == this.Thursday.Name ||
+                    this.Friday.Checked && nextRepeatdt.ToString("dddd") == this.Friday.Name)
                 {
-                    if (this.chkQuartzJobs.Switched)
-                        newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, this.chkHashCalc.Switched, 1, 1, false, true);
-                    else
-                        newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, this.chkHashCalc.Switched, 1, 1, false, false);
-                }
-                else if (!this.Tuesday.Checked && nextRepeatdt.ToString("dddd") == this.Tuesday.Name)//Tuesday
-                {
-                    if (this.chkQuartzJobs.Switched)
-                        newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, this.chkHashCalc.Switched, 1, 1, false, true);
-                    else
-                        newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, this.chkHashCalc.Switched, 1, 1, false, false);
-                }
-
-                else if (!this.Wednesday.Checked && nextRepeatdt.ToString("dddd") == this.Wednesday.Name)//Wedday
-                {
-                    if (this.chkQuartzJobs.Switched)
-                        newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, this.chkHashCalc.Switched, 1, 1, false, true);
-                    else
-                        newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, this.chkHashCalc.Switched, 1, 1, false, false);
-                }
-
-                else if (!this.Thursday.Checked && nextRepeatdt.ToString("dddd") == this.Thursday.Name)//Thursday
-                {
-                    if (this.chkQuartzJobs.Switched)
-                        newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, this.chkHashCalc.Switched, 1, 1, false, true);
-                    else
-                        newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, this.chkHashCalc.Switched, 1, 1, false, false);
-                }
-
-                else if (!this.Friday.Checked && nextRepeatdt.ToString("dddd") == this.Friday.Name)//Friday
-                {
-                    if (this.chkQuartzJobs.Switched)
-                        newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, this.chkHashCalc.Switched, 1, 1, false, true);
-                    else
-                        newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, this.chkHashCalc.Switched, 1, 1, false, false);
-                }
-
-                else if (!this.Saturday.Checked && nextRepeatdt.ToString("dddd") == this.Saturday.Name)//Saturday
-                {
-                    if (this.chkQuartzJobs.Switched)
-                        newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, this.chkHashCalc.Switched, 1, 1, false, true);
-                    else
-                        newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, this.chkHashCalc.Switched, 1, 1, false, false);
-                }
-
-                else if (!this.Sunday.Checked && nextRepeatdt.ToString("dddd") == this.Sunday.Name)//Sunday
-                {
-                    if (this.chkQuartzJobs.Switched)
-                        newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, this.chkHashCalc.Switched, 1, 1, false, true);
-                    else
-                        newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, this.chkHashCalc.Switched, 1, 1, false, false);
-                }
-
-                else
-                {
-                    cntr++;
+                        cntr++;
                     nextRepeatdt = nextRepeatdt.AddDays(1);
                     continue;
                 }
 
-                CreateWindowsTask(nextRepeatdt);
 
-                cntr++;
-                nextRepeatdt = nextRepeatdt.AddDays(1);
-                totalJobs++;
+                for (int cnthrly = 0; cnthrly < hrlyRepeat; cnthrly++)
+                {
+                    if (!this.Monday.Checked && nextRepeatdt.ToString("dddd") == this.Monday.Name)//Monday
+                    {
+                        if (this.chkQuartzJobs.Switched)
+                            newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, chkHashCalc, 1, 1, false, true);
+                        else
+                            newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, chkHashCalc, 1, 1, false, false);
+                    }
+                    else if (!this.Tuesday.Checked && nextRepeatdt.ToString("dddd") == this.Tuesday.Name)//Tuesday
+                    {
+                        if (this.chkQuartzJobs.Switched)
+                            newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, chkHashCalc, 1, 1, false, true);
+                        else
+                            newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, chkHashCalc, 1, 1, false, false);
+                    }
+
+                    else if (!this.Wednesday.Checked && nextRepeatdt.ToString("dddd") == this.Wednesday.Name)//Wedday
+                    {
+                        if (this.chkQuartzJobs.Switched)
+                            newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, chkHashCalc, 1, 1, false, true);
+                        else
+                            newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, chkHashCalc, 1, 1, false, false);
+                    }
+
+                    else if (!this.Thursday.Checked && nextRepeatdt.ToString("dddd") == this.Thursday.Name)//Thursday
+                    {
+                        if (this.chkQuartzJobs.Switched)
+                            newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, chkHashCalc, 1, 1, false, true);
+                        else
+                            newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, chkHashCalc, 1, 1, false, false);
+                    }
+
+                    else if (!this.Friday.Checked && nextRepeatdt.ToString("dddd") == this.Friday.Name)//Friday
+                    {
+                        if (this.chkQuartzJobs.Switched)
+                            newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, chkHashCalc, 1, 1, false, true);
+                        else
+                            newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, chkHashCalc, 1, 1, false, false);
+                    }
+
+                    else if (!this.Saturday.Checked && nextRepeatdt.ToString("dddd") == this.Saturday.Name)//Saturday
+                    {
+                        if (this.chkQuartzJobs.Switched)
+                            newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, chkHashCalc, 1, 1, false, true);
+                        else
+                            newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, chkHashCalc, 1, 1, false, false);
+                    }
+
+                    else if (!this.Sunday.Checked && nextRepeatdt.ToString("dddd") == this.Sunday.Name)//Sunday
+                    {
+                        if (this.chkQuartzJobs.Switched)
+                            newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, chkHashCalc, 1, 1, false, true);
+                        else
+                            newJob.Start(creationDate, nextRepeatdt, this.txtScanPath.Text, chkHashCalc, 1, 1, false, false);
+                    }
+
+                    else//when holiday then not create // will never happen here!
+                    {
+                        cntr++;
+                        //nextRepeatdt = nextRepeatdt.AddDays(1);
+                        nextRepeatdt = nextRepeatdt.AddHours(hrlyRepeat);
+                        continue;
+                    }
+
+                    CreateWindowsTask(nextRepeatdt);
+
+                    cntr++;
+                    //nextRepeatdt = nextRepeatdt.AddDays(1);
+                    nextRepeatdt = nextRepeatdt.AddHours(hrlyRepeat);
+                    totalJobs++;
+                    metroSetLabel3.Text = "("+totalJobs+") Jobs created! Please wait.....";
+                }
             }
 
             MessageBox.Show("Total " + totalJobs + " Jobs added!", "Process completed successfully! @ " + DateTime.Now.ToString(), MessageBoxButtons.OK);

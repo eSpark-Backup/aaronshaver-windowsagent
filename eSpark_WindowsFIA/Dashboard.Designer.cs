@@ -222,9 +222,11 @@ namespace eSpark_WindowsFIA
             this.TextAlign = MetroSet_UI.Enums.TextAlign.Center;
             this.TextColor = System.Drawing.Color.Black;
             this.UseSlideAnimation = true;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Dashboard_FormClosing);
             this.Load += new System.EventHandler(this.Dashboard_Load);
             this.DoubleClick += new System.EventHandler(this.Dashboard_DoubleClick);
             this.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.Dashboard_MouseDoubleClick);
+            this.Validated += new System.EventHandler(this.Dashboard_Validated);
             this.ResumeLayout(false);
 
         }

@@ -31,7 +31,7 @@ namespace eSpark_WindowsFIA
         //public static StringBuilder sb_collectedText = new StringBuilder();
         public static bool processCompleted = false;
         private static bool processIsRunning = false;
-        public static bool calculateHash = false;
+        //public static bool calculateHash = false;
         public static bool IsFSWRunning = false;
         public static int progressCounter = 0;
         public static int LogsLevel = 0;
@@ -50,7 +50,7 @@ namespace eSpark_WindowsFIA
         public static double MinSize = 0;
         private static int comboLastSelectedIndex = -1;
 
-        private bool userExit = false;
+        public static bool userExit = false;
         private static String filefiltr = "";
         public static String currentfilescan = "";
         public static String rePattern = "";
@@ -58,6 +58,7 @@ namespace eSpark_WindowsFIA
         public static DataTable DS_FSW = null;
         public static String outputResultsErr = "";
         public static String outputResultsDB = "";
+        public static bool chkHashCalc = int.Parse(ConfigurationManager.AppSettings["chkHashCalc"]) == 1 ? true : false;
 
         public static NLog.Config.LoggingConfiguration config = new NLog.Config.LoggingConfiguration();
 
@@ -77,7 +78,7 @@ namespace eSpark_WindowsFIA
                     new DataColumn("DatetimeCalled", typeof(DateTime))
             });
 
-            try { this.txtLogsAndDBpath.Text = GetSetting("LogsDBPath"); } catch { }
+            //try { this.txtLogsAndDBpath.Text = GetSetting("LogsDBPath"); } catch { }
             try
             { //this.cmbExcludefileSize.Items.AddRange(); 
                 excFileSize = GetSetting("ExcludeFileSize").Split('~');
@@ -101,18 +102,54 @@ namespace eSpark_WindowsFIA
             }
             catch { }
 
-            if (this.txtLogsAndDBpath.Text.Length > 1)
+            //if (this.txtLogsAndDBpath.Text.Length > 1)
+            //{
+            logfilePath = GetSetting("LogsDBPath");//AssemblyDirectory+ "\\LogsDBFolder";//
+            if (!File.Exists(logfilePath + "\\eSpark_FIA.sqlite"))
             {
-                if (!File.Exists(AssemblyDirectory + "\\eSpark_FIA.sqlite"))
-                {
-                    MessageBox.Show("Source database location not found!", "Source file not found", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                    return;
-                }
-                try { File.Copy(AssemblyDirectory + "\\eSpark_FIA.sqlite", (this.txtLogsAndDBpath.Text + "\\eSpark_FIA.sqlite").Replace("\\\\", "\\"), false); } catch { }
-                try { File.Copy(AssemblyDirectory + "\\sqlite3.exe", (this.txtLogsAndDBpath.Text + "\\sqlite3.exe").Replace("\\\\", "\\"), false); } catch { }
-            }
 
-            UpdateLogdbEntry();
+                try
+                {
+                    if (!Directory.Exists(logfilePath))
+                        Directory.CreateDirectory(logfilePath);
+                    //MessageBox.Show("Source database location not found!", "Source file not found", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    try { File.Copy(AssemblyDirectory + "\\eSpark_FIA.sqlite", (logfilePath + "\\eSpark_FIA.sqlite").Replace("\\\\", "\\"), false); } catch { }
+                    try { File.Copy(AssemblyDirectory + "\\sqlite3.exe", (logfilePath + "\\sqlite3.exe").Replace("\\\\", "\\"), false); } catch { }
+
+
+                    var logfile = new NLog.Targets.FileTarget("logfile")
+                    {
+                        FileName = (logfilePath + "\\logfile.txt").Replace("\\\\", "\\"),
+                        ArchiveFileName = "logfile.{#}.txt",
+                        ArchiveNumbering = NLog.Targets.ArchiveNumberingMode.Date,
+                        ArchiveEvery = NLog.Targets.FileArchivePeriod.Day,
+                        ArchiveDateFormat = "yyyyMMdd"
+                    };
+
+                    // Rules for mapping loggers to targets            
+                    //config.AddRule(LogLevel.Info, LogLevel.Info, logfile);
+                    //config.AddRule(LogLevel.Debug, LogLevel.Debug, logfile);            
+                    if (LogsLevel == 0) config.AddRule(LogLevel.Info, LogLevel.Info, logfile);
+                    else if (LogsLevel == 1) config.AddRule(LogLevel.Error, LogLevel.Fatal, logfile);
+                    else if (LogsLevel == 2) config.AddRule(LogLevel.Trace, LogLevel.Info, logfile);
+                    else if (LogsLevel == 3) config.AddRule(LogLevel.Trace, LogLevel.Fatal, logfile);
+
+                    config.Reload();
+
+                    // Apply config           
+                    NLog.LogManager.Configuration = config;
+                    loger = NLog.LogManager.GetCurrentClassLogger();
+
+
+                }
+                catch {
+                    MessageBox.Show("Unable to write to location::"+ logfilePath, "Write Permissions Required!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                }
+                return;
+            }
+        //}
+
+        UpdateLogdbEntry();
 
             FSW_trayicon.Visible = true;
 
@@ -166,14 +203,14 @@ namespace eSpark_WindowsFIA
              //Full Logs
 
                 LogsLevel = int.Parse(GetSetting("LogsLevel"));
-                this.cmbLogsLevel.SelectedIndex = LogsLevel;
+                //this.cmbLogsLevel.SelectedIndex = LogsLevel;
             }
             catch { }
 
 
-            if (this.txtLogsAndDBpath.Text.Length > 1)
-                logfilePath = this.txtLogsAndDBpath.Text;
-
+            //if (this.txtLogsAndDBpath.Text.Length > 1)
+            //    logfilePath = this.txtLogsAndDBpath.Text;
+            logfilePath = GetSetting("LogsDBPath");//AssemblyDirectory+ "\\LogsDBFolder";//
 
             // Targets where to log to: File and Console
             var logfile = new NLog.Targets.FileTarget("logfile")
@@ -207,13 +244,13 @@ namespace eSpark_WindowsFIA
                 ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
 
             if (rkusr.GetValue("eSpark_WindowsFIA") == null || rkusr.GetValue("eSpark_WindowsFIA").ToString().Length < 1)
-                rkusr.SetValue("eSpark_WindowsFIA", Application.ExecutablePath);
+                rkusr.SetValue("eSpark_WindowsFIA", Application.ExecutablePath+" autostart");
 
             RegistryKey rkHKLM = Registry.LocalMachine.OpenSubKey
                 (@"SOFTWARE\Microsoft\Windows\CurrentVersion\Run", true);
 
             if (rkHKLM.GetValue("eSpark_WindowsFIA") == null || rkHKLM.GetValue("eSpark_WindowsFIA").ToString().Length < 1)
-                rkHKLM.SetValue("eSpark_WindowsFIA", Application.ExecutablePath);
+                rkHKLM.SetValue("eSpark_WindowsFIA", Application.ExecutablePath + " autostart");
 
             
             //else
@@ -244,7 +281,7 @@ namespace eSpark_WindowsFIA
             //StartTime = DateTime.Now;
             //StopTime = DateTime.Now;
             SelectedFldr = "";
-            calculateHash = false;
+            //calculateHash = false;
 
             //using (var fbd = new FolderBrowserDialog())
             //{
@@ -253,31 +290,31 @@ namespace eSpark_WindowsFIA
             //    if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
             //    {
 
-            if (this.txtLogsAndDBpath.Text.Length < 1)
-            {
-                MessageBox.Show("Please enter Logs and database location!", "Logs file location not found?", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                return;
-            }
-            else
-            {
+            //if (this.txtLogsAndDBpath.Text.Length < 1)
+            //{
+            //    MessageBox.Show("Please enter Logs and database location!", "Logs file location not found?", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+            //    return;
+            //}
+            //else
+            //{
                 if (!File.Exists(AssemblyDirectory + "\\eSpark_FIA.sqlite"))
                 {
                     MessageBox.Show("Source database location not found!", "Source file not found", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     return;
                 }
-            }
+            //}
 
             if (this.cmbScanLocations.Items != null && this.cmbScanLocations.Items.Count > 0)
             {
-                for (int i = 0; i < this.cmbScanLocations.Items.Count; i++)
-                {
-                    if (this.txtLogsAndDBpath.Text.Length > 0 && this.cmbScanLocations.Items[i].ToString().Contains(this.txtLogsAndDBpath.Text))
-                    {
-                        MessageBox.Show("Logs and DB folder can not be same in search location!", "Please change logs-db folder location!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
+                //for (int i = 0; i < this.cmbScanLocations.Items.Count; i++)
+                //{
+                //    if (this.txtLogsAndDBpath.Text.Length > 0 && this.cmbScanLocations.Items[i].ToString().Contains(this.txtLogsAndDBpath.Text))
+                //    {
+                //        MessageBox.Show("Logs and DB folder can not be same in search location!", "Please change logs-db folder location!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //        return;
+                //    }
 
-                }
+                //}
 
                 if (Directory.Exists(this.cmbScanLocations.Items[this.cmbScanLocations.SelectedIndex].ToString()))
                     SelectedFldr = this.cmbScanLocations.Items[this.cmbScanLocations.SelectedIndex].ToString().Trim();
@@ -288,33 +325,33 @@ namespace eSpark_WindowsFIA
                 return;
             }
 
-            if (this.cmbLogsLevel.SelectedIndex > -1 && LogsLevel != this.cmbLogsLevel.SelectedIndex)
-            {
-                LogsLevel = this.cmbLogsLevel.SelectedIndex;
-                SetSetting("LogsLevel", "" + LogsLevel);
+            //if (this.cmbLogsLevel.SelectedIndex > -1 && LogsLevel != this.cmbLogsLevel.SelectedIndex)
+            //{
+            //    LogsLevel = this.cmbLogsLevel.SelectedIndex;
+            //    SetSetting("LogsLevel", "" + LogsLevel);
 
-                // Targets where to log to: File and Console
-                var logfile = new NLog.Targets.FileTarget("logfile")
-                {
-                    FileName = (logfilePath + "\\logfile.txt").Replace("\\\\", "\\"),
-                    ArchiveFileName = "logfile.{#}.txt",
-                    ArchiveNumbering = NLog.Targets.ArchiveNumberingMode.Date,
-                    ArchiveEvery = NLog.Targets.FileArchivePeriod.Day,
-                    ArchiveDateFormat = "yyyyMMdd"
-                };
+            //    // Targets where to log to: File and Console
+            //    var logfile = new NLog.Targets.FileTarget("logfile")
+            //    {
+            //        FileName = (logfilePath + "\\logfile.txt").Replace("\\\\", "\\"),
+            //        ArchiveFileName = "logfile.{#}.txt",
+            //        ArchiveNumbering = NLog.Targets.ArchiveNumberingMode.Date,
+            //        ArchiveEvery = NLog.Targets.FileArchivePeriod.Day,
+            //        ArchiveDateFormat = "yyyyMMdd"
+            //    };
 
-                // Rules for mapping loggers to targets            
-                //config.AddRule(LogLevel.Info, LogLevel.Info, logfile);
-                //config.AddRule(LogLevel.Debug, LogLevel.Debug, logfile);
-                config = new NLog.Config.LoggingConfiguration();
-                if (LogsLevel > 0) config.AddRule(LogLevel.Error, LogLevel.Fatal, logfile);
-                if (LogsLevel > 1) config.AddRule(LogLevel.Trace, LogLevel.Trace, logfile);
-                config.Reload();
+            //    // Rules for mapping loggers to targets            
+            //    //config.AddRule(LogLevel.Info, LogLevel.Info, logfile);
+            //    //config.AddRule(LogLevel.Debug, LogLevel.Debug, logfile);
+            //    config = new NLog.Config.LoggingConfiguration();
+            //    if (LogsLevel > 0) config.AddRule(LogLevel.Error, LogLevel.Fatal, logfile);
+            //    if (LogsLevel > 1) config.AddRule(LogLevel.Trace, LogLevel.Trace, logfile);
+            //    config.Reload();
 
-                // Apply config           
-                NLog.LogManager.Configuration = config;
-                loger = NLog.LogManager.GetCurrentClassLogger();
-            }
+            //    // Apply config           
+            //    NLog.LogManager.Configuration = config;
+            //    loger = NLog.LogManager.GetCurrentClassLogger();
+            //}
 
             try
             {
@@ -359,8 +396,8 @@ namespace eSpark_WindowsFIA
 
 
             loger.Log(LogLevel.Trace, "===================Starting Scan =================== \r\n " + SelectedFldr);
-            if (this.chkHash.Switched)
-                calculateHash = true;
+            //if (this.chkHash.Switched)
+            //    calculateHash = true;
 
             CallFileSystemWatcherAsync();
             CallBrowseProcessAsync();
@@ -413,7 +450,7 @@ namespace eSpark_WindowsFIA
                 if (rePattern.Substring(rePattern.Length - 3).Contains('|'))
                     rePattern = rePattern.Remove(rePattern.Length - 1);
 
-                filefiltr = rePattern;
+                filefiltr = rePattern + @"|\\\\*.WindowsFileAgent";// + AssemblyDirectory+";";//\\\\*.abcd|\\\\*.pqrs\.*WindowsFileAgent;
             }
 
             return true;
@@ -467,12 +504,12 @@ namespace eSpark_WindowsFIA
         {
             progressCounter = 0;
             SelectedFldr = path;
-            calculateHash = calcHsh;
+            //calculateHash = calcHsh;
 
             try
             {
                 LogsLevel = int.Parse(ConfigurationManager.AppSettings["LogsLevel"].ToString());
-                logfilePath = ConfigurationManager.AppSettings["LogsDBPath"].ToString();
+                logfilePath = ConfigurationManager.AppSettings["LogsDBPath"].ToString();//AssemblyDirectory + "\\LogsDBFolder";
 
                 // Targets where to log to: File and Console
                 var logfile = new NLog.Targets.FileTarget("logfile")
@@ -558,17 +595,30 @@ namespace eSpark_WindowsFIA
 
                 if (!File.Exists(logfilePath + "\\eSpark_FIA.sqlite") || !File.Exists(logfilePath + "\\sqlite3.exe"))
                 {
-                    try { File.Copy(AssemblyDirectory + "\\eSpark_FIA.sqlite", (logfilePath + "\\eSpark_FIA.sqlite").Replace("\\\\", "\\"), false); } catch { }
-                    try { File.Copy(AssemblyDirectory + "\\sqlite3.exe", (logfilePath + "\\sqlite3.exe").Replace("\\\\", "\\"), false); } catch { }
-
-                    if (!File.Exists(logfilePath + "\\eSpark_FIA.sqlite") || !File.Exists(logfilePath + "\\sqlite3.exe"))
+                    try
                     {
-                        loger.Log(LogLevel.Error, "===================Destination DB sqlite3 eSpark_FIA.sqlite Not exist  =================== " + logfilePath);
-                        currentfilescan = "Destination DB sqlite3 eSpark_FIA.sqlite Not exist  " + logfilePath;
-                        processCompleted = true;
-                        processIsRunning = false;
+                        if (!Directory.Exists(logfilePath))
+                            Directory.CreateDirectory(logfilePath);
+                        //MessageBox.Show("Source database location not found!", "Source file not found", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        try { File.Copy(AssemblyDirectory + "\\eSpark_FIA.sqlite", (logfilePath + "\\eSpark_FIA.sqlite").Replace("\\\\", "\\"), false); } catch { }
+                        try { File.Copy(AssemblyDirectory + "\\sqlite3.exe", (logfilePath + "\\sqlite3.exe").Replace("\\\\", "\\"), false); } catch { }
+
+                        if (!File.Exists(logfilePath + "\\eSpark_FIA.sqlite") || !File.Exists(logfilePath + "\\sqlite3.exe"))
+                        {
+                            loger.Log(LogLevel.Error, "===================Destination DB sqlite3 eSpark_FIA.sqlite Not exist  =================== " + logfilePath);
+                            currentfilescan = "Destination DB sqlite3 eSpark_FIA.sqlite Not exist  " + logfilePath;
+                            processCompleted = true;
+                            processIsRunning = false;
+                            return Task.FromResult("Access denied to scan folder " + logfilePath);
+                        }
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Unable to write to location::" + logfilePath, "Write Permissions Required!", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                         return Task.FromResult("Access denied to scan folder " + logfilePath);
                     }
+
+
                 }
 
                 processIsRunning = true;
@@ -626,7 +676,6 @@ namespace eSpark_WindowsFIA
 
                 if (files_Spider.Count > 0)
                 {
-
                     loger.Log(LogLevel.Trace, "0 > FileName  : CreationTime + : LastWriteTime : LastAccessTime : fileLengthKB : 0xGetHashCode() ");
                     String fileSizeUnit = "Bytes";
                     int dirID = 0;
@@ -665,7 +714,7 @@ namespace eSpark_WindowsFIA
                         try
                         {
                             //FileInfo file = new FileInfo(s);currentfilescan = " Phase1::Reading disk:::........."+di.FullName;
-                            currentfilescan = " Phase2::Updating Database:::........." + s.FullName;
+                            currentfilescan = " Phase2:: Filtering, Hashing :::........." + s.FullName;
                             //if (comboLastSelectedIndex > -1 && Regex.IsMatch(file.FullName, filefiltr.Replace("\\\\", "\\"))) //filefiltr.IsMatch(fldr))
                             if (Regex.IsMatch(s.FullName, filefiltr.Replace("\\\\", "\\")))
                             {
@@ -768,11 +817,15 @@ namespace eSpark_WindowsFIA
                             //fileInf.Add("FileSize", (fileLengthKB.ToString() + "" + fileSizeUnit).ToString());
 
                             String strHashCalc = "0000000";
+                            String strHashCalcStream = "0000000";
+                            
                             try
                             {
-                                if (calculateHash)
+                                if (chkHashCalc)
                                 {
+
                                     strHashCalc = Compute256Hash(s.FullName);
+                                    strHashCalcStream = Compute256HashStream(s.Directory.FullName+ s.FullName + strHashCalc);
                                     //fileInf.Add("FileHash", strHashCalc);
                                 }
                                 //else fileInf.Add("FileHash", strHashCalc);
@@ -788,7 +841,7 @@ namespace eSpark_WindowsFIA
                             //FileList.Add(fileInf);
                             FileMaxID++;
                             FileListImport.Add((dirID).ToString() + "|" + s.Name + "|" + s.CreationTime.ToString() + "|" + s.LastWriteTime.ToString() + "|" + s.LastAccessTime.ToString()
-                                + "||||" + DateTime.Now.ToString() + "|" + (fileLengthKB.ToString() + "" + fileSizeUnit).ToString() + "|" + strHashCalc + "|" + FileMaxID);
+                                + "||||" + DateTime.Now.ToString() + "|" + (fileLengthKB.ToString() + "" + fileSizeUnit).ToString() + "|" + strHashCalc + "|" + strHashCalcStream + "|" + FileMaxID);
 
                             if (dbWritecntr > 102400)//FileList.Count() > 102400)//files records count almost in 100MBs??? //102400
                             {
@@ -799,6 +852,7 @@ namespace eSpark_WindowsFIA
 
 
                                 //controllerDB.InsertOnlyBulkData("ScannedFileLogs", FileList);
+                                currentfilescan = " Phase3:: Updating Database :::.........";
                                 controllerDB.InsertOnlyBulkImport("ScannedFileLogs", "ScannedFileLogs.csv", FileListImport);
                                 FileListImport.Clear();
                                 //FileList.Clear();
@@ -842,6 +896,7 @@ namespace eSpark_WindowsFIA
                         //echo .import somedata.csv MyTable1  | sqlite3 foo.sqlite
 
                         //controllerDB.InsertOnlyBulkData("ScannedDirectoryLogs", DirectList);
+                        currentfilescan = " Phase3:: Updating Database :::.........";
                         controllerDB.InsertOnlyBulkImport("ScannedDirectoryLogs", "ScannedDirectoryLogs.csv", DirectListImport);
                         DirectListImport.Clear();
                         loger.Log(LogLevel.Trace, "===================DBDirectoryLogs=================== \r\n" + outputResultsDB);
@@ -849,6 +904,7 @@ namespace eSpark_WindowsFIA
                         loger.Log(LogLevel.Trace, "\r\n");
 
                         //controllerDB.InsertOnlyBulkData("ScannedFileLogs", FileList);
+                        currentfilescan = " Phase3:: Updating Database :::.........";
                         controllerDB.InsertOnlyBulkImport("ScannedFileLogs", "ScannedFileLogs.csv", FileListImport);
                         FileListImport.Clear();
                         loger.Log(LogLevel.Trace, "===================DBFileLogs=================== \r\n" + outputResultsDB);
@@ -935,6 +991,23 @@ namespace eSpark_WindowsFIA
                 }
             }
             //return null;
+        }
+
+        public static string Compute256HashStream(String fastHashStr)
+        {
+            byte[] fileData = null;
+                        try
+                        {
+                            fileData = Encoding.ASCII.GetBytes(fastHashStr);
+                            byte[] byteHash = _hashAlgorithm2.ComputeHash(fileData);
+                            return BitConverter.ToString(byteHash);
+                        }
+                        catch
+                        {
+                            //sometimes BinaryReader can not handle files
+                            byte[] byteHash = fileData = Encoding.ASCII.GetBytes(fastHashStr.Trim());
+                            return BitConverter.ToString(byteHash);
+                        }
         }
 
 
@@ -1073,10 +1146,11 @@ namespace eSpark_WindowsFIA
         {
             get
             {
-                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-                UriBuilder uri = new UriBuilder(codeBase);
-                string path = Uri.UnescapeDataString(uri.Path);
-                return Path.GetDirectoryName(path);
+                //string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                //UriBuilder uri = new UriBuilder(codeBase);
+                //string path = Uri.UnescapeDataString(uri.Path);
+                //return Path.GetDirectoryName(path);
+                return @"C:\Program Files (x86)\eSpark\WindowsFileAgent";
             }
         }
         private void TaskScheduler_toolStripMenuItem1_Click(object sender, EventArgs e)
@@ -1186,30 +1260,30 @@ namespace eSpark_WindowsFIA
 
         #endregion Public Methods
 
-        private void btnLogs_Click(object sender, EventArgs e)
-        {
-            UserControlLabel = "Please enter Logs and Database file location here";
-            DialogResult result = ShowDialog1();
+        //private void btnLogs_Click(object sender, EventArgs e)
+        //{
+        //    UserControlLabel = "Please enter Logs and Database file location here";
+        //    DialogResult result = ShowDialog1();
 
-            if (result == DialogResult.OK)
-            {
-                //loger.Log(LogLevel.Trace, "===================Starting Scan =================== \r\n " + SelectedFldr);
-                Description = Description;
-                RootPath = RootPath;
-                this.txtLogsAndDBpath.Text = SelectedPath;
+        //    if (result == DialogResult.OK)
+        //    {
+        //        //loger.Log(LogLevel.Trace, "===================Starting Scan =================== \r\n " + SelectedFldr);
+        //        Description = Description;
+        //        RootPath = RootPath;
+        //        //this.txtLogsAndDBpath.Text = SelectedPath;
 
-                if (SelectedPath.Length > 0)
-                { SetSetting("LogsDBPath", SelectedPath); logfilePath = SelectedPath; }
-            }
+        //        if (SelectedPath.Length > 0)
+        //        { SetSetting("LogsDBPath", SelectedPath); logfilePath = SelectedPath; }
+        //    }
 
             
-            if (!File.Exists(logfilePath + "\\eSpark_FIA.sqlite"))
-            {
-                try { File.Copy(AssemblyDirectory + "\\eSpark_FIA.sqlite", (logfilePath + "\\eSpark_FIA.sqlite").Replace("\\\\", "\\"), false); } catch { }
-                try { File.Copy(AssemblyDirectory + "\\sqlite3.exe", (logfilePath + "\\sqlite3.exe").Replace("\\\\", "\\"), false); } catch { }
-            }
+        //    if (!File.Exists(logfilePath + "\\eSpark_FIA.sqlite"))
+        //    {
+        //        try { File.Copy(AssemblyDirectory + "\\eSpark_FIA.sqlite", (logfilePath + "\\eSpark_FIA.sqlite").Replace("\\\\", "\\"), false); } catch { }
+        //        try { File.Copy(AssemblyDirectory + "\\sqlite3.exe", (logfilePath + "\\sqlite3.exe").Replace("\\\\", "\\"), false); } catch { }
+        //    }
 
-        }
+        //}
 
         public static String txtResult = "";
 
@@ -1479,7 +1553,7 @@ namespace eSpark_WindowsFIA
             //dsTemp.Tables[0].Rows[0]["DirectoryID"].ToString()
             //DS_FSW
 
-            if (IsFSWRunning)
+            if (IsFSWRunning && !processIsRunning)
             {
                 if (DS_FSW.Rows.Count > 0)
                 {

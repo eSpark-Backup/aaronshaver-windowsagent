@@ -42,7 +42,7 @@ namespace eSpark_WindowsFIA
                         parms.Add("FileSize", fin.Length.ToString());
 
 
-                        if (MainForm.calculateHash)
+                        if (MainForm.chkHashCalc)
                         {
                             parms.Add("FileHash", MainForm.Compute256Hash(fin.FullName));
                         }
@@ -90,7 +90,7 @@ namespace eSpark_WindowsFIA
                             parms.Add("FileSize", fin.Length.ToString());
 
 
-                            if (MainForm.calculateHash)
+                            if (MainForm.chkHashCalc)
                             {
                                 parms.Add("FileHash", MainForm.Compute256Hash(fin.FullName));
                             }

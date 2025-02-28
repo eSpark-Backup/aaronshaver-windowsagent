@@ -17,15 +17,36 @@ namespace eSpark_WindowsFIA
         //MainForm mainForm = new MainForm();
         public static MainForm mainForm = new MainForm();
         public static Form thisForm = null;
+        private string strtup = "";
+        
 
-        public Dashboard()
+        public Dashboard(string[] srgs)
         {
             InitializeComponent();
+
+            try
+            {
+                strtup = srgs[0];
+            }
+            catch { }
         }
 
         private void Dashboard_Load(object sender, EventArgs e)
         {
             thisForm = this;
+
+            try
+            {
+                if (strtup.Contains("autostart"))
+                {
+                    this.Hide();
+                    this.ShowInTaskbar = false;
+                    this.ShowIcon = false;
+                    this.ShowTitle = false;
+                }
+            }
+            catch { }
+
         }
 
         private void _metroSetEllipse1_Click(object sender, EventArgs e)
@@ -70,6 +91,36 @@ namespace eSpark_WindowsFIA
         {
             this.MaximumSize = new System.Drawing.Size(520, 580);
             this.MinimumSize = new System.Drawing.Size(520, 580);
+        }
+
+        private void Dashboard_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                if (MainForm.userExit)
+                { }
+                else
+                {
+                    try { e.Cancel = true; } catch { }
+                    this.Hide();
+                    this.ShowInTaskbar = false;
+                    this.ShowIcon = false;
+                    this.ShowTitle = false;
+                }
+            }
+            catch { }
+        }
+
+        private void Dashboard_Validated(object sender, EventArgs e)
+        {
+            if (strtup.Contains("autostart"))
+            {
+                this.Hide();
+                this.ShowInTaskbar = false;
+                this.ShowIcon = false;
+                this.ShowTitle = false;
+                MessageBox.Show("Windows File Indexing Agent is still running in background", "AutoStartUp Called!");
+            }
         }
     }
 }
