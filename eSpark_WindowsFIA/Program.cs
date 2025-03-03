@@ -11,7 +11,7 @@ using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using System.IO;
 namespace eSpark_WindowsFIA
 {
     static class Program
@@ -94,8 +94,25 @@ namespace eSpark_WindowsFIA
                 }
                 else
                 {
-                    System.IO.File.AppendAllText(MainForm.AssemblyDirectory + "\\callTaskScheduler", string.Join(" ", args));
-                    //MessageBox.Show("Only one instance of application can be run at a time!", "Application Already Running", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    //try
+                    //{
+                    //    if (!MainForm.timer_callByTaskSched.Enabled)
+                    //        MainForm.timer_callByTaskSched.Start();
+                    //}
+                    //catch (Exception x) { MessageBox.Show(" Scheduler Services Not Running, Please Run Some Tasks From FileSystemAgent!", "Scheduler Services Not Running"); return; }
+
+                    String logfilePath = ConfigurationManager.AppSettings["LogsDBPath"];
+                    //2025-03-03 13:54:34.5834|INFO|eSpark_WindowsFIA.MainForm|==================Closing Windows File Logger===============3/3/2025 1:54:34 PM
+                    try
+                    { 
+                        File.WriteAllText(MainForm.AssemblyDirectory + "\\callTaskScheduler", string.Join(" ", args));
+ 
+                            //String LogFileName = Directory.GetFiles(logfilePath, "*.txt", SearchOption.AllDirectories)[0];
+                            File.AppendAllText(logfilePath + "\\errLogs.txt", DateTime.Now + "|INFO|eSpark_WindowsFIA.MainForm|==================CalledByTaskScheduler===============" + string.Join(" ", args)+Environment.NewLine);
+
+                    } catch(Exception ep) { File.AppendAllText(logfilePath+"\\errLogs.txt", DateTime.Now + "|INFO|eSpark_WindowsFIA.MainForm|*******************Error CalledByTaskScheduler===============" + string.Join(" ", args)+Environment.NewLine+" Error>>>"+ep.Message ); }
+                    
+                    //MessageBox.Show(MainForm.AssemblyDirectory + "\\callTaskScheduler >>>"+ string.Join(" ", args), "Application Already Running", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             //}

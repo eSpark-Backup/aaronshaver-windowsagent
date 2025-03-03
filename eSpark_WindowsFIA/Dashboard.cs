@@ -1,4 +1,5 @@
 ﻿using MetroSet_UI.Forms;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -39,10 +40,13 @@ namespace eSpark_WindowsFIA
             {
                 if (strtup.Contains("autostart"))
                 {
+
                     this.Hide();
                     this.ShowInTaskbar = false;
                     this.ShowIcon = false;
                     this.ShowTitle = false;
+                    
+                    MainForm.loger.Log(LogLevel.Trace, "===================Autostart Called ===================");
                 }
             }
             catch { }

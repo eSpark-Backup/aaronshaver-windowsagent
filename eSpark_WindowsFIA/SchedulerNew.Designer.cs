@@ -96,11 +96,11 @@ namespace eSpark_WindowsFIA
             this.dtStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
             this.dtStartDate.Location = new System.Drawing.Point(150, 16);
             this.dtStartDate.MaxDate = new System.DateTime(2030, 12, 31, 0, 0, 0, 0);
-            this.dtStartDate.MinDate = new System.DateTime(2025, 2, 4, 1, 0, 0, 0);
+            this.dtStartDate.MinDate = System.DateTime.Now.AddMinutes(15);
             this.dtStartDate.Name = "dtStartDate";
             this.dtStartDate.Size = new System.Drawing.Size(301, 25);
             this.dtStartDate.TabIndex = 1;
-            this.dtStartDate.Value = new System.DateTime(2025, 2, 4, 1, 0, 0, 0);
+            this.dtStartDate.Value = System.DateTime.Now.AddMinutes(15);
             // 
             // lblStart
             // 

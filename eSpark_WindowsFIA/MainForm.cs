@@ -158,7 +158,7 @@ namespace eSpark_WindowsFIA
             cmbMinExcludeFileSize.SelectedIndex = 0;
             //resheduled Jobs from database
             SchedulerNew.autoLoadJobsStartUp();
-
+            
             timer_callByTaskSched.Start();
         }
 
@@ -1146,11 +1146,11 @@ namespace eSpark_WindowsFIA
         {
             get
             {
-                //string codeBase = Assembly.GetExecutingAssembly().CodeBase;
-                //UriBuilder uri = new UriBuilder(codeBase);
-                //string path = Uri.UnescapeDataString(uri.Path);
-                //return Path.GetDirectoryName(path);
-                return @"C:\Program Files (x86)\eSpark\WindowsFileAgent";
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                string path = Uri.UnescapeDataString(uri.Path);
+                return Path.GetDirectoryName(path);
+                //return @"C:\Program Files (x86)\eSpark\WindowsFileAgent";
             }
         }
         private void TaskScheduler_toolStripMenuItem1_Click(object sender, EventArgs e)
@@ -1633,11 +1633,12 @@ namespace eSpark_WindowsFIA
             //    if (Runit[0].Contains("r=taskschd.msc"))
             //MessageBox.Show("starting timer 222");
             //btnFilesSearch_Click(this, null);
-            lock (Dashboard.mainForm)
-            {
+            //lock (Dashboard.mainForm)
+            //{
                 try
                 {
-                    if (File.Exists(MainForm.AssemblyDirectory + "\\callTaskScheduler"))
+                MainForm.loger.Log(LogLevel.Warn, "Timer TaskSchedulerCalled =" + DateTime.Now);
+                if (File.Exists(MainForm.AssemblyDirectory + "\\callTaskScheduler"))
                     {
 
                         String schdtls = File.ReadAllText(MainForm.AssemblyDirectory + "\\callTaskScheduler");
@@ -1661,31 +1662,29 @@ namespace eSpark_WindowsFIA
                         Dashboard.mainForm.notifyIcon1.BalloonTipTitle = "Starting Scheduled Task...." + ScannedDateTime;
 
 
-                        try
+                    try
+                    {
+                        ControllerDB controllerDB = new ControllerDB();
+                        DataSet dsTemp = controllerDB.ReadData("ScheduledQuartzJob", " ScannedDate='" + ScannedDateTime + "' and JobCompleted=0 and IsQuartzJob=0 ");
+                        String ScanPath = "";
+                        bool calcHash = false;
+                        if (dsTemp != null && dsTemp.Tables[0] != null && dsTemp.Tables[0].Rows.Count > 0)
                         {
-                            ControllerDB controllerDB = new ControllerDB();
-                            DataSet dsTemp = controllerDB.ReadData("ScheduledQuartzJob", " ScannedDate='" + ScannedDateTime + "' and JobCompleted=0 and IsQuartzJob=0 ");
-                            String ScanPath = "";
-                            bool calcHash = false;
-
-                            if (dsTemp != null && dsTemp.Tables[0] != null && dsTemp.Tables[0].Rows.Count > 0)
-                            {
-                                ScanPath = dsTemp.Tables[0].Rows[0]["ScanPath"].ToString();
-                                calcHash = dsTemp.Tables[0].Rows[0]["CalculateHash"].ToString() == "1" ? true : false;
+                            ScanPath = dsTemp.Tables[0].Rows[0]["ScanPath"].ToString();
+                            calcHash = dsTemp.Tables[0].Rows[0]["CalculateHash"].ToString() == "1" ? true : false;
 
 
-                                //// and last shut down the scheduler when you are ready to close your program
-                                //Scheduler.scheduler.Shutdown();
+                            //// and last shut down the scheduler when you are ready to close your program
+                            //Scheduler.scheduler.Shutdown();
 
-                                Dictionary<String, String> ScheduledJobRecord = new Dictionary<string, string>();
-                                //ScheduledJobRecord.Add("ScanPath", scanPath);
-                                //ScheduledJobRecord.Add("CreationDate", DateTime.Now.ToString());
-                                //ScheduledJobRecord.Add("CalculateHash", calcHash.ToString());//0=false 1=true
-                                //ScheduledJobRecord.Add("ScannedDate", NextScanDate.ToString());//datetime of nextScan
-                                ScheduledJobRecord.Add("ActualCompleteDate", DateTime.Now.ToString());//no of days , 0 means noRepeat
-                                ScheduledJobRecord.Add("JobCompleted", "1");//Is job Completed , 0 means False=Notyet
-                                controllerDB.UpdateData("ScheduledQuartzJob", " ScannedDate='" + ScannedDateTime + "' and IsQuartzJob=0", ScheduledJobRecord);
-                            }
+                            Dictionary<String, String> ScheduledJobRecord = new Dictionary<string, string>();
+                            //ScheduledJobRecord.Add("ScanPath", scanPath);
+                            //ScheduledJobRecord.Add("CreationDate", DateTime.Now.ToString());
+                            //ScheduledJobRecord.Add("CalculateHash", calcHash.ToString());//0=false 1=true
+                            //ScheduledJobRecord.Add("ScannedDate", NextScanDate.ToString());//datetime of nextScan
+                            ScheduledJobRecord.Add("ActualCompleteDate", DateTime.Now.ToString());//no of days , 0 means noRepeat
+                            ScheduledJobRecord.Add("JobCompleted", "1");//Is job Completed , 0 means False=Notyet
+                            controllerDB.UpdateData("ScheduledQuartzJob", " ScannedDate='" + ScannedDateTime + "' and IsQuartzJob=0", ScheduledJobRecord);
 
                             Dashboard.mainForm.notifyIcon1.BalloonTipText = "Starting scanning path......" + ScanPath + " with CalculateHash=" + calcHash;
                             Dashboard.mainForm.notifyIcon1.BalloonTipClicked += new System.EventHandler(Dashboard.mainForm.notifyIcon1_Click);
@@ -1700,12 +1699,15 @@ namespace eSpark_WindowsFIA
 
                             //MainForm.IsFSWRunning = true;
                             MainForm.CalledByScheduler(ScanPath, calcHash);
-
                         }
-                        catch (Exception ee)
-                        {
-                            try { MainForm.loger.Log(LogLevel.Error, "===================SchedullerErr =================== \r\n " + ee.StackTrace); } catch { }
+                        else {
+                            try { MainForm.loger.Log(LogLevel.Warn, "TaskSchedulerCalled -- NOScheduleFound >>" + " ScannedDate='" + ScannedDateTime + "' and JobCompleted=0 and IsQuartzJob=0 "); } catch { }
                         }
+                    }
+                    catch (Exception ee)
+                    {
+                        try { MainForm.loger.Log(LogLevel.Error, "===================SchedullerErr =================== \r\n " + ee.StackTrace); } catch { }
+                    }
 
 
 
@@ -1713,7 +1715,7 @@ namespace eSpark_WindowsFIA
                     }
                 }
                 catch (Exception eep) { try { MainForm.loger.Log(LogLevel.Error, "===================SchedullerErrNotExist =================== \r\n " + eep.StackTrace); } catch { } }
-            }
+            //}
 
         }
         private void Form1_FormClosing(object sender, FormClosedEventArgs e)

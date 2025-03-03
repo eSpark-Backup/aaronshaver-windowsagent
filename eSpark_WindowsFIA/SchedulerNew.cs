@@ -22,7 +22,7 @@ namespace eSpark_WindowsFIA
         {
             InitializeComponent();
             cmbRemoveJobs.SelectedIndex = 0;
-            dtStartDate.MinDate = DateTime.Now;//dd / MMM / yyyy hh: mm: ss tttt
+            dtStartDate.MinDate = DateTime.Now.AddMinutes(15);//dd / MMM / yyyy hh: mm: ss tttt
         }
 
         public static void autoLoadJobsStartUp()
@@ -183,14 +183,33 @@ namespace eSpark_WindowsFIA
                     this.Thursday.Checked && nextRepeatdt.ToString("dddd") == this.Thursday.Name ||
                     this.Friday.Checked && nextRepeatdt.ToString("dddd") == this.Friday.Name)
                 {
-                        cntr++;
+                    cntr++;
                     nextRepeatdt = nextRepeatdt.AddDays(1);
                     continue;
                 }
 
-
                 for (int cnthrly = 0; cnthrly < hrlyRepeat; cnthrly++)
                 {
+
+                    //Saturday//when holiday then not create
+                    if (this.Saturday.Checked && nextRepeatdt.ToString("dddd") == this.Saturday.Name ||
+                        this.Sunday.Checked && nextRepeatdt.ToString("dddd") == this.Sunday.Name ||
+                        this.Monday.Checked && nextRepeatdt.ToString("dddd") == this.Monday.Name ||
+                        this.Tuesday.Checked && nextRepeatdt.ToString("dddd") == this.Tuesday.Name ||
+                        this.Wednesday.Checked && nextRepeatdt.ToString("dddd") == this.Wednesday.Name ||
+                        this.Thursday.Checked && nextRepeatdt.ToString("dddd") == this.Thursday.Name ||
+                        this.Friday.Checked && nextRepeatdt.ToString("dddd") == this.Friday.Name)
+                    {
+                        cntr++;
+                        nextRepeatdt = nextRepeatdt.AddDays(1);
+                        continue;
+                    }
+
+                    if (nextRepeatdt < DateTime.Now)
+                    {
+                        nextRepeatdt = nextRepeatdt.AddHours((double)this.numericUpDown1.Value);                        
+                        continue; }
+
                     if (!this.Monday.Checked && nextRepeatdt.ToString("dddd") == this.Monday.Name)//Monday
                     {
                         if (this.chkQuartzJobs.Switched)
@@ -250,7 +269,7 @@ namespace eSpark_WindowsFIA
                     {
                         cntr++;
                         //nextRepeatdt = nextRepeatdt.AddDays(1);
-                        nextRepeatdt = nextRepeatdt.AddHours(hrlyRepeat);
+                        nextRepeatdt = nextRepeatdt.AddHours((double)this.numericUpDown1.Value);
                         continue;
                     }
 
@@ -258,9 +277,10 @@ namespace eSpark_WindowsFIA
 
                     cntr++;
                     //nextRepeatdt = nextRepeatdt.AddDays(1);
-                    nextRepeatdt = nextRepeatdt.AddHours(hrlyRepeat);
+                    nextRepeatdt = nextRepeatdt.AddHours((double)this.numericUpDown1.Value);
                     totalJobs++;
                     metroSetLabel3.Text = "("+totalJobs+") Jobs created! Please wait.....";
+                    this.Refresh();
                 }
             }
 
@@ -383,7 +403,9 @@ namespace eSpark_WindowsFIA
                 td.Principal.RunLevel = TaskRunLevel.Highest;
 
                 //trigger.Repetition.Interval = TimeSpan.FromMinutes(2);
-                trigger.StartBoundary = TaskStartDT;                
+                trigger.StartBoundary = TaskStartDT;
+                trigger.Repetition.StopAtDurationEnd = true;
+                
                 td.Triggers.Add(trigger);
                 
 
