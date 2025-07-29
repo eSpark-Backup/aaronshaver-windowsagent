@@ -1,0 +1,1 @@
+2025-07-15 06:11:28.2095|INFO|eSpark_WindowsFIA.MainForm|==================Starting Windows File Logger===============15/07/2025 06.11.28

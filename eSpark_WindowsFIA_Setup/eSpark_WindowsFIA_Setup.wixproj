@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>3.8</ProductVersion>
+    <ProjectGuid>1c646648-4417-4612-8a9f-8b9095742277</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>WindowsFIA_Setup</OutputName>
+    <OutputType>Package</OutputType>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <Name>eSpark_WindowsFIA_Setup</Name>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug;</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug;</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Product.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="app.manifest" />
+    <Content Include="Crc32C.NET.dll" />
+    <Content Include="Crc32C.NET.xml" />
+    <Content Include="EntityFramework.dll" />
+    <Content Include="EntityFramework.SqlServer.dll" />
+    <Content Include="EntityFramework.SqlServer.xml" />
+    <Content Include="EntityFramework.xml" />
+    <Content Include="eSpark_FIA.sqlite" />
+    <Content Include="eSpark_WindowsFIA.exe" />
+    <Content Include="eSpark_WindowsFIA.exe.config" />
+    <Content Include="eSpark_WindowsFIA.manifest" />
+    <Content Include="eSpark_WindowsFIA.pdb" />
+    <Content Include="HELP.chm" />
+    <Content Include="LogsDBFolder\eSpark_FIA.sqlite" />
+    <Content Include="LogsDBFolder\sqlite3.exe" />
+    <Content Include="Manual.pdf" />
+    <Content Include="MetroSet UI.dll" />
+    <Content Include="MetroSetUI.dll" />
+    <Content Include="Microsoft.Extensions.Logging.Abstractions.dll" />
+    <Content Include="Microsoft.Extensions.Logging.Abstractions.xml" />
+    <Content Include="Microsoft.Win32.TaskScheduler.dll" />
+    <Content Include="NLog.dll" />
+    <Content Include="NLog.xml" />
+    <Content Include="Quartz.dll" />
+    <Content Include="Quartz.xml" />
+    <Content Include="Resources\About.png" />
+    <Content Include="Resources\Aboutx180.png" />
+    <Content Include="Resources\AppIcon.ico" />
+    <Content Include="Resources\FileSystemAgent.png" />
+    <Content Include="Resources\FileSystemAgentx180.png" />
+    <Content Include="Resources\filter.png" />
+    <Content Include="Resources\logo-p256.ico" />
+    <Content Include="Resources\logop256.ico" />
+    <Content Include="Resources\MetroSet UI.dll" />
+    <Content Include="Resources\MetroSetUI.dll" />
+    <Content Include="Resources\OFSx180.png" />
+    <Content Include="Resources\Scheduler.png" />
+    <Content Include="Resources\Settings.png" />
+    <Content Include="Resources\Settings2.png" />
+    <Content Include="Resources\Settingx180.png" />
+    <Content Include="sqlite3.exe" />
+    <Content Include="System.Buffers.dll" />
+    <Content Include="System.Buffers.xml" />
+    <Content Include="System.Data.SQLite.dll" />
+    <Content Include="System.Data.SQLite.EF6.dll" />
+    <Content Include="System.Data.SQLite.Linq.dll" />
+    <Content Include="System.Data.SQLite.xml" />
+    <Content Include="System.Diagnostics.DiagnosticSource.dll" />
+    <Content Include="System.Diagnostics.DiagnosticSource.xml" />
+    <Content Include="System.Memory.dll" />
+    <Content Include="System.Memory.xml" />
+    <Content Include="System.Numerics.Vectors.dll" />
+    <Content Include="System.Numerics.Vectors.xml" />
+    <Content Include="System.Runtime.CompilerServices.Unsafe.dll" />
+    <Content Include="System.Runtime.CompilerServices.Unsafe.xml" />
+    <Content Include="x64\SQLite.Interop.dll" />
+    <Content Include="x86\SQLite.Interop.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="LogsDBFolder" />
+    <Folder Include="x64" />
+    <Folder Include="x86" />
+    <Folder Include="Resources" />
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" />
+  <!--
+	To modify your build process, add your task inside one of the targets below and uncomment it.
+	Other similar extension points exist, see Wix.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+</Project>

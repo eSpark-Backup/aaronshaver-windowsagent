@@ -1,0 +1,2 @@
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA_Setup\bin\Debug\WindowsFIA_Setup.msi
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA_Setup\bin\Debug\WindowsFIA_Setup.wixpdb

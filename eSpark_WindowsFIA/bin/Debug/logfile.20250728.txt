@@ -1,0 +1,7 @@
+2025-07-28 06:30:50.5658|INFO|eSpark_WindowsFIA.MainForm|==================Starting Windows File Logger===============28/07/2025 06.30.50
+2025-07-28 06:30:56.2810|WARN|eSpark_WindowsFIA.MainForm|Timer TaskSchedulerCalled =28/07/2025 06.30.56
+2025-07-28 06:31:01.2819|WARN|eSpark_WindowsFIA.MainForm|Timer TaskSchedulerCalled =28/07/2025 06.31.01
+2025-07-28 06:31:06.2802|WARN|eSpark_WindowsFIA.MainForm|Timer TaskSchedulerCalled =28/07/2025 06.31.06
+2025-07-28 06:31:11.2852|WARN|eSpark_WindowsFIA.MainForm|Timer TaskSchedulerCalled =28/07/2025 06.31.11
+2025-07-28 06:31:16.2787|WARN|eSpark_WindowsFIA.MainForm|Timer TaskSchedulerCalled =28/07/2025 06.31.16
+2025-07-28 06:31:21.2822|WARN|eSpark_WindowsFIA.MainForm|Timer TaskSchedulerCalled =28/07/2025 06.31.21

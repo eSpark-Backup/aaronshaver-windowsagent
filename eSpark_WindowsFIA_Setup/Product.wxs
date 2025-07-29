@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+  <Product Name='Windows File Management Agent' Id='82fb98a6-f47f-4476-baaa-799fd3c7975f' UpgradeCode='82fb98a6-f47f-4476-baaa-799fd3c7975f'
+    Language='1033' Codepage='1252' Version='2.2.3' Manufacturer='eSpark Consulting Group'>
+
+    <Package InstallPrivileges='elevated' Id='*' Keywords='Installer' Description="eSpark_WindowsFIA Installer"
+      Comments='Windows File Management Agent is a registered trademark of eSpark Consulting Solutions.' Manufacturer='eSpark_consulting '
+      InstallerVersion='100' Languages='1033' Compressed='yes' SummaryCodepage='1252' InstallScope="perMachine"/>
+
+    <Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" />
+    <Property Id='DiskPrompt' Value="eSpark_WindowsFIA Installation [1]" />
+
+    <Directory Id='TARGETDIR' Name='SourceDir'>
+      <Directory Id='ProgramFilesFolder' Name='PFiles'>
+        <Directory Id='eSpark' Name='eSpark'>
+          <Directory Id='INSTALLDIR' Name='WindowsFileAgent'>
+
+            <Directory Id='Resources' Name='Resources'>
+              <Component Id='Resourcesdirectory' Guid='82fb98a6-f47f-4476-baaa-755fd3c7975f'>
+                <File Id='logop256.ico' Name='logo-p256.ico' DiskId='1' Source='Resources\logo-p256.ico'/>
+				<File Id='filter.png' Name='filter.png' DiskId='1' Source='Resources\filter.png'/>
+				  <File Id='About.png' Name='About.png' DiskId='1' Source='Resources\Aboutx180.png'/>
+				  <File Id='FileSystemAgent.png' Name='FileSystemAgent.png' DiskId='1' Source='Resources\OFSx180.png'/>
+				  <File Id='Scheduler.png' Name='Scheduler.png' DiskId='1' Source='Resources\FileSystemAgentx180.png'/>
+				  <File Id='Settings.png' Name='Settings.png' DiskId='1' Source='Resources\Settingx180.png'/>				  
+				  <File Id='Settings2.png' Name='Settings2.png' DiskId='1' Source='Resources\Settings2.png'/>
+              </Component>
+            </Directory>
+
+            <Directory Id='x64dir' Name='x64'>
+              <Component Id='x64directory' Guid='82fb98a6-f47f-4476-baaa-711fd3c7975f'>
+                <File Id='x64SQLite.Interop.dll' Name='SQLite.Interop.dll' DiskId='1' Source='x64\SQLite.Interop.dll'/>
+              </Component>
+            </Directory>
+
+            <Directory Id='x86dir' Name='x86'>
+              <Component Id='x86directory' Guid='82fb98a6-f47f-4476-baaa-778fd3c7975f'>
+				  <File Id='x86SQLite.Interop.dll' Name='SQLite.Interop.dll' DiskId='1' Source='x86\SQLite.Interop.dll'/>
+              </Component>
+            </Directory>
+
+			<Directory Id='LogsDBFolderdir' Name='LogsDBFolder'>
+				  <Component Id='LogsDBFolderdirectory' Guid='82fb98a6-f47f-4476-baaa-778fd3c7985f'>
+					  <File Id='eSpark_FIA.sqlite' Name='eSpark_FIA.sqlite' DiskId='1' Source='LogsDBFolder\eSpark_FIA.sqlite'/>
+					  <File Id='sqlite3.exe' Name='sqlite3.exe' DiskId='1' Source='LogsDBFolder\sqlite3.exe'/>
+				  </Component>
+			</Directory>
+
+
+			  <Component Id='MainExecutable' Guid='82fb98a6-f47f-4476-baaa-799fd3c7975f'>
+            <File Id='eSpark_WindowsFIA.exe' Name='eSpark_WindowsFIA.exe' DiskId='1' Source='eSpark_WindowsFIA.exe' KeyPath='yes'>
+				<Shortcut Advertise="yes"
+							Id="desktopSc"
+							Directory="DesktopFolder"
+							Name="WindowsFMAgent"
+							WorkingDirectory="INSTALLLOCATION"
+							Description="Windows File Management Agent"
+							Icon="logop256.ico">
+
+				</Shortcut>
+             </File>
+                <File Id='eSpark_WindowsFIA.exe.config' Name='eSpark_WindowsFIA.exe.config' DiskId='1' Source='eSpark_WindowsFIA.exe.config'/>
+				<File Id='app.manifest' Name='app.manifest' DiskId='1' Source='app.manifest'/>
+				<File Id='MetroSetUI.dll' Name='MetroSet UI.dll' DiskId='1' Source='MetroSet UI.dll'/>
+				<File Id='sqlite32.exe' Name='sqlite3.exe' DiskId='1' Source='sqlite3.exe'/>
+				<File Id='eSpark_WindowsFIA.manifest' Name='eSpark_WindowsFIA.manifest' DiskId='1' Source='eSpark_WindowsFIA.manifest'/>
+                <File Id='System.Runtime.CompilerServices.Unsafe.xml' Name='System.Runtime.CompilerServices.Unsafe.xml' DiskId='1' Source='System.Runtime.CompilerServices.Unsafe.xml'/>
+				<File Id='System.Runtime.CompilerServices.Unsafe.dll' Name='System.Runtime.CompilerServices.Unsafe.dll' DiskId='1' Source='System.Runtime.CompilerServices.Unsafe.dll'/>
+				<File Id='System.Numerics.Vectors.xml' Name='System.Numerics.Vectors.xml' DiskId='1' Source='System.Numerics.Vectors.xml'/>
+				<File Id='System.Numerics.Vectors.dll' Name='System.Numerics.Vectors.dll' DiskId='1' Source='System.Numerics.Vectors.dll'/>
+				<File Id='Microsoft.Win32.TaskScheduler.dll' Name='Microsoft.Win32.TaskScheduler.dll' DiskId='1' Source='Microsoft.Win32.TaskScheduler.dll'/>
+				<File Id='System.Memory.xml' Name='System.Memory.xml' DiskId='1' Source='System.Memory.xml'/>
+				<File Id='System.Memory.dll' Name='System.Memory.dll' DiskId='1' Source='System.Memory.dll'/>
+				<File Id='System.Diagnostics.DiagnosticSource.xml' Name='System.Diagnostics.DiagnosticSource.xml' DiskId='1' Source='System.Diagnostics.DiagnosticSource.xml'/>
+				<File Id='System.Diagnostics.DiagnosticSource.dll' Name='System.Diagnostics.DiagnosticSource.dll' DiskId='1' Source='System.Diagnostics.DiagnosticSource.dll'/>
+				<File Id='System.Data.SQLite.xml' Name='System.Data.SQLite.xml' DiskId='1' Source='System.Data.SQLite.xml'/>
+				<File Id='System.Data.SQLite.Linq.dll' Name='System.Data.SQLite.Linq.dll' DiskId='1' Source='System.Data.SQLite.Linq.dll'/>
+				<File Id='System.Data.SQLite.EF6.dll' Name='System.Data.SQLite.EF6.dll' DiskId='1' Source='System.Data.SQLite.EF6.dll'/>
+				<File Id='System.Data.SQLite.dll' Name='System.Data.SQLite.dll' DiskId='1' Source='System.Data.SQLite.dll'/>
+				<File Id='System.Buffers.xml' Name='System.Buffers.xml' DiskId='1' Source='System.Buffers.xml'/>
+				<File Id='System.Buffers.dll' Name='System.Buffers.dll' DiskId='1' Source='System.Buffers.dll'/>
+				<File Id='Quartz.xml' Name='Quartz.xml' DiskId='1' Source='Quartz.xml'/>
+				<File Id='Quartz.dll' Name='Quartz.dll' DiskId='1' Source='Quartz.dll'/>
+				<File Id='NLog.xml' Name='NLog.xml' DiskId='1' Source='NLog.xml'/>
+				<File Id='NLog.dll' Name='NLog.dll' DiskId='1' Source='NLog.dll'/>
+				<File Id='Microsoft.Extensions.Logging.Abstractions.xml' Name='Microsoft.Extensions.Logging.Abstractions.xml' DiskId='1' Source='Microsoft.Extensions.Logging.Abstractions.xml'/>
+				<File Id='Microsoft.Extensions.Logging.Abstractions.dll' Name='Microsoft.Extensions.Logging.Abstractions.dll' DiskId='1' Source='Microsoft.Extensions.Logging.Abstractions.dll'/>
+				<File Id='eSpark_FIA2.sqlite' Name='eSpark_FIA.sqlite' DiskId='1' Source='eSpark_FIA.sqlite'/>
+				<File Id='EntityFramework.xml' Name='EntityFramework.xml' DiskId='1' Source='EntityFramework.xml'/>
+				<File Id='EntityFramework.dll' Name='EntityFramework.dll' DiskId='1' Source='EntityFramework.dll'/>
+				<File Id='EntityFramework.SqlServer.xml' Name='EntityFramework.SqlServer.xml' DiskId='1' Source='EntityFramework.SqlServer.xml'/>
+				<File Id='EntityFramework.SqlServer.dll' Name='EntityFramework.SqlServer.dll' DiskId='1' Source='EntityFramework.SqlServer.dll'/>
+				<File Id='Crc32C.NET.xml' Name='Crc32C.NET.xml' DiskId='1' Source='Crc32C.NET.xml'/>
+				<File Id='Crc32C.NET.dll' Name='Crc32C.NET.dll' DiskId='1' Source='Crc32C.NET.dll'/>
+			</Component>
+
+            <Component Id='HelperLibrary' Guid='82fb98a6-f47f-4476-baaa-799fd399999f'>
+              <File Id='HelperDLL' Name='Help.chm' DiskId='1' Source='Help.chm' KeyPath='yes' />
+            </Component>
+
+          </Directory>
+        </Directory>
+      </Directory>
+
+      <Directory Id="ProgramMenuFolder" Name="Programs">
+        <Directory Id="ProgramMenuDir" Name="WindowsFileAgent">
+          <Component Id="ProgramMenuDir" Guid="82fb98a6-f47f-4476-baaa-799fd3c77780">
+            <RemoveFolder Id='ProgramMenuDir' On='uninstall' />
+            <RegistryValue Root='HKCU' Key='Software\[Manufacturer]\[ProductName]' Type='string' Value='' KeyPath='yes' />
+          </Component>
+        </Directory>
+      </Directory>
+      <Directory Id="DesktopFolder" Name="Desktop" />
+    </Directory>
+
+    <Feature Id='Complete' Level='1'>
+      <ComponentRef Id='MainExecutable' />
+      <ComponentRef Id='HelperLibrary' />
+      <ComponentRef Id='ProgramMenuDir' />
+      <ComponentRef Id='x86directory' />
+      <ComponentRef Id='x64directory' />
+	  <ComponentRef Id='LogsDBFolderdirectory' />
+      <ComponentRef Id='Resourcesdirectory' />
+	  <ComponentRef Id="RegistryEntries"/>
+		
+    </Feature>
+
+    <Icon Id="logop256.ico" SourceFile="eSpark_WindowsFIA.exe" />
+
+  </Product>
+	<Fragment>
+		<DirectoryRef Id="INSTALLDIR">
+			<Component Id="RegistryEntries" Guid="82fb98a6-f47f-4476-baaa-799fd3c7975e">
+				<RegistryKey Root="HKCU" Key="Software\Microsoft\Windows\CurrentVersion\Run" Action="createAndRemoveOnUninstall">
+					<RegistryValue Type="string" Name="eSpark_WindowsFIA.exe" Value="&quot;eSpark_WindowsFIA.exe&quot;" KeyPath="yes"/>
+				</RegistryKey>
+			</Component>
+		</DirectoryRef>
+	</Fragment>
+</Wix>

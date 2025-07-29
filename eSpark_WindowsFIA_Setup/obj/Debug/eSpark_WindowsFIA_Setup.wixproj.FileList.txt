@@ -1,0 +1,12 @@
+obj\Debug\Product.wixobj
+C:\Users\masb\Desktop\eSpark_WindowsFIA\eSpark_WindowsFIA_Setup\bin\Debug\WindowsFIA_Setup.msi
+C:\Users\masb\Desktop\eSpark_WindowsFIA\eSpark_WindowsFIA_Setup\bin\Debug\WindowsFIA_Setup.wixpdb
+obj\Debug\eSpark_WindowsFIA_Setup.wixproj.BindContentsFileListnull.txt
+obj\Debug\eSpark_WindowsFIA_Setup.wixproj.BindOutputsFileListnull.txt
+obj\Debug\eSpark_WindowsFIA_Setup.wixproj.BindBuiltOutputsFileListnull.txt
+C:\Users\AFFAN\Downloads\aaronshaver-windowsagent-masb_Updates (1)\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA_Setup\bin\Debug\WindowsFIA_Setup.msi
+C:\Users\AFFAN\Downloads\aaronshaver-windowsagent-masb_Updates (1)\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA_Setup\bin\Debug\WindowsFIA_Setup.wixpdb
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA_Setup\bin\Debug\WindowsFIA_Setup.msi
+C:\Users\MASB_DC\Desktop\New folder\aaronshaver-windowsagent-masb_Updates\eSpark_WindowsFIA_Setup\bin\Debug\WindowsFIA_Setup.wixpdb
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA_Setup\bin\Debug\WindowsFIA_Setup.msi
+D:\Projects\GitHub\eSpark-Consultants\src\aaronshaver-windowsagent\eSpark_WindowsFIA_Setup\bin\Debug\WindowsFIA_Setup.wixpdb
